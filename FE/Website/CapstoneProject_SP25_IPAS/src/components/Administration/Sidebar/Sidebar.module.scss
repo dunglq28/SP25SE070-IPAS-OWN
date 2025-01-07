@@ -1,0 +1,148 @@
+@import "@/styles/variables.scss";
+
+.Sidebar {
+  background-color: $color-background;
+  color: $color-text;
+  height: 100vh;
+  user-select: none;
+  transition: 0.3s;
+  position: sticky;
+  top: 0;
+  flex-direction: column;
+
+  .Logo {
+    width: 100%;
+    min-height: 80px;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 12px 0 12px;
+
+    .Avatar {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+    }
+
+    .LogoText {
+      margin-left: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      overflow: hidden;
+      white-space: nowrap;
+      color: $color-text;
+      opacity: 1;
+    }
+  }
+
+  .ArrowSidebar {
+    position: absolute;
+    right: -9px;
+    top: 34px;
+    background-color: $color-primary;
+    color: $color-text;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease-out; /* Thêm hiệu ứng cho mũi tên */
+  }
+
+  .WrapperDivider {
+    flex-direction: row;
+    justify-content: center;
+    height: 0px;
+    margin: 10px 0;
+    .Divider {
+      width: 90%;
+      min-width: 90%;
+      margin: 0;
+      background-color: $color_second;
+    }
+  }
+
+  .WrapperTitle {
+    justify-content: start;
+    padding-left: 12px;
+    height: 0px;
+    margin: 0px 0 10px 0;
+    .Title {
+    }
+  }
+
+  .MenuItems {
+    flex-grow: 1;
+    flex-direction: column;
+    padding: 10px 0;
+    row-gap: 10px;
+    overflow: hidden;
+
+    .MenuItem {
+      display: flex;
+      align-items: center;
+      width: 90%;
+      border-radius: 7px;
+      font-weight: 500;
+
+      &:hover {
+        background-color: $color-primary;
+        color: $color-light-text;
+      }
+      &:active {
+        background-color: $color-primary-hover;
+      }
+
+      .MenuIcon {
+        font-size: 25px;
+        margin-right: 10px;
+        margin-left: -6px;
+      }
+
+      .MenuText {
+        white-space: nowrap;
+        font-size: 16px;
+        overflow: hidden;
+      }
+    }
+
+    .disabled {
+      background-color: $color-disabled;
+      opacity: 0.6;
+    }
+
+    .disabled:hover,
+    .disabled:active {
+      background-color: $color-disabled;
+      color: $color-disabled-text;
+    }
+  }
+
+  .Profile {
+    align-items: center;
+    padding: 10px;
+    height: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: $color-text;
+
+    &:hover {
+      background-color: $color-hover-bg;
+    }
+
+    .LogoutIcon {
+      font-size: 25px;
+      margin: 0 10px;
+      color: $color-text;
+    }
+
+    .LogoutText {
+      white-space: nowrap;
+      font-size: 16px;
+      overflow: hidden;
+      font-weight: bold;
+      color: $color-text;
+    }
+  }
+}
