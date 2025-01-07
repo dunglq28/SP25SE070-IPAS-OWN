@@ -1,0 +1,6 @@
+@CapstoneProject_SP25_IPAS_API_HostAddress = http://localhost:5242
+
+GET {{CapstoneProject_SP25_IPAS_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

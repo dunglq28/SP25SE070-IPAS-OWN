@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Request\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="F:\User\HocKi\Đồ án tốt nghiệp\SP25-SP25SE070-GreenProduction-AI\BE\CapstoneProject_SP25_IPAS\CapstoneProject_SP25_IPAS_API\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="F:\User\HocKi\Đồ án tốt nghiệp\SP25-SP25SE070-GreenProduction-AI\BE\CapstoneProject_SP25_IPAS\CapstoneProject_SP25_IPAS_API\.editorconfig" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneProject_SP25_IPAS_API", "CapstoneProject_SP25_IPAS_API\CapstoneProject_SP25_IPAS_API.csproj", "{0E5D35AE-F028-44AF-9760-DFA5498F2E64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneProject_SP25_IPAS_Repository", "CapstoneProject_SP25_IPAS_Repository\CapstoneProject_SP25_IPAS_Repository.csproj", "{E0BE8643-D7F8-4D6D-9AA4-677F4AF4DF33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneProject_SP25_IPAS_Service", "CapstoneProject_SP25_IPAS_Service\CapstoneProject_SP25_IPAS_Service.csproj", "{CB866F72-02E4-407C-ACF4-167D60981D98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneProject_SP25_IPAS_BussinessObject", "CapstoneProject_SP25_IPAS_BussinessObject\CapstoneProject_SP25_IPAS_BussinessObject.csproj", "{9AE69A66-EE89-4FBF-89F2-E1C68FE38B0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneProject_SP25_IPAS_Common", "CapstoneProject_SP25_IPAS_Common\CapstoneProject_SP25_IPAS_Common.csproj", "{334F1000-011F-472D-89FA-7F2685D42281}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E5D35AE-F028-44AF-9760-DFA5498F2E64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E5D35AE-F028-44AF-9760-DFA5498F2E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E5D35AE-F028-44AF-9760-DFA5498F2E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E5D35AE-F028-44AF-9760-DFA5498F2E64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0BE8643-D7F8-4D6D-9AA4-677F4AF4DF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0BE8643-D7F8-4D6D-9AA4-677F4AF4DF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0BE8643-D7F8-4D6D-9AA4-677F4AF4DF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0BE8643-D7F8-4D6D-9AA4-677F4AF4DF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB866F72-02E4-407C-ACF4-167D60981D98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB866F72-02E4-407C-ACF4-167D60981D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB866F72-02E4-407C-ACF4-167D60981D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB866F72-02E4-407C-ACF4-167D60981D98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE69A66-EE89-4FBF-89F2-E1C68FE38B0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE69A66-EE89-4FBF-89F2-E1C68FE38B0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE69A66-EE89-4FBF-89F2-E1C68FE38B0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE69A66-EE89-4FBF-89F2-E1C68FE38B0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{334F1000-011F-472D-89FA-7F2685D42281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{334F1000-011F-472D-89FA-7F2685D42281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{334F1000-011F-472D-89FA-7F2685D42281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{334F1000-011F-472D-89FA-7F2685D42281}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD2CEDC4-4791-4D95-9E0A-C400D43FA5F1}
+	EndGlobalSection
+EndGlobal
