@@ -14,4 +14,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CapstoneProject_SP25_IPAS_BussinessObject\CapstoneProject_SP25_IPAS_BussinessObject.csproj" />
+    <ProjectReference Include="..\CapstoneProject_SP25_IPAS_Common\CapstoneProject_SP25_IPAS_Common.csproj" />
+  </ItemGroup>
+
 </Project>
