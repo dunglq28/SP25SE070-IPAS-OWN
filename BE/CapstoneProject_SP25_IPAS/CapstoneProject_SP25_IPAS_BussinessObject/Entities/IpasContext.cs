@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 
@@ -112,7 +111,7 @@ public partial class IpasContext : DbContext
            .Build();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         optionsBuilder.UseSqlServer(connectionString);
-    } 
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -125,6 +124,8 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             entity.Property(e => e.CarePlanId).HasColumnName("CarePlanID");
             entity.Property(e => e.DayOfWeek).HasMaxLength(50);
+            entity.Property(e => e.EndTime).HasColumnType("datetime");
+            entity.Property(e => e.StarTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.CarePlan).WithMany(p => p.CarePlanSchedules)
                 .HasForeignKey(d => d.CarePlanId)
@@ -138,11 +139,12 @@ public partial class IpasContext : DbContext
             entity.ToTable("ChatMessage");
 
             entity.Property(e => e.MessageId).HasColumnName("MessageID");
-            entity.Property(e => e.MessageCode).HasMaxLength(1);
-            entity.Property(e => e.MessageContent).HasMaxLength(1);
-            entity.Property(e => e.MessageType).HasMaxLength(1);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.MessageCode).HasMaxLength(50);
+            entity.Property(e => e.MessageType).HasMaxLength(50);
             entity.Property(e => e.RoomId).HasColumnName("RoomID");
             entity.Property(e => e.SenderId).HasColumnName("SenderID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Room).WithMany(p => p.ChatMessages)
                 .HasForeignKey(d => d.RoomId)
@@ -157,6 +159,7 @@ public partial class IpasContext : DbContext
 
             entity.Property(e => e.RoomId).HasColumnName("RoomID");
             entity.Property(e => e.AiresponseId).HasColumnName("AIResponseID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.RoomCode).HasMaxLength(50);
             entity.Property(e => e.RoomName).HasMaxLength(200);
 
@@ -240,12 +243,16 @@ public partial class IpasContext : DbContext
             entity.ToTable("Crop");
 
             entity.Property(e => e.CropId).HasColumnName("CropID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.CropActualTime).HasColumnType("datetime");
             entity.Property(e => e.CropCode).HasMaxLength(50);
+            entity.Property(e => e.CropExpectedTime).HasColumnType("datetime");
             entity.Property(e => e.CropName).HasMaxLength(255);
             entity.Property(e => e.HarvestSeason).HasMaxLength(200);
             entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
             entity.Property(e => e.Notes).HasMaxLength(255);
             entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.Crops)
                 .HasForeignKey(d => d.LandPlotId)
@@ -259,8 +266,10 @@ public partial class IpasContext : DbContext
             entity.ToTable("Cultivar");
 
             entity.Property(e => e.CultivarId).HasColumnName("CultivarID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.CultivarCode).HasMaxLength(50);
             entity.Property(e => e.CultivarName).HasMaxLength(50);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Farm>(entity =>
@@ -271,6 +280,7 @@ public partial class IpasContext : DbContext
 
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
             entity.Property(e => e.ClimateZone).HasMaxLength(50);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.FarmCode).HasMaxLength(50);
             entity.Property(e => e.FarmName).HasMaxLength(100);
@@ -279,6 +289,7 @@ public partial class IpasContext : DbContext
                 .HasColumnName("LogoURL");
             entity.Property(e => e.SoilType).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<FarmCoordination>(entity =>
@@ -303,11 +314,13 @@ public partial class IpasContext : DbContext
             entity.ToTable("GraftedPlant");
 
             entity.Property(e => e.GraftedPlantId).HasColumnName("GraftedPlantID");
+            entity.Property(e => e.GraftedDate).HasColumnType("datetime");
             entity.Property(e => e.GraftedPlantCode).HasMaxLength(50);
             entity.Property(e => e.GraftedPlantName).HasMaxLength(100);
             entity.Property(e => e.GrowthStage).HasMaxLength(100);
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.PlantId).HasColumnName("PlantID");
+            entity.Property(e => e.SeparatedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
 
             entity.HasOne(d => d.Plan).WithMany(p => p.GraftedPlants)
@@ -326,10 +339,12 @@ public partial class IpasContext : DbContext
             entity.ToTable("GraftedPlantNote");
 
             entity.Property(e => e.GraftedPlantNoteId).HasColumnName("GraftedPlantNoteID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.GraftedPlantId).HasColumnName("GraftedPlantID");
             entity.Property(e => e.GraftedPlantNoteName).HasMaxLength(100);
             entity.Property(e => e.Image).HasMaxLength(50);
             entity.Property(e => e.NoteTaker).HasMaxLength(50);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.GraftedPlant).WithMany(p => p.GraftedPlantNotes)
                 .HasForeignKey(d => d.GraftedPlantId)
@@ -344,6 +359,7 @@ public partial class IpasContext : DbContext
 
             entity.Property(e => e.HarvestHistoryId).HasColumnName("HarvestHistoryID");
             entity.Property(e => e.CropId).HasColumnName("CropID");
+            entity.Property(e => e.DateHarvest).HasColumnType("datetime");
             entity.Property(e => e.HarvestHistoryCode).HasMaxLength(50);
             entity.Property(e => e.HarvestStatus).HasMaxLength(50);
 
@@ -395,13 +411,15 @@ public partial class IpasContext : DbContext
             entity.ToTable("LandPlot");
 
             entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
-            entity.Property(e => e.LandPlotCode).HasMaxLength(1);
-            entity.Property(e => e.LandPlotName).HasMaxLength(1);
+            entity.Property(e => e.LandPlotCode).HasMaxLength(50);
+            entity.Property(e => e.LandPlotName).HasMaxLength(100);
             entity.Property(e => e.SoilType).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.TargetMarket).HasMaxLength(100);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.LandPlots)
                 .HasForeignKey(d => d.FarmId)
@@ -430,11 +448,13 @@ public partial class IpasContext : DbContext
             entity.ToTable("LandRow");
 
             entity.Property(e => e.LandRowId).HasColumnName("LandRowID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.Direction).HasMaxLength(50);
             entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
             entity.Property(e => e.LandRowCode).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.LandRows)
                 .HasForeignKey(d => d.LandPlotId)
@@ -448,6 +468,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("Notification");
 
             entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.IsRead).HasColumnName("isRead");
             entity.Property(e => e.Link).HasMaxLength(100);
             entity.Property(e => e.NotificationCode).HasMaxLength(50);
@@ -485,8 +506,11 @@ public partial class IpasContext : DbContext
             entity.ToTable("Order");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.EnrolledDate).HasColumnType("datetime");
+            entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
             entity.Property(e => e.OrderCode).HasMaxLength(50);
+            entity.Property(e => e.OrderDate).HasColumnType("datetime");
             entity.Property(e => e.OrderName).HasMaxLength(100);
             entity.Property(e => e.PackageId).HasColumnName("PackageID");
 
@@ -506,9 +530,11 @@ public partial class IpasContext : DbContext
             entity.ToTable("Package");
 
             entity.Property(e => e.PackageId).HasColumnName("PackageID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.PackageCode).HasMaxLength(50);
             entity.Property(e => e.PackageName).HasMaxLength(100);
             entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<PackageDetail>(entity =>
@@ -533,12 +559,14 @@ public partial class IpasContext : DbContext
             entity.ToTable("Partner");
 
             entity.Property(e => e.PartnerId).HasColumnName("PartnerID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(20);
             entity.Property(e => e.National).HasMaxLength(100);
             entity.Property(e => e.PartnerCode).HasMaxLength(50);
             entity.Property(e => e.PartnerName).HasMaxLength(100);
             entity.Property(e => e.PhoneNumber).HasMaxLength(20);
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Partners)
                 .HasForeignKey(d => d.RoleId)
@@ -552,6 +580,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("Payment");
 
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PaymentCode).HasMaxLength(50);
             entity.Property(e => e.PaymentMethod).HasMaxLength(50);
@@ -559,6 +588,7 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.TransactionId)
                 .HasMaxLength(100)
                 .HasColumnName("TransactionID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)
@@ -573,7 +603,9 @@ public partial class IpasContext : DbContext
 
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.AssignorId).HasColumnName("AssignorID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.CropId).HasColumnName("CropID");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.Frequency).HasMaxLength(50);
             entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
@@ -583,8 +615,10 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.PlantId).HasColumnName("PlantID");
             entity.Property(e => e.ProcessId).HasColumnName("ProcessID");
             entity.Property(e => e.ResponsibleBy).HasMaxLength(50);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
             entity.Property(e => e.TypeWorkId).HasColumnName("TypeWorkID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Assignor).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.AssignorId)
@@ -618,6 +652,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("Plant");
 
             entity.Property(e => e.PlantId).HasColumnName("PlantID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.CultivarId).HasColumnName("CultivarID");
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.GrowthStage).HasMaxLength(50);
@@ -630,6 +665,8 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.PlantLotId).HasColumnName("PlantLotID");
             entity.Property(e => e.PlantName).HasMaxLength(50);
             entity.Property(e => e.PlantReferenceId).HasColumnName("PlantReferenceID");
+            entity.Property(e => e.PlantingDate).HasColumnType("datetime");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Cultivar).WithMany(p => p.Plants)
                 .HasForeignKey(d => d.CultivarId)
@@ -674,9 +711,11 @@ public partial class IpasContext : DbContext
             entity.ToTable("PlantGrowthHistory");
 
             entity.Property(e => e.PlantGrowthHistoryId).HasColumnName("PlantGrowthHistoryID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.NoteTaker).HasMaxLength(100);
             entity.Property(e => e.PlantGrowthHistoryCode).HasMaxLength(50);
             entity.Property(e => e.PlantId).HasColumnName("PlantID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Plant).WithMany(p => p.PlantGrowthHistories)
                 .HasForeignKey(d => d.PlantId)
@@ -690,6 +729,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("PlantLot");
 
             entity.Property(e => e.PlantLotId).HasColumnName("PlantLotID");
+            entity.Property(e => e.ImportedDate).HasColumnType("datetime");
             entity.Property(e => e.PartnerId).HasColumnName("PartnerID");
             entity.Property(e => e.PlantLotCode).HasMaxLength(50);
             entity.Property(e => e.PlantLotName).HasMaxLength(100);
@@ -708,10 +748,12 @@ public partial class IpasContext : DbContext
             entity.ToTable("PlantResource");
 
             entity.Property(e => e.PlanResourceId).HasColumnName("PlanResourceID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.PlanResourceCode).HasMaxLength(50);
             entity.Property(e => e.PlantGrowthHistoryId).HasColumnName("PlantGrowthHistoryID");
             entity.Property(e => e.ResourceType).HasMaxLength(255);
             entity.Property(e => e.ResourceUrl).HasColumnName("ResourceURL");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.PlantGrowthHistory).WithMany(p => p.PlantResources)
                 .HasForeignKey(d => d.PlantGrowthHistoryId)
@@ -725,6 +767,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("Process");
 
             entity.Property(e => e.ProcessId).HasColumnName("ProcessID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
             entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.IsDefault).HasColumnName("isDefault");
@@ -732,6 +775,7 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.ProcessCode).HasMaxLength(50);
             entity.Property(e => e.ProcessName).HasMaxLength(100);
             entity.Property(e => e.ProcessStyleId).HasColumnName("ProcessStyleID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.Processes)
                 .HasForeignKey(d => d.FarmId)
@@ -747,6 +791,7 @@ public partial class IpasContext : DbContext
             entity.HasKey(e => e.ProcessDataId).HasName("PK__ProcessD__D954CCEB1364C6C3");
 
             entity.Property(e => e.ProcessDataId).HasColumnName("ProcessDataID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.ProcessDataCode).HasMaxLength(50);
             entity.Property(e => e.ProcessId).HasColumnName("ProcessID");
             entity.Property(e => e.ResourceUrl)
@@ -770,8 +815,10 @@ public partial class IpasContext : DbContext
             entity.ToTable("ProcessStyle");
 
             entity.Property(e => e.ProcessStyleId).HasColumnName("ProcessStyleID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.ProcessStyleCode).HasMaxLength(50);
             entity.Property(e => e.ProcessStyleName).HasMaxLength(100);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>
@@ -781,6 +828,8 @@ public partial class IpasContext : DbContext
             entity.ToTable("RefreshToken");
 
             entity.Property(e => e.RefreshTokenId).HasColumnName("RefreshTokenID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
             entity.Property(e => e.RefreshTokenCode).HasMaxLength(50);
             entity.Property(e => e.RefreshTokenValue).HasMaxLength(255);
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -808,6 +857,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("SubProcess");
 
             entity.Property(e => e.SubProcessId).HasColumnName("SubProcessID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.IsDefault).HasColumnName("isDefault");
             entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
@@ -816,6 +866,7 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.ProcessStyleId).HasColumnName("ProcessStyleID");
             entity.Property(e => e.SubProcessCode).HasMaxLength(50);
             entity.Property(e => e.SubProcessName).HasMaxLength(100);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Process).WithMany(p => p.SubProcesses)
                 .HasForeignKey(d => d.ProcessId)
@@ -833,6 +884,7 @@ public partial class IpasContext : DbContext
             entity.ToTable("TaskFeedback");
 
             entity.Property(e => e.TaskFeedbackId).HasColumnName("TaskFeedbackID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.ManagerId).HasColumnName("ManagerID");
             entity.Property(e => e.TaskFeedbackCode).HasMaxLength(50);
             entity.Property(e => e.WorkLogId).HasColumnName("WorkLogID");
@@ -854,9 +906,11 @@ public partial class IpasContext : DbContext
 
             entity.Property(e => e.TypeWorkId).HasColumnName("TypeWorkID");
             entity.Property(e => e.BackgroundColor).HasMaxLength(50);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.TextColor).HasMaxLength(50);
             entity.Property(e => e.TypeWorkCode).HasMaxLength(50);
             entity.Property(e => e.TypeWorkName).HasMaxLength(255);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -866,7 +920,11 @@ public partial class IpasContext : DbContext
             entity.ToTable("User");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.Dob).HasColumnName("DOB");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.DeleteDate).HasColumnType("datetime");
+            entity.Property(e => e.Dob)
+                .HasColumnType("datetime")
+                .HasColumnName("DOB");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
             entity.Property(e => e.Gender).HasMaxLength(20);
@@ -874,6 +932,7 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.PhoneNumber).HasMaxLength(20);
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
             entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
             entity.Property(e => e.UserCode).HasMaxLength(50);
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
@@ -928,6 +987,7 @@ public partial class IpasContext : DbContext
 
             entity.Property(e => e.WorkLogId).HasColumnName("WorkLogID");
             entity.Property(e => e.CropId).HasColumnName("CropID");
+            entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.HarvestHistoryId).HasColumnName("HarvestHistoryID");
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             entity.Property(e => e.Status).HasMaxLength(50);
@@ -953,8 +1013,10 @@ public partial class IpasContext : DbContext
             entity.ToTable("WorkLogResource");
 
             entity.Property(e => e.WorkLogResourceId).HasColumnName("WorkLogResourceID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.ResourceType).HasMaxLength(255);
             entity.Property(e => e.ResourceUrl).HasColumnName("ResourceURL");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
             entity.Property(e => e.WorkLogId).HasColumnName("WorkLogID");
             entity.Property(e => e.WorkLogResourceCode).HasMaxLength(50);
 

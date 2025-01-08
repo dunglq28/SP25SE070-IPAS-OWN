@@ -15,7 +15,7 @@ public partial class Notification
 
     public string? Link { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public bool? IsRead { get; set; }
 

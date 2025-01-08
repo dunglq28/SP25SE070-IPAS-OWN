@@ -9,7 +9,7 @@ public partial class HarvestHistory
 
     public string? HarvestHistoryCode { get; set; }
 
-    public DateOnly? DateHarvest { get; set; }
+    public DateTime? DateHarvest { get; set; }
 
     public string? HarvestHistoryNote { get; set; }
 

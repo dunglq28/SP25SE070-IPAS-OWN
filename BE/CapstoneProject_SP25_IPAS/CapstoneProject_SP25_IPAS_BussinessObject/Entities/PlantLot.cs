@@ -19,7 +19,7 @@ public partial class PlantLot
 
     public int? LastQuantity { get; set; }
 
-    public DateOnly? ImportedDate { get; set; }
+    public DateTime? ImportedDate { get; set; }
 
     public string? Note { get; set; }
 

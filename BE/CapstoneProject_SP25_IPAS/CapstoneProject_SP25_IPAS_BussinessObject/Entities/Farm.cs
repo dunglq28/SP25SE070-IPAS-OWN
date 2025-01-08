@@ -21,9 +21,9 @@ public partial class Farm
 
     public string? ClimateZone { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public bool? IsDelete { get; set; }
 

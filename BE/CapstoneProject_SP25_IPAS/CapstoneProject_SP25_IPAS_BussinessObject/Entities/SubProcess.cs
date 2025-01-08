@@ -17,9 +17,9 @@ public partial class SubProcess
 
     public bool? IsActive { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public bool? IsDeleted { get; set; }
 

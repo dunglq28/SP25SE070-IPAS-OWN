@@ -15,11 +15,11 @@ public partial class Order
 
     public string? Notes { get; set; }
 
-    public DateOnly? OrderDate { get; set; }
+    public DateTime? OrderDate { get; set; }
 
-    public DateOnly? EnrolledDate { get; set; }
+    public DateTime? EnrolledDate { get; set; }
 
-    public DateOnly? ExpiredDate { get; set; }
+    public DateTime? ExpiredDate { get; set; }
 
     public int? PackageId { get; set; }
 

@@ -11,9 +11,9 @@ public partial class RefreshToken
 
     public string? RefreshTokenValue { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? ExpiredDate { get; set; }
+    public DateTime? ExpiredDate { get; set; }
 
     public bool? IsUsed { get; set; }
 

@@ -11,13 +11,13 @@ public partial class Plan
 
     public string? PlanCode { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public DateOnly? EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public bool? IsActive { get; set; }
 

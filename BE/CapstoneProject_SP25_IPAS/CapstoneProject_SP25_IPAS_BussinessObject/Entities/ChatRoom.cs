@@ -11,7 +11,7 @@ public partial class ChatRoom
 
     public string? RoomName { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public int? AiresponseId { get; set; }
 

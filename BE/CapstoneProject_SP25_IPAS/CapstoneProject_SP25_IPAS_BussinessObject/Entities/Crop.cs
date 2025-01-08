@@ -11,13 +11,13 @@ public partial class Crop
 
     public string? CropName { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
-    public DateOnly? CropExpectedTime { get; set; }
+    public DateTime? CropExpectedTime { get; set; }
 
-    public DateOnly? CropActualTime { get; set; }
+    public DateTime? CropActualTime { get; set; }
 
     public string? HarvestSeason { get; set; }
 

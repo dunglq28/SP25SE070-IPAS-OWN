@@ -11,7 +11,7 @@ public partial class ProcessDatum
 
     public string? Input { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public string? ResourceUrl { get; set; }
 

@@ -15,11 +15,11 @@ public partial class TypeWork
 
     public string? TypeWorkName { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public string? BackgroundColor { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 }

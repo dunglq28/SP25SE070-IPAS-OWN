@@ -13,7 +13,7 @@ public partial class WorkLog
 
     public string? Notes { get; set; }
 
-    public DateOnly? Date { get; set; }
+    public DateTime? Date { get; set; }
 
     public bool? IsConfirm { get; set; }
 

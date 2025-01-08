@@ -17,9 +17,9 @@ public partial class GraftedPlantNote
 
     public int? GraftedPlantId { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public virtual GraftedPlant? GraftedPlant { get; set; }
 }

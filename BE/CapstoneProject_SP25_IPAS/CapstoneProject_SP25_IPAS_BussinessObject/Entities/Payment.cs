@@ -11,13 +11,13 @@ public partial class Payment
 
     public string? TransactionId { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public string? PaymentMethod { get; set; }
 
     public string? Status { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public int? OrderId { get; set; }
 

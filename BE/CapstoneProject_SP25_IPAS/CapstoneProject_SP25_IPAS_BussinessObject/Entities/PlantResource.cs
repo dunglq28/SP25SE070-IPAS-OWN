@@ -15,9 +15,9 @@ public partial class PlantResource
 
     public string? Description { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public int? PlantGrowthHistoryId { get; set; }
 

@@ -13,11 +13,11 @@ public partial class GraftedPlant
 
     public string? GrowthStage { get; set; }
 
-    public DateOnly? SeparatedDate { get; set; }
+    public DateTime? SeparatedDate { get; set; }
 
     public string? Status { get; set; }
 
-    public DateOnly? GraftedDate { get; set; }
+    public DateTime? GraftedDate { get; set; }
 
     public string? Note { get; set; }
 

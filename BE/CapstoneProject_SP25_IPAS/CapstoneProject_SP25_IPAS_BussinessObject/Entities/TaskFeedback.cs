@@ -11,7 +11,7 @@ public partial class TaskFeedback
 
     public string? Content { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public int? WorkLogId { get; set; }
 

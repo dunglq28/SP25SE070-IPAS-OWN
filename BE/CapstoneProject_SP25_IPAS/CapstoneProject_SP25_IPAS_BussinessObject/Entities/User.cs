@@ -17,17 +17,17 @@ public partial class User
 
     public string? Gender { get; set; }
 
-    public DateOnly? Dob { get; set; }
+    public DateTime? Dob { get; set; }
 
     public string? UserCode { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public bool? IsDelete { get; set; }
 
-    public DateOnly? DeleteDate { get; set; }
+    public DateTime? DeleteDate { get; set; }
 
     public string? Status { get; set; }
 
