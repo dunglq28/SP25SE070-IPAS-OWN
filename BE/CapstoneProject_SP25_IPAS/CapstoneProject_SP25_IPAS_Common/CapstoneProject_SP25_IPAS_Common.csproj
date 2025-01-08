@@ -11,5 +11,8 @@
     <Folder Include="Enum\" />
     <Folder Include="Upload\" />
   </ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+	</ItemGroup>
 </Project>

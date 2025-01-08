@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="IService\" />
     <Folder Include="Mapping\" />
+    <Folder Include="IService\" />
+    <Folder Include="Service\" />
     <Folder Include="Service\" />
   </ItemGroup>
 
