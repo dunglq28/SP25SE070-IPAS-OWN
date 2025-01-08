@@ -9,11 +9,18 @@
   <ItemGroup>
     <Folder Include="IService\" />
     <Folder Include="Mapping\" />
+    <Folder Include="IService\" />
+    <Folder Include="Service\" />
     <Folder Include="Service\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CapstoneProject_SP25_IPAS_Common\CapstoneProject_SP25_IPAS_Common.csproj" />
+    <ProjectReference Include="..\CapstoneProject_SP25_IPAS_Repository\CapstoneProject_SP25_IPAS_Repository.csproj" />
   </ItemGroup>
 
 </Project>

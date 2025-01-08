@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
@@ -22,6 +27,10 @@
 
   <ItemGroup>
     <None Include="F:\User\HocKi\Đồ án tốt nghiệp\SP25-SP25SE070-GreenProduction-AI\BE\CapstoneProject_SP25_IPAS\CapstoneProject_SP25_IPAS_API\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CapstoneProject_SP25_IPAS_Service\CapstoneProject_SP25_IPAS_Service.csproj" />
   </ItemGroup>
 
 </Project>
