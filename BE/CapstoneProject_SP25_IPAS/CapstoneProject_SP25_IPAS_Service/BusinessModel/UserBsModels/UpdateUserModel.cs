@@ -20,7 +20,7 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels
 
         public string? Address { get; set; }
 
-        public DateOnly Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         public int? Gender { get; set; }
 

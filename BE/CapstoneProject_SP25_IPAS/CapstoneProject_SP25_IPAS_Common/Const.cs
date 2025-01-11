@@ -14,28 +14,12 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string APIEndPoint = "https://localhost:7111";
         #region Error Codes
 
-        public static int ERROR_EXCEPTION = -4;
+        public static int ERROR_EXCEPTION = 400;
 
         #endregion
 
         #region Success Codes
 
-        public static int SUCCESS_CREATE_CODE = 1;
-        public static string SUCCESS_CREATE_MSG = "Save data success";
-        public static int SUCCESS_READ_CODE = 1;
-        public static string SUCCESS_READ_MSG = "Get data success";
-        public static int SUCCESS_UPDATE_CODE = 1;
-        public static string SUCCESS_UPDATE_MSG = "Update data success";
-        public static int SUCCESS_DELETE_CODE = 1;
-        public static string SUCCESS_DELETE_MSG = "Delete data success";
-        public static int SUCCESS_CHECK_CODE = 1;
-        public static string SUCCESS_CHECK_MSG = "Check data is valid";
-        public static int SUCCESS_CREATE_PAYMENT_URL_CODE = 1;
-        public static string SUCCESS_CREATE_PAYMENT_URL_MSG = "Create payment link success";
-        public static int SUCCESS_PAYMENT_EXCUTE_CODE = 1;
-        public static string SUCCESS_PAYMENT_EXCUTE_MSG = "Create payment link success";
-        public static int SUCCESS_UPDATE_AFTER_PAYMENT_CODE = 1;
-        public static string SUCCESS_UPDATE_AFTER_PAYMENT_MSG = "Update data after payment success";
         public static int SUCCESS_LOGIN_CODE = 200;
         public static string SUCCESS_LOGIN_MSG = "Login Successfully";
         public static int SUCCESS_LOGOUT_CODE = 200;
@@ -50,26 +34,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         #endregion
 
         #region Fail code
-
         public static int FAIL_CREATE_CODE = -1;
-        public static string FAIL_CREATE_MSG = "Save data fail";
-        public static int FAIL_READ_CODE = -1;
-        public static string FAIL_READ_MSG = "Get data fail";
-        public static int FAIL_UPDATE_CODE = -1;
-        public static string FAIL_UPDATE_MSG = "Update data fail";
-        public static int FAIL_DELETE_CODE = -1;
-        public static string FAIL_DELETE_MSG = "Delete data fail";
-        public static int FAIL_CHECK_ID_CODE = -1;
-        public static string FAIL_CHECK_ID_MSG = "Invalid ID format";
-        public static int FAIL_CHECK_DATE_FILTER_CODE = -1;
-        public static string FAIL_CHECK_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
-        public static int FAIL_CHECK_NUMBER_FILTER_CODE = -1;
-        public static string FAIL_CHECK_NUMBER_FILTER_MSG = "Number 'To' must greater than Number 'From'";
-        public static int FAIL_PAYMENT_EXCUTE_CODE = -1;
-        public static string FAIL_PAYMENT_EXCUTE_MSG = "Payment excute fail";
-        public static int FAIL_UPDATE_AFTER_PAYMENT_CODE = -1;
-        public static string FAIL_UPDATE_AFTER_PAYMENT_MSG = "Update data fail";
-
         public static int FAIL_LOGOUT_CODE = 500;
         public static string FAIL_LOGOUT_MSG = "Have an error when logout";
         public static int FAIL_SOFT_DELETE_USER_CODE = 500;
@@ -79,18 +44,6 @@ namespace CapstoneProject_SP25_IPAS_Common
 
         #region Warning Code
 
-        public static int WARNING_NO_DATA_CODE = 4;
-        public static string WARNING_NO_DATA_MSG = "No data";
-        public static int WARNING_INVALID_ID_CODE = 4;
-        public static string WARNING_INVALID_ID_MSG = "Invalid ID format";
-        public static int WARNING_INVALID_USER_ID_CODE = 4;
-        public static string WARNING_INVALID_USER_ID_MSG = "Invalid User ID format";
-        public static int WARNING_INVALID_DETAIL_PROPOSAL_ID_CODE = 4;
-        public static string WARNING_INVALID_DETAIL_PROPOSAL_ID_MSG = "Invalid Detail Proposal ID format";
-        public static int WARNING_WRONG_ROLE_CODE = 4;
-        public static string WARNING_WRONG_ROLE_MSG = "Users are not authorized to make bids";
-        public static int WARNING_INVALID_DATE_FILTER_CODE = 4;
-        public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
         public static int WARNING_INVALID_LOGIN_CODE = 4;
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wrong";
         public static int WARNING_INVALID_REFRESH_TOKEN_CODE = 4;

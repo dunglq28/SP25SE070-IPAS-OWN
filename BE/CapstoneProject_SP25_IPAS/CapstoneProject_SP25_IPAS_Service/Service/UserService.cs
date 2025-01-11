@@ -201,7 +201,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                                         CreateDate = DateTime.Now,
                                         ExpiredDate = checkExistRefreshToken.ExpiredDate
                                     });
-                                    return new BusinessResult(Const.SUCCESS_RFT_CODE, Const.SUCCESS_READ_MSG, new AuthenModel
+                                    return new BusinessResult(Const.SUCCESS_RFT_CODE, Const.SUCCESS_RFT_MSG, new AuthenModel
                                     {
                                         AccessToken = newAccessToken,
                                         RefreshToken = newRefreshToken
