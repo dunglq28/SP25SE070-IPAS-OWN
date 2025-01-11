@@ -26,15 +26,15 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
             return token;
         }
 
-        public static JwtSecurityToken CreateRefreshToken(List<Claim> authClaims, IConfiguration configuration, DateTime currentTime)
+        public static JwtSecurityToken CreateRefreshToken(List<Claim> authClaims, IConfiguration configuration, DateTime currentTime, int expiredDays)
         {
             var authSigningToken = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"]));
-            _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityTime);
+            //_ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityTime);
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
                 audience: configuration["JWT:ValidAudience"],
                 claims: authClaims,
-                expires: currentTime.AddDays(tokenValidityTime),
+                expires: currentTime.AddDays(expiredDays),
                 signingCredentials: new SigningCredentials(authSigningToken, SecurityAlgorithms.HmacSha256)
             );
             return token;

@@ -81,7 +81,7 @@ namespace CapstoneProject_SP25_IPAS_Common.Mail
                     <div class=""container"">
                       <div class=""header"">
                         <img
-                          src=""https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/SPORTYDI.png?alt=media&token=e5dbca1b-32c2-463b-8c2d-c1c914dccf17""
+                          src=""https://res.cloudinary.com/dgshx4n2c/image/upload/v1736416025/My%20Brand/Logo_lnkwkb.png""
                           alt
                         />
                         <div style=""border-left: 2px solid #1cbcd4; margin-left: 20px"">
@@ -90,7 +90,7 @@ namespace CapstoneProject_SP25_IPAS_Common.Mail
                       </div>
                       <div class=""content"">
                         <div>
-                          <h3>Đặt lại mật khẩu Sportidy</h3>
+                          <h3>Đặt lại mật khẩu IPAS</h3>
                           <p style=""font-size: 15px"">Bạn vừa thực hiện yêu cầu đặt lại mật khẩu cho tài khoản {email} tại IPAS.</p>
                           <p style=""font-size: 15px"">Đây là mã xác thực OTP của bạn</p>
                         </div>
@@ -105,7 +105,7 @@ namespace CapstoneProject_SP25_IPAS_Common.Mail
                       </div>
                       <div class=""footer"">
                         <img
-                          src=""https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/SPORTYDI.png?alt=media&token=e5dbca1b-32c2-463b-8c2d-c1c914dccf17""
+                          src=""https://res.cloudinary.com/dgshx4n2c/image/upload/v1736416025/My%20Brand/Logo_lnkwkb.png""
                           alt=""logo""
                           width=""80px""
                         />

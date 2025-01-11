@@ -1,5 +1,6 @@
 ﻿using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using CapstoneProject_SP25_IPAS_Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,34 +18,52 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             _context = context;
         }
 
-        public Task AddUserAsync(User newUser)
+        public async Task AddUserAsync(User newUser)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<List<User>> GetAllUsersByRole(string roleName)
+        public async Task<List<User>> GetAllUsersByRole(string roleName)
         {
-            throw new NotImplementedException();
+            var result = await _context.Users.Include(x => x.Role)
+                                                .Where(x => x.Role.RoleName.ToLower().Equals(roleName))
+                                                .ToListAsync();
+            return result;
         }
 
-        public Task<User?> GetUserByEmailAsync(string email)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));  
         }
 
-        public Task<User?> GetUserByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            var getUser = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            if(getUser != null)
+            {
+                return getUser;
+            }
+            return null;
         }
 
-        public Task<int> SoftDeleteUserAsync(int userId)
+        public async Task<int> SoftDeleteUserAsync(int userId)
         {
-            throw new NotImplementedException();
+            var checkUser = await GetUserByIdAsync(userId);
+            if (checkUser != null)
+            {
+                checkUser.IsDelete = true;
+                var result = await _context.SaveChangesAsync();
+                return result;
+            }
+            return 0;
+            
         }
 
-        public Task<int> UpdateUserAsync(User user)
+        public async Task<int> UpdateUserAsync(User user)
         {
-            throw new NotImplementedException();
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync();
         }
     }
 }
