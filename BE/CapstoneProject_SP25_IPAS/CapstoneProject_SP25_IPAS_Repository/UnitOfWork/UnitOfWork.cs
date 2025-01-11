@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using CapstoneProject_SP25_IPAS_Repository.Repository;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +13,25 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        //private Fa24Se1716Prn231G5KoiauctionContext _context;
-        //private PaymentRepository _paymentRepo;
+        private IpasContext _context;
+        private readonly IConfiguration _configuration;
+        private IDbContextTransaction _transaction;
 
-        //public UnitOfWork(Fa24Se1716Prn231G5KoiauctionContext context)
-        //{
-        //    _context = context;
-        //}
+
+        //private PaymentRepository _paymentRepo;
+        private UserRepository _userRepo;
+        private RoleRepository _roleRepo;
+        private RefreshTokenRepository _refreshRepo;
+
+        public UnitOfWork(IpasContext context, IConfiguration configuration)
+        {
+            _context = context;
+            _userRepo = new UserRepository(context);
+            _roleRepo = new RoleRepository(context);
+            _refreshRepo = new RefreshTokenRepository(context);
+            _configuration = configuration;
+        }
+
 
         //protected virtual void Dispose(bool disposing)
         //{
@@ -44,6 +60,36 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             //return await _context.SaveChangesAsync();
             throw new NotImplementedException();
         }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitAsync()
+        {
+            try
+            {
+                await _transaction.CommitAsync();
+            }
+            catch
+            {
+                await _transaction.RollbackAsync();
+            }
+            finally
+            {
+                await _transaction.DisposeAsync();
+                _transaction = null!;
+            }
+        }
+
+        public async Task RollBackAsync()
+        {
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null!;
+        }
+
         //public PaymentRepository PaymentRepository
         //{
         //    get
@@ -55,5 +101,40 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         //        return _paymentRepo;
         //    }
         //}
+        public UserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepo == null)
+                {
+                    this._userRepo = new UserRepository(_context);
+                }
+                return _userRepo;
+            }
+        }
+
+        public RoleRepository RoleRepository
+        {
+            get
+            {
+                if (_roleRepo == null)
+                {
+                    this._roleRepo = new RoleRepository(_context);
+                }
+                return _roleRepo;
+            }
+        }
+
+        public RefreshTokenRepository RefreshTokenRepository
+        {
+            get
+            {
+                if(_refreshRepo == null)
+                {
+                    this._refreshRepo = new RefreshTokenRepository(_context);
+                }
+                return _refreshRepo;
+            }
+        }
     }
 }
