@@ -69,11 +69,11 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutModel logoutModel)
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenModel removeRefreshTokenModel)
         {
             try
             {
-                var result = await _userService.Logout(logoutModel.RefreshToken);
+                var result = await _userService.Logout(removeRefreshTokenModel.RefreshToken);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -85,6 +85,82 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 };
                 return BadRequest(response);
 
+            }
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel removeRefreshTokenModel)
+        {
+            try
+            {
+                var result = await _userService.RefreshToken(removeRefreshTokenModel.RefreshToken); 
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> RequestResetPassword([FromBody] EmailModel emailModel) 
+        {
+            try
+            {
+                var result = await _userService.RequestResetPassword(emailModel.Email);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("forget-password/confirm")]
+        public async Task<IActionResult> ConfirmResetPassword([FromBody] ConfirmOtpModel confirmOtpModel)
+        {
+            try
+            {
+                var result = await _userService.ConfirmResetPassword(confirmOtpModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("forget-password/new-password")]
+        public async Task<IActionResult> NewPassword([FromBody] ResetPasswordModel resetPasswordModel)
+        {
+            try
+            {
+                var result = await _userService.ExecuteResetPassword(resetPasswordModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
             }
         }
 

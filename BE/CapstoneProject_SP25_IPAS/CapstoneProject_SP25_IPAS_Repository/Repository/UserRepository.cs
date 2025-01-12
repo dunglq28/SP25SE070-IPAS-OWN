@@ -60,6 +60,19 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             
         }
 
+        public async Task<bool> AddOtpToUser(string email, string otpCode, DateTime expiredOtpTime)
+        {
+            var checkUser = await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
+            if(checkUser != null)
+            {
+                checkUser.Otp = otpCode;
+                checkUser.ExpiredOtpTime = expiredOtpTime;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
         public async Task<int> UpdateUserAsync(User user)
         {
             _context.Users.Update(user);

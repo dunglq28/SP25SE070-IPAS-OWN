@@ -16,5 +16,6 @@ namespace CapstoneProject_SP25_IPAS_Repository.IRepository
         public Task<int> UpdateUserAsync(User user);
         public Task<int> SoftDeleteUserAsync(int userId);
         public Task<List<User>> GetAllUsersByRole(string roleName);
+        public Task<bool> AddOtpToUser(string email, string otpCode, DateTime expiredOtpTime);
     }
 }

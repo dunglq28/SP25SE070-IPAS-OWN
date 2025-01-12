@@ -13,8 +13,8 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
 {
     public interface IUserService
     {
-        public Task<UserModel> GetUserById(int userId);
-        public Task<UserModel> GetUserByEmail(string email);
+        public Task<BusinessResult> GetUserById(int userId);
+        public Task<BusinessResult> GetUserByEmail(string email);
         public Task<BusinessResult> LoginByEmailAndPassword(string email, string password);
         public Task<BusinessResult> RegisterAsync(SignUpModel model);
 
@@ -22,13 +22,13 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
 
         public Task<BusinessResult> RefreshToken(string jwtToken);
 
-        public Task<bool> RequestResetPassword(string email);
-        public Task<bool> ConfirmResetPassword(ConfirmOtpModel confirmOtpModel);
-        public Task<bool> ExecuteResetPassword(ResetPasswordModel resetPasswordModel);
+        public Task<BusinessResult> RequestResetPassword(string email);
+        public Task<BusinessResult> ConfirmResetPassword(ConfirmOtpModel confirmOtpModel);
+        public Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel);
 
         public Task<bool> UpdateUser(UpdateUserModel updateUserRequestModel);
         public Task<BusinessResult> SoftDeleteUser(int userId);
-        public Task<bool> BannedUser(int userId);
+        public Task<BusinessResult> BannedUser(int userId);
         public Task<bool> DeleteUser(int userId);
         public Task<bool> CreateUser(CreateAccountModel createAccountModel);
         public Task<string> UpdateAvatarOfUser(IFormFile avatarOfUser, int id);

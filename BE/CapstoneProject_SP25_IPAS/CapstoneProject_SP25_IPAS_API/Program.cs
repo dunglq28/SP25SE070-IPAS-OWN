@@ -10,6 +10,7 @@ using CapstoneProject_SP25_IPAS_Repository.Repository;
 using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
 using AutoMapper;
 using CapstoneProject_SP25_IPAS_Service.Mapping;
+using CapstoneProject_SP25_IPAS_Common.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<IpasContext>(options =>
@@ -81,6 +82,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = false;
 });
+
+// add mail settings
+builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.ConfigureServices();
 

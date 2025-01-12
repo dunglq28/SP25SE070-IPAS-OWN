@@ -35,6 +35,10 @@ public partial class User
 
     public int? RoleId { get; set; }
 
+    public string? AvatarURL { get; set; }
+    public string? Otp { get; set; }
+    public DateTime? ExpiredOtpTime { get; set; }
+
     public virtual ICollection<ChatRoom> ChatRooms { get; set; } = new List<ChatRoom>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();

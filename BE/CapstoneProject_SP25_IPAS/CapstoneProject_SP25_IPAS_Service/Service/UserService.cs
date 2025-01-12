@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using CapstoneProject_SP25_IPAS_Common;
+using CapstoneProject_SP25_IPAS_Common.Mail;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
 using CapstoneProject_SP25_IPAS_Service.Base;
@@ -26,25 +27,54 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
-        private readonly IMailService _service;
+        private readonly IMailService _mailService;
         private readonly IMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService service, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
-            _service = service;
+            _mailService = mailService;
             _mapper = mapper;
         }
 
-        public Task<bool> BannedUser(int userId)
+        public async Task<BusinessResult> BannedUser(int userId)
         {
-            throw new NotImplementedException();
+            var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (existUser != null && !existUser.Status.ToLower().Equals("Banned".ToLower()))
+            {
+                existUser.Status = "Banned";
+                var result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_BANNED_USER_CODE, Const.SUCCESS_BANNED_USER_MSG);
+                }
+                return new BusinessResult(Const.FAIL_BANNED_USER_CODE, Const.FAIL_BANNED_USER_MSG);
+            }
+            return new BusinessResult(Const.WARNING_BANNED_USER_CODE, Const.WARNING_BANNED_USER_MSG);
+
         }
 
-        public Task<bool> ConfirmResetPassword(ConfirmOtpModel confirmOtpModel)
+        public async Task<BusinessResult> ConfirmResetPassword(ConfirmOtpModel confirmOtpModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(confirmOtpModel.Email);
+                if(checkExistUser != null && checkExistUser.Otp != null)
+                {
+                    if(checkExistUser.Otp.Equals(confirmOtpModel.OtpCode) && checkExistUser.ExpiredOtpTime >= DateTime.Now)
+                    {
+                        return new BusinessResult(Const.SUCCESS_CONFIRM_RESET_PASSWORD_CODE, Const.SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE, true);
+                    }
+                    return new BusinessResult(Const.FAIL_CONFIRM_RESET_PASSWORD_CODE, Const.FAIL_CONFIRM_RESET_PASSWORD_MESSAGE, false);
+                }
+                return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG, false);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
         }
 
         public Task<bool> CreateUser(CreateAccountModel createAccountModel)
@@ -57,9 +87,31 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExecuteResetPassword(ResetPasswordModel resetPasswordModel)
+        public async Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var checkUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(resetPasswordModel.Email);
+                if(checkUser != null && checkUser.Otp.Equals(resetPasswordModel.OtpCode))
+                {
+                    checkUser.Password = PasswordHelper.HashPassword(resetPasswordModel.NewPassword);
+                    var result = await _unitOfWork.UserRepository.UpdateUserAsync(checkUser);
+                    if(result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_RESET_PASSWORD_CODE, Const.SUCCESS_RESET_PASSWORD_MSG, true);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.FAIL_RESET_PASSWORD_CODE, Const.FAIL_RESET_PASSWORD_MSG, false);
+                    }
+
+                }
+                return new BusinessResult(Const.WARNING_RESET_PASSWORD_CODE, Const.WARNING_RESET_PASSWORD_MSG, false);
+             }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
         }
 
         public Task<List<User>> GetAllUsersByRole(string roleName)
@@ -67,19 +119,31 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             throw new NotImplementedException();
         }
 
-        public Task<UserModel> GetUserByEmail(string email)
+        public async Task<BusinessResult> GetUserByEmail(string email)
         {
-            throw new NotImplementedException();
+            var getUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if(getUser != null)
+            {
+                var result =  _mapper.Map<UserModel>(getUser);
+                return new BusinessResult(Const.SUCCESS_GET_USER_CODE, Const.SUCCESS_GET_USER_BY_EMAIL_MSG, result);
+            }
+            return new BusinessResult(Const.FAIL_GET_USER_CODE, Const.FAIL_GET_USER_BY_EMAIL_MSG, null);
         }
 
-        public Task<UserModel> GetUserById(int userId)
+        public async Task<BusinessResult> GetUserById(int userId)
         {
-            throw new NotImplementedException();
+            var getUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if(getUser != null)
+            {
+                var result = _mapper.Map<UserModel>(getUser);
+                return new BusinessResult(Const.SUCCESS_GET_USER_CODE, Const.FAIL_GET_USER_BY_ID_MSG, result);
+            }
+            return new BusinessResult(Const.FAIL_GET_USER_CODE, Const.FAIL_GET_USER_BY_ID_MSG, null);
         }
 
         public async Task<BusinessResult> LoginByEmailAndPassword(string email, string password)
         {
-            using(var transaction = await _unitOfWork.BeginTransactionAsync())
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
@@ -88,11 +152,11 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     {
                         return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG);
                     }
-                 
+
                     var verifyPassword = PasswordHelper.VerifyPassword(password, existUser.Password);
-                    if(verifyPassword || existUser.Password == null)
+                    if (verifyPassword || existUser.Password == null)
                     {
-                        if(existUser.Status.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
+                        if (existUser.Status.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
                         {
                             return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
                         }
@@ -135,10 +199,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         public async Task<BusinessResult> Logout(string refreshToken)
         {
             var checkExistRefreshToken = await _unitOfWork.RefreshTokenRepository.GetRefrshTokenByRefreshTokenValue(refreshToken);
-            if(checkExistRefreshToken != null)
+            if (checkExistRefreshToken != null)
             {
                 var result = await _unitOfWork.RefreshTokenRepository.DeleteToken(refreshToken);
-                if(result)
+                if (result)
                 {
                     return new BusinessResult(Const.SUCCESS_LOGOUT_CODE, Const.SUCCESS_LOGOUT_MSG);
                 }
@@ -152,8 +216,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
 
         public async Task<BusinessResult> RefreshToken(string jwtToken)
         {
-           var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-           var handler = new JwtSecurityTokenHandler();
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
+            var handler = new JwtSecurityTokenHandler();
             var validationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -170,7 +234,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 SecurityToken validatedToken;
                 var principal = handler.ValidateToken(jwtToken, validationParameters, out validatedToken);
                 var email = principal.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-                if(email != null)
+                if (email != null)
                 {
                     if (principal != null)
                     {
@@ -185,18 +249,18 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                             }
                             else
                             {
-                                if(checkExistRefreshToken.ExpiredDate >= DateTime.Now)
+                                if (checkExistRefreshToken.ExpiredDate >= DateTime.Now)
                                 {
                                     var newAccessToken = await GenerateAccessToken(email, existUser);
                                     _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int newTokenValidityInMinutes);
 
-                                    var newRefreshToken = await GenerateRefreshToken(email, checkExistRefreshToken.ExpiredDate,0);
+                                    var newRefreshToken = await GenerateRefreshToken(email, checkExistRefreshToken.ExpiredDate, 0);
                                     _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
 
                                     await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
                                     {
                                         UserId = checkExistRefreshToken.UserId,
-                                        RefreshTokenCode = "IPAS-" + "RFT-" + NumberHelper.GenerateRandomByDate(), 
+                                        RefreshTokenCode = "IPAS-" + "RFT-" + NumberHelper.GenerateRandomByDate(),
                                         RefreshTokenValue = newRefreshToken,
                                         CreateDate = DateTime.Now,
                                         ExpiredDate = checkExistRefreshToken.ExpiredDate
@@ -235,16 +299,17 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var newUser = new User()
                     {
                         Email = model.Email,
-                        UserCode = "IPAS-" + "USR-" + NumberHelper.GenerateSixDigitNumber(),
+                        UserCode = "IPAS-" + "USR-" + NumberHelper.GenerateRandomByDate(),
                         FullName = model.FullName,
                         CreateDate = DateTime.Now,
                         UpdateDate = DateTime.Now,
+                        AvatarURL = model.Avatar ?? "",
                         Status = "Active",
                         IsDelete = false,
                     };
 
                     var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(model.Email);
-                    if(checkExistUser != null)
+                    if (checkExistUser != null)
                     {
                         return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG);
                     }
@@ -274,26 +339,35 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public Task<bool> RequestResetPassword(string email)
+        public async Task<BusinessResult> RequestResetPassword(string email)
         {
-            throw new NotImplementedException();
+            var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if (existUser != null)
+            {
+                if(existUser.Status.ToLower() == "Active".ToLower() && existUser.IsDelete == false)
+                {
+                    bool checkSendOtp = await CreateOtpAsync(email);
+                    return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
+                }
+            }
+            return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG, false);
         }
 
         public async Task<BusinessResult> SoftDeleteUser(int userId)
         {
-               try
-               {
-                    var softDeleteUser = await _unitOfWork.UserRepository.SoftDeleteUserAsync(userId);
-                    if (softDeleteUser > 0)
-                    {
-                        return new BusinessResult(Const.SUCCESS_SOFT_DELETE_USER_CODE, Const.SUCCESS_SOFT_DELETE_USER_MSG);
-                    }
-                    return new BusinessResult(Const.FAIL_SOFT_DELETE_USER_CODE, Const.FAIL_SOFT_DELETE_USER_MSG);
-               }
-               catch(Exception ex)
-               {
+            try
+            {
+                var softDeleteUser = await _unitOfWork.UserRepository.SoftDeleteUserAsync(userId);
+                if (softDeleteUser > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_SOFT_DELETE_USER_CODE, Const.SUCCESS_SOFT_DELETE_USER_MSG);
+                }
+                return new BusinessResult(Const.FAIL_SOFT_DELETE_USER_CODE, Const.FAIL_SOFT_DELETE_USER_MSG);
+            }
+            catch (Exception ex)
+            {
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
-               }
+            }
         }
 
         public Task<string> UpdateAvatarOfUser(IFormFile avatarOfUser, int id)
@@ -349,5 +423,56 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
             return new JwtSecurityTokenHandler().WriteToken(refreshToken).ToString();
         }
+
+        private async Task<bool> CreateOtpAsync(string email)
+        {
+            try
+            {
+                string otpCode = NumberHelper.GenerateSixDigitNumber().ToString();
+                var expiredTime = DateTime.Now.AddMinutes(5);
+                var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+                if(checkExistUser != null)
+                {
+                    if(checkExistUser.Otp != null)
+                    {
+                        checkExistUser.Otp = otpCode;
+                        checkExistUser.ExpiredOtpTime = expiredTime;
+                        await _unitOfWork.UserRepository.UpdateUserAsync(checkExistUser);
+                    }
+                    else
+                    {
+                        await _unitOfWork.UserRepository.AddOtpToUser(email, otpCode, expiredTime);
+                    }
+                    bool checkSendMail = await SendOtpResetPasswordAsync(email, otpCode);
+                    return checkSendMail;
+                }
+                else
+                {
+                    throw new Exception("Account does not exist. Can not send Otp");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<bool> SendOtpResetPasswordAsync(string email, string otpCode)
+        {
+            // create new email
+            MailRequest newEmail = new MailRequest()
+            {
+                ToEmail = email,
+                Subject = "IPAS Reset Password",
+                Body = SendOTPTemplate.EmailSendOTPResetPassword(email, otpCode)
+            };
+
+            // send email
+            await _mailService.SendEmailAsync(newEmail);
+            return true;
+        }
+
+
     }
 }
