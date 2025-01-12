@@ -30,6 +30,17 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_REGISTER_MSG = "Register success. You can login now";
         public static int SUCCESS_SOFT_DELETE_USER_CODE = 200;
         public static string SUCCESS_SOFT_DELETE_USER_MSG = "Soft Delete User Success";
+        public static int SUCCESS_BANNED_USER_CODE = 200;
+        public static string SUCCESS_BANNED_USER_MSG = "Banned User Success";
+        public static int SUCCESS_SEND_OTP_RESET_PASSWORD_CODE = 200;
+        public static string SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG = "Otp has sended. Please check your mail";
+        public static int SUCCESS_GET_USER_CODE = 200;
+        public static string SUCCESS_GET_USER_BY_EMAIL_MSG = "Get user by email success";
+        public static string SUCCESS_GET_USER_BY_ID_MSG = "Get user by id success";
+        public static int SUCCESS_RESET_PASSWORD_CODE = 200;
+        public static string SUCCESS_RESET_PASSWORD_MSG = "Reset password success";
+        public static int SUCCESS_CONFIRM_RESET_PASSWORD_CODE = 200;
+        public static string SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE = "You can reset password now";
 
         #endregion
 
@@ -39,7 +50,15 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_LOGOUT_MSG = "Have an error when logout";
         public static int FAIL_SOFT_DELETE_USER_CODE = 500;
         public static string FAIL_SOFT_DELETE_USER_MSG = "Have an error when soft delete user";
-
+        public static int FAIL_BANNED_USER_CODE = 500;
+        public static string FAIL_BANNED_USER_MSG = "Have an error when banned user";
+        public static int FAIL_GET_USER_CODE = 500;
+        public static string FAIL_GET_USER_BY_EMAIL_MSG = "Have an error when get user by email";
+        public static string FAIL_GET_USER_BY_ID_MSG = "Have an error when get user by id";
+        public static int FAIL_RESET_PASSWORD_CODE = 500;
+        public static string FAIL_RESET_PASSWORD_MSG = "Have an error when reset password";
+        public static int FAIL_CONFIRM_RESET_PASSWORD_CODE = 500;
+        public static string FAIL_CONFIRM_RESET_PASSWORD_MESSAGE = "Otp does not correct or expired. Please try again or another";
         #endregion
 
         #region Warning Code
@@ -61,6 +80,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_ACCOUNT_IS_EXISTED_MSG = "Account is existed";
         public static int WARNING_ROLE_IS_NOT_EXISTED_CODE = 400;
         public static string WARNING_ROLE_IS_NOT_EXISTED_MSG = "Role does not existed";
+        public static int WARNING_BANNED_USER_CODE = 404;
+        public static string WARNING_BANNED_USER_MSG = "User does not existed or is banned";
+        public static int WARNING_RESET_PASSWORD_CODE = 404;
+        public static string WARNING_RESET_PASSWORD_MSG = "Account does not exist or otp incorrect";
 
         #endregion
     }

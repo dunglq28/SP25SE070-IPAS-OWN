@@ -32,7 +32,12 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
 
         public static string GenerateRandomByDate()
         {
-            return "" + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second;
+            return DateTime.Now.Day.ToString("D2") +
+                   DateTime.Now.Month.ToString("D2") +
+                   DateTime.Now.Year +
+                   DateTime.Now.Hour.ToString("D2") +
+                   DateTime.Now.Minute.ToString("D2") +
+                   DateTime.Now.Second.ToString("D2");
         }
     }
 }

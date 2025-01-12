@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel
 {
@@ -11,12 +12,12 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel
         public string Email { get; set; } = "";
 
         [Required(ErrorMessage = "Password is required!")]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = "";
+        [Display(Name = "NewPassword")]
+        public string NewPassword { get; set; } = "";
 
-        [Required(ErrorMessage = "Confirm Password is required!")]
-        [Display(Name = "Confirm Password")]
-        [Compare("Password", ErrorMessage = "Password and password confirm does not match!")]
-        public string ConfirmPassword { get; set; } = "";
+        [StringLength(6)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Only numeric values are allowed.")]
+        public string OtpCode { get; set; } = "";
+
     }
 }
