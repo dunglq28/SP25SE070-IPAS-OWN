@@ -11,5 +11,9 @@ public partial class CriteriaType
 
     public string? CriteriaTypeName { get; set; }
 
-    public virtual ICollection<Criterion> Criteria { get; set; } = new List<Criterion>();
+    public int? GrowthStageID { get; set; }
+
+    public virtual GrowthStage? GrowthStage { get; set; }
+
+    public virtual ICollection<Criteria> Criteria { get; set; } = new List<Criteria>();
 }

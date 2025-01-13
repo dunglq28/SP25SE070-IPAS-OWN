@@ -13,6 +13,8 @@ public partial class PlantGrowthHistory
 
     public string? NoteTaker { get; set; }
 
+    public string? IssueName { get; set; }
+
     public DateTime? CreateDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }

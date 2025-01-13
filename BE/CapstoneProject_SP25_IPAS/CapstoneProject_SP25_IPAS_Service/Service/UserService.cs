@@ -60,9 +60,9 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             try
             {
                 var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(confirmOtpModel.Email);
-                if(checkExistUser != null && checkExistUser.Otp != null)
+                if (checkExistUser != null && checkExistUser.Otp != null)
                 {
-                    if(checkExistUser.Otp.Equals(confirmOtpModel.OtpCode) && checkExistUser.ExpiredOtpTime >= DateTime.Now)
+                    if (checkExistUser.Otp.Equals(confirmOtpModel.OtpCode) && checkExistUser.ExpiredOtpTime >= DateTime.Now)
                     {
                         return new BusinessResult(Const.SUCCESS_CONFIRM_RESET_PASSWORD_CODE, Const.SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE, true);
                     }
@@ -92,11 +92,11 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             try
             {
                 var checkUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(resetPasswordModel.Email);
-                if(checkUser != null && checkUser.Otp.Equals(resetPasswordModel.OtpCode))
+                if (checkUser != null && checkUser.Otp.Equals(resetPasswordModel.OtpCode))
                 {
                     checkUser.Password = PasswordHelper.HashPassword(resetPasswordModel.NewPassword);
                     var result = await _unitOfWork.UserRepository.UpdateUserAsync(checkUser);
-                    if(result > 0)
+                    if (result > 0)
                     {
                         return new BusinessResult(Const.SUCCESS_RESET_PASSWORD_CODE, Const.SUCCESS_RESET_PASSWORD_MSG, true);
                     }
@@ -107,7 +107,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
 
                 }
                 return new BusinessResult(Const.WARNING_RESET_PASSWORD_CODE, Const.WARNING_RESET_PASSWORD_MSG, false);
-             }
+            }
             catch (Exception ex)
             {
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
@@ -122,9 +122,9 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         public async Task<BusinessResult> GetUserByEmail(string email)
         {
             var getUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
-            if(getUser != null)
+            if (getUser != null)
             {
-                var result =  _mapper.Map<UserModel>(getUser);
+                var result = _mapper.Map<UserModel>(getUser);
                 return new BusinessResult(Const.SUCCESS_GET_USER_CODE, Const.SUCCESS_GET_USER_BY_EMAIL_MSG, result);
             }
             return new BusinessResult(Const.FAIL_GET_USER_CODE, Const.FAIL_GET_USER_BY_EMAIL_MSG, null);
@@ -133,7 +133,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         public async Task<BusinessResult> GetUserById(int userId)
         {
             var getUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
-            if(getUser != null)
+            if (getUser != null)
             {
                 var result = _mapper.Map<UserModel>(getUser);
                 return new BusinessResult(Const.SUCCESS_GET_USER_CODE, Const.FAIL_GET_USER_BY_ID_MSG, result);
@@ -344,7 +344,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
             if (existUser != null)
             {
-                if(existUser.Status.ToLower() == "Active".ToLower() && existUser.IsDelete == false)
+                if (existUser.Status.ToLower() == "Active".ToLower() && existUser.IsDelete == false)
                 {
                     bool checkSendOtp = await CreateOtpAsync(email);
                     return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
@@ -431,9 +431,9 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 string otpCode = NumberHelper.GenerateSixDigitNumber().ToString();
                 var expiredTime = DateTime.Now.AddMinutes(5);
                 var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
-                if(checkExistUser != null)
+                if (checkExistUser != null)
                 {
-                    if(checkExistUser.Otp != null)
+                    if (checkExistUser.Otp != null)
                     {
                         checkExistUser.Otp = otpCode;
                         checkExistUser.ExpiredOtpTime = expiredTime;
@@ -473,6 +473,60 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             return true;
         }
 
+        public async Task<BusinessResult> RegisterSendMailAsync(string email)
+        {
+            var checkExistAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if(checkExistAccount != null)
+            {
+                return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG, false);
+            }
+            bool checkSendOtp = await CreateOtpRegisterAsync(email);
+            return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
+        }
 
+        public BusinessResult VerifyOtpRegisterAsync(string email, string otp)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp))
+                return new BusinessResult(Const.WARNING_CHECK_MAIL_REGISTER_CODE, Const.WARNING_CHECK_MAIL_REGISER_MSG, false);
+
+            var expectedOtp = NumberHelper.GenerateOtp(email);
+
+            if (otp == expectedOtp)
+                return new BusinessResult(Const.SUCCESS_OTP_VALID_CODE, Const.SUCCESS_OTP_VALID_MESSAGE, true);
+            else
+                return new BusinessResult(Const.FAIL_CONFIRM_RESET_PASSWORD_CODE, Const.FAIL_CONFIRM_RESET_PASSWORD_MESSAGE, false);
+        }
+
+
+        private async Task<bool> CreateOtpRegisterAsync(string email)
+        {
+            try
+            {
+                string otpCode = NumberHelper.GenerateOtp(email);
+                bool checkSendMail = await SendOtpRegisterAccountAsync(email, otpCode);
+                return checkSendMail;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<bool> SendOtpRegisterAccountAsync(string email, string otpCode)
+        {
+            // create new email
+            MailRequest newEmail = new MailRequest()
+            {
+                ToEmail = email,
+                Subject = "IPAS Register Account",
+                Body = RegisterOTPTemplate.EmailSendOTPRegisterAccount(email, otpCode)
+            };
+
+            // send email
+            await _mailService.SendEmailAsync(newEmail);
+            return true;
+        }
     }
 }

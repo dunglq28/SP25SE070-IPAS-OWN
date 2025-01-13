@@ -19,6 +19,52 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             _userService = userService;
         }
 
+        [HttpPost("register/send-otp")]
+        public async Task<IActionResult> RegisterSendOTPAccount(EmailModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await _userService.RegisterSendMailAsync(model.Email);
+                    return Ok(result);
+                }
+                return ValidationProblem(ModelState);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("register/verify-otp")]
+        public IActionResult RegisterVerifyOTPAccount(VerifyOtpRequest model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = _userService.VerifyOtpRegisterAsync(model.Email, model.Otp);
+                    return Ok(result);
+                }
+                return ValidationProblem(ModelState);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAccount(SignUpModel model)
         {

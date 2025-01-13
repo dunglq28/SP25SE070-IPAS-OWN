@@ -27,5 +27,7 @@ public partial class PlantLot
 
     public virtual Partner? Partner { get; set; }
 
-    public virtual ICollection<Plant> Plants { get; set; } = new List<Plant>();
+    public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
+
+    public virtual ICollection<GraftedPlant> GraftedPlants { get; set; } = new List<GraftedPlant>();
 }

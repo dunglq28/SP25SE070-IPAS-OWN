@@ -29,7 +29,7 @@ public partial class SubProcess
 
     public virtual Process? Process { get; set; }
 
-    public virtual ICollection<ProcessDatum> ProcessData { get; set; } = new List<ProcessDatum>();
+    public virtual ICollection<ProcessData> ProcessData { get; set; } = new List<ProcessData>();
 
     public virtual ProcessStyle? ProcessStyle { get; set; }
 }

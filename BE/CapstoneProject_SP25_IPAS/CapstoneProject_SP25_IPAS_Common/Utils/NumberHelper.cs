@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +39,16 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
                    DateTime.Now.Hour.ToString("D2") +
                    DateTime.Now.Minute.ToString("D2") +
                    DateTime.Now.Second.ToString("D2");
+        }
+        public static string GenerateOtp(string email)
+        {
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() / (60 * 60); // Làm mới mỗi 60 phút
+            var message = $"{email}:{timestamp}";
+
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes("IPAS"));
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+            var otp = BitConverter.ToString(hash).Replace("-", "").Substring(0, 6); // Lấy 6 ký tự đầu
+            return otp.ToUpper();
         }
     }
 }

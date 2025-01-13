@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 
-public partial class PlantCriterion
+public partial class PlantCriteria
 {
     public int PlantId { get; set; }
 
@@ -11,7 +11,7 @@ public partial class PlantCriterion
 
     public bool? IsChecked { get; set; }
 
-    public virtual Criterion Criteria { get; set; } = null!;
+    public virtual Criteria Criteria { get; set; } = null!;
 
     public virtual Plant Plant { get; set; } = null!;
 }
