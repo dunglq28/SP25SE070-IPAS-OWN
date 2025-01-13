@@ -27,9 +27,13 @@ public partial class Process
 
     public virtual Farm? Farm { get; set; }
 
+    public int? GrowthStageID { get; set; }
+
+    public virtual GrowthStage? GrowthStage { get; set; }
+
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 
-    public virtual ICollection<ProcessDatum> ProcessData { get; set; } = new List<ProcessDatum>();
+    public virtual ICollection<ProcessData> ProcessData { get; set; } = new List<ProcessData>();
 
     public virtual ProcessStyle? ProcessStyle { get; set; }
 

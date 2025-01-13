@@ -23,8 +23,6 @@ public partial class Plant
 
     public DateTime? PlantingDate { get; set; }
 
-    public int? PlantLotId { get; set; }
-
     public int? PlantReferenceId { get; set; }
 
     public string? Description { get; set; }
@@ -47,11 +45,10 @@ public partial class Plant
 
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 
-    public virtual ICollection<PlantCriterion> PlantCriteria { get; set; } = new List<PlantCriterion>();
+    public virtual ICollection<PlantCriteria> PlantCriteria { get; set; } = new List<PlantCriteria>();
 
     public virtual ICollection<PlantGrowthHistory> PlantGrowthHistories { get; set; } = new List<PlantGrowthHistory>();
 
-    public virtual PlantLot? PlantLot { get; set; }
 
     public virtual Plant? PlantReference { get; set; }
 }

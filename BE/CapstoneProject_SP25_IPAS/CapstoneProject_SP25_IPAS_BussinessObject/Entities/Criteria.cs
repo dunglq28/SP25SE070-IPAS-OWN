@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 
-public partial class Criterion
+public partial class Criteria
 {
     public int CriteriaId { get; set; }
 
@@ -25,5 +25,5 @@ public partial class Criterion
 
     public virtual CriteriaType? CriteriaType { get; set; }
 
-    public virtual ICollection<PlantCriterion> PlantCriteria { get; set; } = new List<PlantCriterion>();
+    public virtual ICollection<PlantCriteria> PlantCriteria { get; set; } = new List<PlantCriteria>();
 }

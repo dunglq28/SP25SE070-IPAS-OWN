@@ -11,7 +11,7 @@ public partial class CriteriaHarvestType
 
     public bool? IsChecked { get; set; }
 
-    public virtual Criterion Criteria { get; set; } = null!;
+    public virtual Criteria Criteria { get; set; } = null!;
 
     public virtual HarvestType HarvestType { get; set; } = null!;
 }

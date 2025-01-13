@@ -28,7 +28,7 @@ public partial class IpasContext : DbContext
 
     public virtual DbSet<CriteriaType> CriteriaTypes { get; set; }
 
-    public virtual DbSet<Criterion> Criteria { get; set; }
+    public virtual DbSet<Criteria> Criteria { get; set; }
 
     public virtual DbSet<Crop> Crops { get; set; }
 
@@ -72,7 +72,7 @@ public partial class IpasContext : DbContext
 
     public virtual DbSet<Plant> Plants { get; set; }
 
-    public virtual DbSet<PlantCriterion> PlantCriteria { get; set; }
+    public virtual DbSet<PlantCriteria> PlantCriteria { get; set; }
 
     public virtual DbSet<PlantGrowthHistory> PlantGrowthHistories { get; set; }
 
@@ -82,7 +82,7 @@ public partial class IpasContext : DbContext
 
     public virtual DbSet<Process> Processes { get; set; }
 
-    public virtual DbSet<ProcessDatum> ProcessData { get; set; }
+    public virtual DbSet<ProcessData> ProcessData { get; set; }
 
     public virtual DbSet<ProcessStyle> ProcessStyles { get; set; }
 
@@ -220,9 +220,13 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.CriteriaTypeId).HasColumnName("CriteriaTypeID");
             entity.Property(e => e.CriteriaTypeCode).HasMaxLength(50);
             entity.Property(e => e.CriteriaTypeName).HasMaxLength(100);
+
+            entity.HasOne(d => d.GrowthStage).WithMany(p => p.CriteriaTypes)
+               .HasForeignKey(d => d.GrowthStageID)
+               .HasConstraintName("FK__GrowthStage__CriteriaType__154EB7A3");
         });
 
-        modelBuilder.Entity<Criterion>(entity =>
+        modelBuilder.Entity<Criteria>(entity =>
         {
             entity.HasKey(e => e.CriteriaId).HasName("PK__Criteria__FE6ADB2D6E962A2F");
 
@@ -250,14 +254,9 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.CropExpectedTime).HasColumnType("datetime");
             entity.Property(e => e.CropName).HasMaxLength(255);
             entity.Property(e => e.HarvestSeason).HasMaxLength(200);
-            entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
             entity.Property(e => e.Notes).HasMaxLength(255);
             entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.LandPlot).WithMany(p => p.Crops)
-                .HasForeignKey(d => d.LandPlotId)
-                .HasConstraintName("FK__Crop__LandPlotID__2A164134");
         });
 
         modelBuilder.Entity<Cultivar>(entity =>
@@ -321,6 +320,7 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.GrowthStage).HasMaxLength(100);
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.PlantId).HasColumnName("PlantID");
+            entity.Property(e => e.PlantLotID).HasColumnName("PlantLotID");
             entity.Property(e => e.SeparatedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
 
@@ -331,6 +331,10 @@ public partial class IpasContext : DbContext
             entity.HasOne(d => d.Plant).WithMany(p => p.GraftedPlants)
                 .HasForeignKey(d => d.PlantId)
                 .HasConstraintName("FK__GraftedPl__Plant__531856C7");
+
+            entity.HasOne(d => d.PlantLot).WithMany(p => p.GraftedPlants)
+                .HasForeignKey(d => d.PlantLotID)
+                .HasConstraintName("FK__GraftedPl__PlantLot__234556C7");
         });
 
         modelBuilder.Entity<GraftedPlantNote>(entity =>
@@ -644,6 +648,14 @@ public partial class IpasContext : DbContext
             entity.HasOne(d => d.TypeWork).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.TypeWorkId)
                 .HasConstraintName("FK__Plan__TypeWorkID__1F98B2C1");
+
+            entity.HasOne(d => d.GrowthStage).WithMany(p => p.Plans)
+               .HasForeignKey(d => d.GrowthStageID)
+               .HasConstraintName("FK__Plan__GrowthStage__154GD6A5");
+
+            entity.HasOne(d => d.PlantLot).WithMany(p => p.Plans)
+               .HasForeignKey(d => d.PlantLotID)
+               .HasConstraintName("FK__PlantLot__Plan__125DE7K2");
         });
 
         modelBuilder.Entity<Plant>(entity =>
@@ -663,7 +675,6 @@ public partial class IpasContext : DbContext
                 .HasColumnName("ImageURL");
             entity.Property(e => e.LandRowId).HasColumnName("LandRowID");
             entity.Property(e => e.PlantCode).HasMaxLength(50);
-            entity.Property(e => e.PlantLotId).HasColumnName("PlantLotID");
             entity.Property(e => e.PlantName).HasMaxLength(50);
             entity.Property(e => e.PlantReferenceId).HasColumnName("PlantReferenceID");
             entity.Property(e => e.PlantingDate).HasColumnType("datetime");
@@ -677,16 +688,14 @@ public partial class IpasContext : DbContext
                 .HasForeignKey(d => d.LandRowId)
                 .HasConstraintName("FK__Plant__LandRowID__1BC821DD");
 
-            entity.HasOne(d => d.PlantLot).WithMany(p => p.Plants)
-                .HasForeignKey(d => d.PlantLotId)
-                .HasConstraintName("FK_Plant_PlantLot");
+          
 
             entity.HasOne(d => d.PlantReference).WithMany(p => p.InversePlantReference)
                 .HasForeignKey(d => d.PlantReferenceId)
                 .HasConstraintName("FK_Plant_Plant");
         });
 
-        modelBuilder.Entity<PlantCriterion>(entity =>
+        modelBuilder.Entity<PlantCriteria>(entity =>
         {
             entity.HasKey(e => new { e.PlantId, e.CriteriaId }).HasName("PK__PlantCri__5718EB0E07503B86");
 
@@ -785,9 +794,13 @@ public partial class IpasContext : DbContext
             entity.HasOne(d => d.ProcessStyle).WithMany(p => p.Processes)
                 .HasForeignKey(d => d.ProcessStyleId)
                 .HasConstraintName("FK__Process__Process__339FAB6E");
+
+            entity.HasOne(d => d.GrowthStage).WithMany(p => p.Processes)
+               .HasForeignKey(d => d.GrowthStageID)
+               .HasConstraintName("FK__Process__GrowthStage__157CH7B6");
         });
 
-        modelBuilder.Entity<ProcessDatum>(entity =>
+        modelBuilder.Entity<ProcessData>(entity =>
         {
             entity.HasKey(e => e.ProcessDataId).HasName("PK__ProcessD__D954CCEB1364C6C3");
 
@@ -1024,6 +1037,42 @@ public partial class IpasContext : DbContext
             entity.HasOne(d => d.WorkLog).WithMany(p => p.WorkLogResources)
                 .HasForeignKey(d => d.WorkLogId)
                 .HasConstraintName("FK__WorkLogRe__WorkL__29221CFB");
+        });
+
+        modelBuilder.Entity<GrowthStage>(entity =>
+        {
+            entity.HasKey(e => e.GrowthStageId).HasName("PK__GrowthStage__9C7B4B56ED4D5A2C");
+
+            entity.ToTable("GrowthStage");
+
+            entity.Property(e => e.GrowthStageCode).HasColumnName("GrowthStageCode");
+            entity.Property(e => e.GrowthStageCode).HasMaxLength(50);
+
+            entity.Property(e => e.GrowthStageName).HasColumnName("GrowthStageName");
+            entity.Property(e => e.GrowthStageName).HasMaxLength(50);
+
+            entity.Property(e => e.MonthAgeStart).HasColumnType("datetime");
+            entity.Property(e => e.MonthAgeEnd).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<LandPlotCrop>(entity =>
+        {
+            entity.HasKey(e => new { e.LandPlotID, e.CropID }).HasName("PK__LandPlotCrop__30A6B59BBF089C48");
+
+            entity.ToTable("LandPlotCrop");
+
+            entity.Property(e => e.LandPlotID).HasColumnName("LandPlotID");
+            entity.Property(e => e.CropID).HasColumnName("CropID");
+
+            entity.HasOne(d => d.LandPlot).WithMany(p => p.LandPlotCrops)
+                .HasForeignKey(d => d.LandPlotID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LandPlotCrop_LandPlot");
+
+            entity.HasOne(d => d.Crop).WithMany(p => p.LandPlotCrops)
+                .HasForeignKey(d => d.CropID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LandPlotCrop_Crop");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 
-public partial class ProcessDatum
+public partial class ProcessData
 {
     public int ProcessDataId { get; set; }
 

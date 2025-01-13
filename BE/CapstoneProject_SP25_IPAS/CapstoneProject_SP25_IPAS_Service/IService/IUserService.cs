@@ -17,6 +17,8 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
         public Task<BusinessResult> GetUserByEmail(string email);
         public Task<BusinessResult> LoginByEmailAndPassword(string email, string password);
         public Task<BusinessResult> RegisterAsync(SignUpModel model);
+        public Task<BusinessResult> RegisterSendMailAsync(string email);
+        public BusinessResult VerifyOtpRegisterAsync(string email, string otp);
 
         public Task<BusinessResult> Logout(string refreshToken);
 

@@ -32,4 +32,8 @@ public partial class GraftedPlant
     public virtual Plan? Plan { get; set; }
 
     public virtual Plant? Plant { get; set; }
+
+    public int? PlantLotID { get; set; }
+
+    public virtual PlantLot? PlantLot { get; set; }
 }

@@ -31,13 +31,11 @@ public partial class Crop
 
     public double? MarketPrice { get; set; }
 
-    public int? LandPlotId { get; set; }
-
     public virtual ICollection<HarvestHistory> HarvestHistories { get; set; } = new List<HarvestHistory>();
-
-    public virtual LandPlot? LandPlot { get; set; }
 
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 
     public virtual ICollection<WorkLog> WorkLogs { get; set; } = new List<WorkLog>();
+
+    public virtual ICollection<LandPlotCrop> LandPlotCrops { get; set; } = new List<LandPlotCrop>();
 }

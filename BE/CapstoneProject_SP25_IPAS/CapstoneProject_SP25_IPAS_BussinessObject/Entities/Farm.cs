@@ -11,7 +11,7 @@ public partial class Farm
 
     public string? FarmName { get; set; }
 
-    public string? Location { get; set; }
+    public string? Address { get; set; }
 
     public string? LogoUrl { get; set; }
 
@@ -28,6 +28,8 @@ public partial class Farm
     public bool? IsDelete { get; set; }
 
     public string? Status { get; set; }
+    public string? District { get; set; }
+    public string? Ward { get; set; }
 
     public double? Length { get; set; }
 

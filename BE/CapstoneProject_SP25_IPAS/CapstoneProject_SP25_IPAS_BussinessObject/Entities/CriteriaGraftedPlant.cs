@@ -11,7 +11,7 @@ public partial class CriteriaGraftedPlant
 
     public bool? IsChecked { get; set; }
 
-    public virtual Criterion Criteria { get; set; } = null!;
+    public virtual Criteria Criteria { get; set; } = null!;
 
     public virtual GraftedPlant GraftedPlant { get; set; } = null!;
 }

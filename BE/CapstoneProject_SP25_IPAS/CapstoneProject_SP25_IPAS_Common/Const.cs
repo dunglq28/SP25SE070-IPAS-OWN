@@ -41,6 +41,8 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_RESET_PASSWORD_MSG = "Reset password success";
         public static int SUCCESS_CONFIRM_RESET_PASSWORD_CODE = 200;
         public static string SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE = "You can reset password now";
+        public static int SUCCESS_OTP_VALID_CODE = 200;
+        public static string SUCCESS_OTP_VALID_MESSAGE = "Otp is valid";
 
         #endregion
 
@@ -84,6 +86,8 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_BANNED_USER_MSG = "User does not existed or is banned";
         public static int WARNING_RESET_PASSWORD_CODE = 404;
         public static string WARNING_RESET_PASSWORD_MSG = "Account does not exist or otp incorrect";
+        public static int WARNING_CHECK_MAIL_REGISTER_CODE = 400;
+        public static string WARNING_CHECK_MAIL_REGISER_MSG = "Email and OTP are required";
 
         #endregion
     }

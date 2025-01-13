@@ -47,6 +47,13 @@ public partial class Plan
 
     public int? CropId { get; set; }
 
+    public int? GrowthStageID { get; set; }
+
+    public virtual GrowthStage? GrowthStage { get; set; }
+    public int? PlantLotID { get; set; }
+
+    public virtual PlantLot? PlantLot { get; set; }
+
     public virtual User? Assignor { get; set; }
 
     public virtual ICollection<CarePlanSchedule> CarePlanSchedules { get; set; } = new List<CarePlanSchedule>();
