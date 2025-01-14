@@ -1,4 +1,4 @@
-import { Dashboard, Login } from "@/pages";
+import { Dashboard, Login, User } from "@/pages";
 
 import { GuestLayout, HeaderOnly, ManagementLayout } from "@/layouts";
 
@@ -10,7 +10,13 @@ interface RouteItem {
 
 export const publicRoutes: RouteItem[] = [
   { path: "/", component: Login, layout: GuestLayout },
-  { path: "/Dashboard", component: Dashboard, layout: ManagementLayout },
+  { path: "/dashboard", component: Dashboard, layout: ManagementLayout },
+  { path: "/users", component: User, layout: ManagementLayout },
+  { path: "/farmInfo", component: User, layout: ManagementLayout },
+  { path: "/farmDetail", component: User, layout: ManagementLayout },
+  { path: "/processInfo", component: User, layout: ManagementLayout },
+  { path: "/processDetail", component: User, layout: ManagementLayout },
+
 ];
 
 export const privateRoutes: RouteItem[] = [];
