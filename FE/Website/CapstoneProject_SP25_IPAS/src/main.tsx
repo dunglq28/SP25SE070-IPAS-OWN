@@ -1,10 +1,24 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+const originalWarn = console.warn;
+const originalError = console.error;
+
+// Ghi đè console.warn
+console.warn = (message, ...args) => {
+  if (typeof message === "string" && message.includes("antd")) {
+    return; // Bỏ qua tất cả các cảnh báo có liên quan đến Ant Design
+  }
+  originalWarn(message, ...args); // Hiển thị các cảnh báo khác
+};
+
+// Ghi đè console.error
+console.error = (message, ...args) => {
+  if (typeof message === "string" && message.includes("antd")) {
+    return; // Bỏ qua tất cả các lỗi có liên quan đến Ant Design
+  }
+};
+
+createRoot(document.getElementById("root")!).render(<App />);

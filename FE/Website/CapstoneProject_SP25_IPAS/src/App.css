@@ -12,3 +12,22 @@ body {
   font-size: 16px;
   line-height: 1.5;
 }
+
+.ant-menu-inline {
+  background-color: #fff !important;
+}
+
+.ant-menu-submenu-title {
+  color: #000 !important;
+}
+
+.SubMenuItems {
+  position: relative;
+}
+
+.SubMenuItems.active .ant-menu-submenu-title,
+.SubMenuItems .ant-menu-submenu-title:hover {
+  color: #326e2f !important;
+  background-color: #bcd379 !important;
+  font-weight: bold;
+}
