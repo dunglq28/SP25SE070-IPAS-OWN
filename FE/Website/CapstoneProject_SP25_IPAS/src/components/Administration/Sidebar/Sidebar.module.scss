@@ -1,4 +1,4 @@
-@import "@/styles/variables.scss";
+@use "@/styles/variables.scss" as vars;
 
 .SidebarContainer {
   transition: 0.5s;
@@ -30,7 +30,7 @@
         font-weight: bold;
         overflow: hidden;
         white-space: nowrap;
-        color: $color-text;
+        color: vars.$color-text;
         opacity: 1;
       }
     }
@@ -39,8 +39,8 @@
       position: absolute;
       right: -9px;
       top: 34px;
-      background-color: $color_second;
-      color: $color_primary !important;
+      background-color: vars.$color_second;
+      color: vars.$color_primary !important;
       border-radius: 6px;
       cursor: pointer;
       width: 20px;
@@ -56,7 +56,7 @@
         width: 90%;
         min-width: 90%;
         margin: 0;
-        background-color: $color_second;
+        background-color: vars.$color_second;
       }
     }
 
@@ -106,18 +106,18 @@
             height: 40px;
             border-radius: 4px;
             // font-size: 16px;
-            color: $color_sidebar_text_inactive;
+            color: vars.$color_sidebar_text_inactive;
 
             &:hover {
               font-weight: bold;
-              background-color: $color_second;
-              color: $color_primary;
+              background-color: vars.$color_second;
+              color: vars.$color_primary;
             }
           }
 
           .Active {
-            background-color: $color_second !important;
-            color: $color_primary;
+            background-color: vars.$color_second !important;
+            color: vars.$color_primary;
             font-weight: bold;
           }
         }
@@ -139,7 +139,7 @@
       position: absolute;
       left: 30px;
       width: 3px;
-      background-color: $color_second;
+      background-color: vars.$color_second;
     }
 
     .MenuMinHeight {
@@ -159,13 +159,13 @@
       margin-top: auto;
 
       &:hover {
-        background-color: $color_logout_bg_hover;
+        background-color: vars.$color_logout_bg_hover;
       }
 
       .LogoutIcon {
         font-size: 25px;
         margin: 0 10px;
-        color: $color_logout_text;
+        color: vars.$color_logout_text;
       }
 
       .LogoutText {
@@ -174,7 +174,7 @@
         font-size: 16px;
         overflow: hidden;
         font-weight: bold;
-        color: $color_logout_text;
+        color: vars.$color_logout_text;
       }
     }
   }
@@ -185,12 +185,12 @@
   align-items: center;
   // font-size: 16px;
   background-color: #fff;
-  color: $color_sidebar_text_inactive !important;
+  color: vars.$color_sidebar_text_inactive !important;
 
   &:hover {
     font-weight: bold;
-    background-color: $color_second !important;
-    color: $color_primary !important;
+    background-color: vars.$color_second !important;
+    color: vars.$color_primary !important;
   }
 }
 
@@ -203,7 +203,7 @@
 }
 
 .Active {
-  background-color: $color_second !important;
-  color: $color_primary !important;
+  background-color: vars.$color_second !important;
+  color: vars.$color_primary !important;
   font-weight: bold;
 }

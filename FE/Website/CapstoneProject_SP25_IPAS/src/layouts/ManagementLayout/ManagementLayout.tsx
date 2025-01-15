@@ -18,7 +18,6 @@ const ManagementLayout: React.FC<ManagementLayoutProps> = ({ children }) => {
       <SidebarAdmin />
 
       <Layout style={{ flex: 1 }}>
-        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
         <HeaderAdmin />
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb items={[{ title: "Home" }, { title: "Dashboard" }]} />;

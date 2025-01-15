@@ -2,16 +2,11 @@ import { Avatar, Divider, Flex, Layout, Menu, Tooltip, Typography } from "antd";
 import style from "./Sidebar.module.scss";
 import { Icons, Images } from "@/assets";
 import { useEffect, useRef, useState } from "react";
-import {
-  DashboardOutlined,
-  UserOutlined,
-  EnvironmentOutlined,
-  BarChartOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { EnvironmentOutlined } from "@ant-design/icons";
+import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import "@/App.css";
-import { generateRandomKey } from "@/utils";
+import { PATHS } from "@/routes";
+import { useSidebarStore } from "@/stores";
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -22,6 +17,7 @@ interface MenuItem {
   icon: React.ReactNode;
   subMenuItems?: SubMenuItem[];
   to?: string;
+  activePaths: string[];
   category: string;
 }
 
@@ -30,19 +26,25 @@ interface SubMenuItem {
   label: string;
   icon: string;
   to?: string;
+  activePaths: string[];
+}
+
+interface ActiveMenu {
+  parentKey: string | null;
+  subItemKey: string | null;
 }
 
 function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const SIDEBAR_WIDTH_EXPANDED = 280;
   const SIDEBAR_WIDTH_COLLAPSED = 65;
+  const [activeMenu, setActiveMenu] = useState<ActiveMenu>({
+    parentKey: null,
+    subItemKey: null,
+  });
 
-  // Hàm toggle trạng thái Sidebar
-  const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
-  };
+  const { isExpanded, toggleSidebar } = useSidebarStore();
 
   const handleNavigation = (to?: string) => {
     if (to) {
@@ -52,85 +54,135 @@ function Sidebar() {
 
   const menuItems = [
     {
-      key: generateRandomKey(),
+      key: "Dashboard",
       label: "Dashboard",
       icon: <Icons.checkSuccuss />,
-      to: "/dashboard",
+      to: PATHS.DASHBOARD,
+      activePaths: [PATHS.DASHBOARD],
       category: "Main",
     },
     {
-      key: generateRandomKey(),
+      key: "User Management",
       label: "User Management",
       icon: <Icons.checkSuccuss />,
-      to: "/users",
+      to: PATHS.USER.USER_LIST,
+      activePaths: [PATHS.USER.USER_LIST, PATHS.USER.USER_DETAIL],
       category: "Main",
     },
     {
-      key: "sub1",
+      key: "Farm Management",
       label: "Farm Management",
       icon: <EnvironmentOutlined />,
+      activePaths: [
+        PATHS.FARM.FARM_LIST,
+        PATHS.FARM.FARM_DETAIL,
+        PATHS.FARM.FARM_PLOT_LIST,
+        PATHS.FARM.FARM_PLOT_CREATE,
+      ],
       subMenuItems: [
         {
-          key: "3",
-          label: "Farm Information",
+          key: "Farm List",
+          label: "Farm List",
           icon: Images.radius,
-          to: "/farmInfo",
+          to: PATHS.FARM.FARM_LIST,
+          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
         },
-        { key: "4", label: "Farm Details", icon: Images.radius, to: "/farmDetail" },
+        {
+          key: "Land Plot List",
+          label: "Land Plot List",
+          icon: Images.radius,
+          to: PATHS.FARM.FARM_PLOT_LIST,
+          activePaths: [PATHS.FARM.FARM_PLOT_LIST, PATHS.FARM.FARM_PLOT_CREATE],
+        },
       ],
       category: "Main",
     },
     {
-      key: "sub2",
+      key: "Process Management",
       label: "Process Management",
       icon: <EnvironmentOutlined />,
+      activePaths: [PATHS.PROCESS.PROCESS_LIST, PATHS.PROCESS.PROCESS_DETAIL],
       subMenuItems: [
         {
-          key: "5",
-          label: "Process Information",
+          key: "Process List",
+          label: "Process List",
           icon: Images.radius,
-          to: "/processInfo",
+          to: PATHS.PROCESS.PROCESS_LIST,
+          activePaths: [PATHS.PROCESS.PROCESS_LIST, PATHS.PROCESS.PROCESS_DETAIL],
         },
-        { key: "6", label: "Process Details", icon: Images.radius, to: "/processDetail" },
       ],
       category: "Main",
     },
     {
-      key: generateRandomKey(),
+      key: "Setting",
       label: "Setting",
       icon: <Icons.checkSuccuss />,
+      activePaths: [""],
       category: "Settings",
     },
     {
-      key: generateRandomKey(),
+      key: "Help",
       label: "Help",
       icon: <Icons.checkSuccuss />,
+      activePaths: [""],
       category: "Settings",
     },
   ];
 
+  useEffect(() => {
+    const findMatchingPath = (paths: string[], pathname: string) => {
+      return paths.some((path) => {
+        if (path.includes(":id")) {
+          return matchPath(path, pathname);
+        }
+        return pathname === path;
+      });
+    };
+
+    const currentItem = menuItems.find(
+      (menuItem) =>
+        (menuItem.activePaths && findMatchingPath(menuItem.activePaths, location.pathname)) ||
+        location.pathname === menuItem.to,
+    );
+
+    if (currentItem) {
+      let matchingSubMenu = null;
+
+      // Tìm submenu item phù hợp
+      matchingSubMenu =
+        currentItem.subMenuItems?.find((subItem) =>
+          subItem.activePaths.some((path) => location.pathname === path),
+        ) ||
+        currentItem.subMenuItems?.find((subItem) =>
+          findMatchingPath(subItem.activePaths, location.pathname),
+        );
+
+      setActiveMenu({
+        parentKey: currentItem.key || null,
+        subItemKey: matchingSubMenu ? matchingSubMenu.key : null,
+      });
+    }
+  }, [location.pathname]);
+
   const defaultOpenKeys = menuItems
     .filter((item) => {
-      // Nếu có subMenuItems, kiểm tra các mục con
-      if (item.subMenuItems) {
-        return item.subMenuItems.some((subItem) => subItem.to === location.pathname);
-      }
-      // Nếu không có subMenuItems, kiểm tra trực tiếp mục cha
-      return item.to === location.pathname;
+      // Kiểm tra nếu item có activePaths và xem location.pathname có chứa bất kỳ giá trị nào trong mảng activePaths
+      return item.activePaths && item.activePaths.some((path) => location.pathname.includes(path));
     })
-    .map((item) => item.key);
+    .map((item) => item.key)
+    .filter((key): key is string => key !== undefined);
 
   const defaultKey = menuItems
     .map((item) => {
-      // Kiểm tra nếu mục chính hoặc subItem trùng với pathname
-      if (item.to === location.pathname) {
+      // Kiểm tra nếu mục chính không có submenu và location.pathname có trong activePaths của item
+      if (item.activePaths && !item.subMenuItems && item.activePaths.includes(location.pathname)) {
         return item.key; // Trả về key của mục chính
       }
 
-      // Kiểm tra trong subMenuItems nếu có
+      // Kiểm tra nếu mục chính có submenu và location.pathname có trong activePaths của subMenuItems
       if (item.subMenuItems) {
-        const matchingSubItem = item.subMenuItems.find(
-          (subItem) => subItem.to === location.pathname,
+        const matchingSubItem = item.subMenuItems.find((subItem) =>
+          subItem.activePaths.includes(location.pathname),
         );
         if (matchingSubItem) {
           return matchingSubItem.key; // Trả về key của subItem
@@ -142,17 +194,14 @@ function Sidebar() {
     .find((key) => key !== null);
 
   const renderMenuItem = (item: MenuItem) => {
-    const isActive = item.subMenuItems
-      ? item.subMenuItems?.some((subItem) => location.pathname === subItem.to)
-      : location.pathname === item.to;
+    const isMainMenuActive = item.key === activeMenu.parentKey;
 
     if (!item.subMenuItems) {
       return (
         <Menu.Item
           key={item.key}
-          // icon={item.icon}
           icon={<Flex className={style.MenuIcon}>{item.icon}</Flex>}
-          className={`${style.MenuItem} ${isActive ? style.Active : ""}`}
+          className={`${style.MenuItem} ${isMainMenuActive ? style.Active : ""}`}
           onClick={() => handleNavigation(item.to)}
           data-menu-key={item.key}
         >
@@ -163,9 +212,8 @@ function Sidebar() {
     return (
       <Menu.SubMenu
         key={item.key}
-        className={`SubMenuItems ${isActive ? "active" : ""}`}
+        className={`SubMenuItems ${isMainMenuActive ? "active" : ""}`}
         icon={<Flex className={style.MenuIcon}>{item.icon}</Flex>}
-        // icon={item.icon}
         title={isExpanded ? <span className={style.SubMenuItemsTitle}>{item.label}</span> : null}
       >
         {isExpanded && (
@@ -178,7 +226,7 @@ function Sidebar() {
         )}
 
         {item.subMenuItems!.map((subItem) => {
-          const isSubItemActive = location.pathname === subItem.to;
+          const isSubItemActive = subItem.key === activeMenu.subItemKey;
           return isExpanded ? (
             <Flex key={subItem.key} className={style.SubMenuItem}>
               <img style={{ width: "24px" }} src={subItem.icon} alt={subItem.label} />
