@@ -43,6 +43,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE = "You can reset password now";
         public static int SUCCESS_OTP_VALID_CODE = 200;
         public static string SUCCESS_OTP_VALID_MESSAGE = "Otp is valid";
+        public static int SUCCESS_UPLOAD_IMAGE_CODE = 200;
+        public static string SUCCESS_UPLOAD_IMAGE_MESSAGE = "Upload image success";
+        public static int SUCCESS_UPLOAD_VIDEO_CODE = 200;
+        public static string SUCCESS_UPLOAD_VIDEO_MESSAGE = "Upload video success";
+        public static int SUCCESS_DELETE_IMAGE_CODE = 200;
+        public static string SUCCESS_DELETE_IMAGE_MESSAGE = "Delete image success";
+        public static int SUCCESS_DELETE_VIDEO_CODE = 200;
+        public static string SUCCESS_DELETE_VIDEO_MESSAGE = "Delete video success";
 
         #endregion
 
@@ -61,6 +69,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_RESET_PASSWORD_MSG = "Have an error when reset password";
         public static int FAIL_CONFIRM_RESET_PASSWORD_CODE = 500;
         public static string FAIL_CONFIRM_RESET_PASSWORD_MESSAGE = "Otp does not correct or expired. Please try again or another";
+        public static int FAIL_UPLOAD_IMAGE_CODE = 500;
+        public static string FAIL_UPLOAD_IMAGE_MESSAGE = "Upload image failed";
+        public static int FAIL_UPLOAD_VIDEO_CODE = 500;
+        public static string FAIL_UPLOAD_VIDEO_MESSAGE = "Upload video failed";
+        public static int FAIL_DELETE_IMAGE_CODE = 500;
+        public static string FAIL_DELETE_IMAGE_MESSAGE = "Delete image failed";
+        public static int FAIL_DELETE_VIDEO_CODE = 500;
+        public static string FAIL_DELETE_VIDEO_MESSAGE = "Delete video failed";
         #endregion
 
         #region Warning Code

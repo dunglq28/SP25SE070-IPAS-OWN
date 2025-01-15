@@ -1,6 +1,6 @@
 ﻿namespace CapstoneProject_SP25_IPAS_API.Payloads.Request
 {
-    public class MessageRequestModel
+    public class ParamsRequestModel
     {
         public string Message { get; set; }
     }
@@ -16,5 +16,15 @@
     {
         public string Email { get; set; }
         public string Otp { get; set; }
+    }
+
+    public class DeleteImageURLModel
+    {
+        public string ImageURL { get; set; }
+    }
+
+    public class DeleteVideoURLModel
+    {
+        public string VideoURL { get; set; }
     }
 }

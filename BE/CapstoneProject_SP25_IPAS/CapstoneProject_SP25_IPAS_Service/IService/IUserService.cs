@@ -32,7 +32,7 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
         public Task<BusinessResult> SoftDeleteUser(int userId);
         public Task<BusinessResult> BannedUser(int userId);
         public Task<bool> DeleteUser(int userId);
-        public Task<bool> CreateUser(CreateAccountModel createAccountModel);
+        public Task<BusinessResult> CreateUser(CreateAccountModel createAccountModel);
         public Task<string> UpdateAvatarOfUser(IFormFile avatarOfUser, int id);
         public Task<List<User>> GetAllUsersByRole(string roleName);
     }

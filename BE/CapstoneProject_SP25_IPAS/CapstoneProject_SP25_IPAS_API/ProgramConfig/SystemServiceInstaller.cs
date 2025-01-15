@@ -35,6 +35,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             // Register servicies
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             services.AddHttpClient();
 
