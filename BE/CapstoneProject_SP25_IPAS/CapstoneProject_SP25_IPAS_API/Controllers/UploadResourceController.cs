@@ -80,16 +80,16 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
 
 
         [HttpPost("upload-video")]
-        public async Task<IActionResult> UploadVideo(IFormFile file)
+        public async Task<IActionResult> UploadVideo(IFormFile uploadVideoFile)
         {
-            if (file == null || file.Length == 0)
+            if (uploadVideoFile == null || uploadVideoFile.Length == 0)
             {
                 return BadRequest(new { message = "File is required" });
             }
 
             try
             {
-                var videoUrl = await _cloudinaryService.UploadVideoAsync(file, null);
+                var videoUrl = await _cloudinaryService.UploadVideoAsync(uploadVideoFile, null);
                 if(videoUrl != null)
                 {
                     return Ok(new BusinessResult(Const.SUCCESS_UPLOAD_VIDEO_CODE, Const.SUCCESS_UPLOAD_VIDEO_MESSAGE, videoUrl));

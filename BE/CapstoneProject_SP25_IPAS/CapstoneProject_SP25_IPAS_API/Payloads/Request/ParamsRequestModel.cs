@@ -1,6 +1,6 @@
 ﻿namespace CapstoneProject_SP25_IPAS_API.Payloads.Request
 {
-    public class MessageRequestModel
+    public class ParamsRequestModel
     {
         public string Message { get; set; }
     }
