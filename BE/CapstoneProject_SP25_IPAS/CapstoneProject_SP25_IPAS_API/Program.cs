@@ -11,6 +11,9 @@ using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
 using AutoMapper;
 using CapstoneProject_SP25_IPAS_Service.Mapping;
 using CapstoneProject_SP25_IPAS_Common.Mail;
+using CapstoneProject_SP25_IPAS_API.Middleware;
+using System.Text.Json;
+using CapstoneProject_SP25_IPAS_Common.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<IpasContext>(options =>
@@ -85,6 +88,15 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 // add mail settings
 builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false)
+        );
+    });
 
 builder.Services.ConfigureServices();
 
@@ -93,9 +105,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseMiddleware<TokenValidationMiddleware>();
+app.UseMiddleware<AccountStatusMiddleware>();
+app.UseMiddleware<AuthorizeMiddleware>();
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

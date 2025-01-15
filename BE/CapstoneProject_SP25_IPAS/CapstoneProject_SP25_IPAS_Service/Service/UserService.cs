@@ -9,6 +9,7 @@ using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
 using CapstoneProject_SP25_IPAS_Service.IService;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -41,7 +42,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         public async Task<BusinessResult> BannedUser(int userId)
         {
             var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
-            if (existUser != null && !existUser.Status.ToLower().Equals("Banned".ToLower()))
+            if (existUser != null && !existUser.Status.ToLower().Equals("banned"))
             {
                 existUser.Status = "Banned";
                 var result = await _unitOfWork.SaveAsync();
@@ -77,14 +78,61 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public Task<bool> CreateUser(CreateAccountModel createAccountModel)
+        public async Task<BusinessResult> CreateUser(CreateAccountModel createAccountModel)
         {
-            throw new NotImplementedException();
+            using(var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    User user = new User()
+                    {
+                        Email = createAccountModel.Email,
+                        UserCode = "IPAS-" + "USR-" + NumberHelper.GenerateRandomByDate(),
+                        FullName = createAccountModel.FullName,
+                        Status = "Active",
+                        RoleId = (int)createAccountModel.Role,
+                        IsDelete = false,
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        AvatarURL = createAccountModel.AvatarUrl ?? "",
+                    };
+
+                    var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(createAccountModel.Email);
+                    if(existUser != null)
+                    {
+                        return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG, false);
+                    }
+                    if(createAccountModel.Password != null)
+                    {
+                        user.Password = PasswordHelper.HashPassword(createAccountModel.Password);
+                    }
+                    var role = await _unitOfWork.RoleRepository.GetRoleByName(createAccountModel.Role.ToString());
+                    if (role != null)
+                    {
+                        user.RoleId = role.RoleId;
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG);
+                    }
+                    await _unitOfWork.UserRepository.AddUserAsync(user);
+                    await transaction.CommitAsync();
+                    return new BusinessResult(Const.SUCCESS_REGISTER_CODE, Const.SUCCESS_REGISTER_MSG);
+
+                }
+                catch (Exception ex)
+                {
+
+                    await transaction.RollbackAsync();
+                    return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+                }
+            }
         }
 
-        public Task<bool> DeleteUser(int userId)
+        public async Task<bool> DeleteUser(int userId)
         {
-            throw new NotImplementedException();
+            //var test = await _unitOfWork.UserRepository.GetByCondition();
+            return false;
         }
 
         public async Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel)

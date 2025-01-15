@@ -17,4 +17,14 @@
         public string Email { get; set; }
         public string Otp { get; set; }
     }
+
+    public class DeleteImageURLModel
+    {
+        public string ImageURL { get; set; }
+    }
+
+    public class DeleteVideoURLModel
+    {
+        public string VideoURL { get; set; }
+    }
 }
