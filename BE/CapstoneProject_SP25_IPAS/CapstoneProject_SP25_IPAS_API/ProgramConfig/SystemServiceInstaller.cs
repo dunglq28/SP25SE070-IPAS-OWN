@@ -17,7 +17,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
+            services.AddHttpContextAccessor();
             // Add Mapping profiles
             var mapper = new MapperConfiguration(mc =>
             {

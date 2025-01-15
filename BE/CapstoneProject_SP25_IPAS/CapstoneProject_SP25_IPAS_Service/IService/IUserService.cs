@@ -35,5 +35,6 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
         public Task<bool> CreateUser(CreateAccountModel createAccountModel);
         public Task<string> UpdateAvatarOfUser(IFormFile avatarOfUser, int id);
         public Task<List<User>> GetAllUsersByRole(string roleName);
+        public Task<BusinessResult> LoginGoogleHandler(string GoogleToken);
     }
 }

@@ -19,7 +19,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         #endregion
 
         #region Success Codes
-
+        #region UserService
         public static int SUCCESS_LOGIN_CODE = 200;
         public static string SUCCESS_LOGIN_MSG = "Login Successfully";
         public static int SUCCESS_LOGOUT_CODE = 200;
@@ -43,10 +43,15 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE = "You can reset password now";
         public static int SUCCESS_OTP_VALID_CODE = 200;
         public static string SUCCESS_OTP_VALID_MESSAGE = "Otp is valid";
-
+        public static int SUCCESS_VALIDATE_TOKEN_GOOGLE_CODE = 200;
+        public static string SUCCESS_TOKEN_GOOGLE_VALIDATE_MSG = "Validate google token success";
+        public static int SUCCESS_FECTH_GOOGLE_USER_INFO_CODE = 200;
+        public static string SUCCESS_FECTH_GOOGLE_USER_INFO_MSG = "Fecth info of user from google success";
+        #endregion
         #endregion
 
         #region Fail code
+        #region User code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
         public static string FAIL_LOGOUT_MSG = "Have an error when logout";
@@ -61,6 +66,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_RESET_PASSWORD_MSG = "Have an error when reset password";
         public static int FAIL_CONFIRM_RESET_PASSWORD_CODE = 500;
         public static string FAIL_CONFIRM_RESET_PASSWORD_MESSAGE = "Otp does not correct or expired. Please try again or another";
+        public static int FAIL_LOGIN_WITH_GOOGLE_CODE = 500;
+        public static string FAIL_LOGIN_WITH_GOOGLE_MSG = "Your email has not exist in system";
+        public static int FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE = 500;
+        public static string FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG = "Your google code not valid. Please try again";
+        public static int FAIL_USER_INFO_FETCH_CODE = 500;
+        public static string FAIL_USER_INFO_FETCH_MSG = "Fetch info of user from google fail";
+
+        #endregion
         #endregion
 
         #region Warning Code
@@ -88,6 +101,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_RESET_PASSWORD_MSG = "Account does not exist or otp incorrect";
         public static int WARNING_CHECK_MAIL_REGISTER_CODE = 400;
         public static string WARNING_CHECK_MAIL_REGISER_MSG = "Email and OTP are required";
+
 
         #endregion
     }

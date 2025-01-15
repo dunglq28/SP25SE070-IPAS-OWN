@@ -13,6 +13,9 @@ using CapstoneProject_SP25_IPAS_Service.Mapping;
 using CapstoneProject_SP25_IPAS_Common.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.WebHost.UseUrls(builder.Configuration["AllowedHosts:localhost"]);
+
 builder.Services.AddDbContext<IpasContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -67,6 +70,11 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
         ClockSkew = TimeSpan.Zero
     };
+})
+.AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
 
 // Add CORS
