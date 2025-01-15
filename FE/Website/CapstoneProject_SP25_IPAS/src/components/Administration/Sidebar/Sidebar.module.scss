@@ -1,148 +1,209 @@
 @import "@/styles/variables.scss";
 
-.Sidebar {
-  background-color: $color-background;
-  color: $color-text;
-  height: 100vh;
-  user-select: none;
-  transition: 0.3s;
-  position: sticky;
-  top: 0;
-  flex-direction: column;
-
-  .Logo {
-    width: 100%;
-    min-height: 80px;
-    margin-top: 10px;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 12px 0 12px;
-
-    .Avatar {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-    }
-
-    .LogoText {
-      margin-left: 10px;
-      font-size: 22px;
-      font-weight: bold;
-      overflow: hidden;
-      white-space: nowrap;
-      color: $color-text;
-      opacity: 1;
-    }
-  }
-
-  .ArrowSidebar {
-    position: absolute;
-    right: -9px;
-    top: 34px;
-    background-color: $color-primary;
-    color: $color-text;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    transition: transform 0.3s ease-out; /* Thêm hiệu ứng cho mũi tên */
-  }
-
-  .WrapperDivider {
-    flex-direction: row;
-    justify-content: center;
-    height: 0px;
-    margin: 10px 0;
-    .Divider {
-      width: 90%;
-      min-width: 90%;
-      margin: 0;
-      background-color: $color_second;
-    }
-  }
-
-  .WrapperTitle {
-    justify-content: start;
-    padding-left: 12px;
-    height: 0px;
-    margin: 0px 0 10px 0;
-    .Title {
-    }
-  }
-
-  .MenuItems {
-    flex-grow: 1;
+.SidebarContainer {
+  transition: 0.5s;
+  .Sidebar {
+    height: 100vh;
+    user-select: none;
+    position: sticky;
+    top: 0;
     flex-direction: column;
-    padding: 10px 0;
-    row-gap: 10px;
-    overflow: hidden;
 
-    .MenuItem {
-      display: flex;
+    .Logo {
+      width: 100%;
+      min-height: 50px;
+      margin-top: 10px;
       align-items: center;
-      width: 90%;
-      border-radius: 7px;
-      font-weight: 500;
+      transition: transform 1s ease-out;
+      padding: 12px 12px 0 12px;
+      margin-bottom: auto;
+
+      .Avatar {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+      }
+
+      .LogoText {
+        margin-left: 10px;
+        font-size: 22px;
+        font-weight: bold;
+        overflow: hidden;
+        white-space: nowrap;
+        color: $color-text;
+        opacity: 1;
+      }
+    }
+
+    .ArrowSidebar {
+      position: absolute;
+      right: -9px;
+      top: 34px;
+      background-color: $color_second;
+      color: $color_primary !important;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+    }
+
+    .WrapperDivider {
+      flex-direction: row;
+      justify-content: center;
+      height: 0px;
+      margin: 10px 0;
+      .Divider {
+        width: 90%;
+        min-width: 90%;
+        margin: 0;
+        background-color: $color_second;
+      }
+    }
+
+    .WrapperTitle {
+      padding-left: 12px;
+      height: 0px;
+      margin: 0px 0 10px 0;
+    }
+
+    .MenuContainer {
+      flex-direction: column;
+      row-gap: 8px;
+      overflow-y: hidden;
 
       &:hover {
-        background-color: $color-primary;
-        color: $color-light-text;
-      }
-      &:active {
-        background-color: $color-primary-hover;
+        overflow-y: auto;
       }
 
-      .MenuIcon {
+      .MenuItems {
+        flex-grow: 1;
+        padding-bottom: 10px;
+        overflow: hidden;
+        background-color: #fff;
+        z-index: 999;
+
+        .SubMenuItemsTitle {
+          height: 2.25rem;
+          // font-size: 16px;
+        }
+
+        .SubMenuItem {
+          margin-left: 30px;
+          background-color: #fff;
+          transition: 0.3s;
+
+          .Item {
+            align-items: center;
+            transition: border-color 0.3s, background-color 0.3s,
+              padding 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+            cursor: pointer;
+            padding-left: 12px;
+            padding-right: 16px;
+            border-radius: 8px !important;
+            margin: 4px 4px 4px 0px;
+            font-weight: 500;
+            width: calc(100% - 8px);
+            height: 40px;
+            border-radius: 4px;
+            // font-size: 16px;
+            color: $color_sidebar_text_inactive;
+
+            &:hover {
+              font-weight: bold;
+              background-color: $color_second;
+              color: $color_primary;
+            }
+          }
+
+          .Active {
+            background-color: $color_second !important;
+            color: $color_primary;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    /* Tùy chỉnh thanh cuộn cho các trình duyệt webkit (Chrome, Safari, Edge) */
+    .MenuContainer::-webkit-scrollbar {
+      width: 8px; /* Đặt chiều rộng của thanh cuộn */
+    }
+
+    /* Tùy chỉnh phần tay cầm của thanh cuộn */
+    .MenuContainer::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    .SubMenuLine {
+      position: absolute;
+      left: 30px;
+      width: 3px;
+      background-color: $color_second;
+    }
+
+    .MenuMinHeight {
+      min-height: 110px;
+    }
+
+    .MenuOverflowHidden {
+      overflow: hidden;
+    }
+
+    .Profile {
+      align-items: center;
+      padding: 10px;
+      height: 40px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: auto;
+
+      &:hover {
+        background-color: $color_logout_bg_hover;
+      }
+
+      .LogoutIcon {
         font-size: 25px;
-        margin-right: 10px;
-        margin-left: -6px;
+        margin: 0 10px;
+        color: $color_logout_text;
       }
 
-      .MenuText {
+      .LogoutText {
+        margin-top: 4px;
         white-space: nowrap;
         font-size: 16px;
         overflow: hidden;
+        font-weight: bold;
+        color: $color_logout_text;
       }
     }
-
-    .disabled {
-      background-color: $color-disabled;
-      opacity: 0.6;
-    }
-
-    .disabled:hover,
-    .disabled:active {
-      background-color: $color-disabled;
-      color: $color-disabled-text;
-    }
   }
+}
 
-  .Profile {
-    align-items: center;
-    padding: 10px;
-    height: 70px;
-    white-space: nowrap;
-    overflow: hidden;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    color: $color-text;
+.MenuItem {
+  display: flex;
+  align-items: center;
+  // font-size: 16px;
+  background-color: #fff;
+  color: $color_sidebar_text_inactive !important;
 
-    &:hover {
-      background-color: $color-hover-bg;
-    }
-
-    .LogoutIcon {
-      font-size: 25px;
-      margin: 0 10px;
-      color: $color-text;
-    }
-
-    .LogoutText {
-      white-space: nowrap;
-      font-size: 16px;
-      overflow: hidden;
-      font-weight: bold;
-      color: $color-text;
-    }
+  &:hover {
+    font-weight: bold;
+    background-color: $color_second !important;
+    color: $color_primary !important;
   }
+}
+
+.MenuIcon {
+  vertical-align: -0.325rem !important;
+  font-size: 20px !important;
+  span {
+    font-size: 20px !important;
+  }
+}
+
+.Active {
+  background-color: $color_second !important;
+  color: $color_primary !important;
+  font-weight: bold;
 }
