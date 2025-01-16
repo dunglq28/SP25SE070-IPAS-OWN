@@ -19,8 +19,8 @@ const ManagementLayout: React.FC<ManagementLayoutProps> = ({ children }) => {
 
       <Layout style={{ flex: 1 }}>
         <HeaderAdmin />
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb items={[{ title: "Home" }, { title: "Dashboard" }]} />;
+        <Content style={{ margin: "0 32px" }}>
+          <Breadcrumb items={[{ title: "Home" }, { title: "Dashboard" }]} />
           <div
             style={{
               padding: 24,
@@ -31,7 +31,7 @@ const ManagementLayout: React.FC<ManagementLayoutProps> = ({ children }) => {
           >
             Bill is a cat.
           </div>
-          {/* {children} */}
+          {children}
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
