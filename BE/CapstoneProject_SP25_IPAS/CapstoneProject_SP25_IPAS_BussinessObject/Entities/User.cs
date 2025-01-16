@@ -30,6 +30,7 @@ public partial class User
     public DateTime? DeleteDate { get; set; }
 
     public string? Status { get; set; }
+    public string? Address { get; set; }
 
     public int? IsDependency { get; set; }
 
@@ -53,5 +54,5 @@ public partial class User
 
     public virtual ICollection<UserWorkLog> UserWorkLogs { get; set; } = new List<UserWorkLog>();
 
-    public virtual ICollection<Farm> Farms { get; set; } = new List<Farm>();
+    public virtual ICollection<UserFarm> UserFarms { get; set; } = new List<UserFarm>();
 }

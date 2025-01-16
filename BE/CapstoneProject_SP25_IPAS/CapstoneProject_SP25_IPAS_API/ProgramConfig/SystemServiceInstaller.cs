@@ -29,6 +29,13 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             // Register repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepostiory, UserRepository>();
+            services.AddScoped<IFarmRepository, FarmRepository>();
+            services.AddScoped<IUserWorkLogRepository, UserWorkLogRepository>();
+            services.AddScoped<IUserFarmRepository, UserFarmRepository>();
+            services.AddScoped<IPlanRepository, PlanRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<ITaskFeedbackRepository, TaskFeedbackRepository>();
+            services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 

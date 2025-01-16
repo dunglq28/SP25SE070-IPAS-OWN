@@ -1,8 +1,8 @@
-﻿using CapstoneProject_SP25_IPAS_API.Payloads.Request;
-using CapstoneProject_SP25_IPAS_API.Payloads.Response;
+﻿using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
 using CapstoneProject_SP25_IPAS_Common;
 using CapstoneProject_SP25_IPAS_Service.Base;
 using CapstoneProject_SP25_IPAS_Service.IService;
+using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
 using CapstoneProject_SP25_IPAS_Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +14,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
     [ApiController]
     public class UploadResourceController : ControllerBase
     {
-        public ICloudinaryService _cloudinaryService;
+        private readonly ICloudinaryService _cloudinaryService;
 
         public UploadResourceController(ICloudinaryService service)
         {
