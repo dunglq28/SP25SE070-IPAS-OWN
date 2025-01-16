@@ -1,4 +1,5 @@
-﻿using CapstoneProject_SP25_IPAS_Repository.Repository;
+﻿using CapstoneProject_SP25_IPAS_Repository.IRepository;
+using CapstoneProject_SP25_IPAS_Repository.Repository;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,12 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public UserRepository UserRepository { get; }
         public RoleRepository RoleRepository { get; }
         public RefreshTokenRepository RefreshTokenRepository { get; }
-
+        public ChatRoomRepository ChatRoomRepository { get; }
+        public FarmRepository FarmRepository { get; }
+        public TaskFeedbackRepository TaskFeedbackRepository { get; }
+        public UserWorkLogRepository UserWorkLogRepository { get; }
+        public PlanRepository PlanRepository { get; }
+        public NotificationRepository NotificationRepository { get; }
+        public UserFarmRepository UserFarmRepository { get; }
     }
 }

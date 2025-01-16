@@ -31,9 +31,9 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
             return BitConverter.ToInt64(bytes, 0);
         }
 
-        public static string GenerateRandomByDate()
+        public static string GenerateRandomCode(string aliasEntity)
         {
-            return DateTime.Now.Day.ToString("D2") +
+            return "IPAS-" + aliasEntity + "-" + DateTime.Now.Day.ToString("D2") +
                    DateTime.Now.Month.ToString("D2") +
                    DateTime.Now.Year +
                    DateTime.Now.Hour.ToString("D2") +

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using CapstoneProject_SP25_IPAS_Common;
+using CapstoneProject_SP25_IPAS_Common.Enum;
 using CapstoneProject_SP25_IPAS_Common.Mail;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
@@ -8,6 +9,9 @@ using CapstoneProject_SP25_IPAS_Service.Base;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
 using CapstoneProject_SP25_IPAS_Service.IService;
+using CapstoneProject_SP25_IPAS_Service.Pagination;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
@@ -29,13 +34,15 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
         private readonly IMailService _mailService;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _mailService = mailService;
+            _cloudinaryService = cloudinaryService;
             _mapper = mapper;
         }
 
@@ -87,7 +94,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     User user = new User()
                     {
                         Email = createAccountModel.Email,
-                        UserCode = "IPAS-" + "USR-" + NumberHelper.GenerateRandomByDate(),
+                        UserCode = NumberHelper.GenerateRandomCode("USR"),
                         FullName = createAccountModel.FullName,
                         Status = "Active",
                         RoleId = (int)createAccountModel.Role,
@@ -129,10 +136,59 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public async Task<bool> DeleteUser(int userId)
+        public async Task<BusinessResult> DeleteUser(int userId)
         {
-            //var test = await _unitOfWork.UserRepository.GetByCondition();
-            return false;
+            string includeProperties = "Plans,TaskFeedbacks,UserWorkLogs,ChatRooms,Farms,Notifications,RefreshTokens";
+            var entityDeleteUser = await _unitOfWork.UserRepository.GetByCondition(x => x.UserId == userId, includeProperties);
+            if (entityDeleteUser == null)
+            {
+                return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG, false);
+            }
+            foreach (var plan in entityDeleteUser!.Plans.ToList())
+            {
+                _unitOfWork.PlanRepository.Delete(plan);
+            }
+            foreach (var taskFeedback in entityDeleteUser!.TaskFeedbacks.ToList())
+            {
+                _unitOfWork.TaskFeedbackRepository.Delete(taskFeedback);
+            }
+            foreach (var userWorkLog in entityDeleteUser!.UserWorkLogs.ToList())
+            {
+                _unitOfWork.UserWorkLogRepository.Delete(userWorkLog);
+            }
+            foreach (var chatRoom in entityDeleteUser!.ChatRooms.ToList())
+            {
+                _unitOfWork.ChatRoomRepository.Delete(chatRoom);
+            }
+            foreach (var userFarm in entityDeleteUser!.UserFarms.ToList())
+            {
+                _unitOfWork.UserFarmRepository.Delete(userFarm);
+            }
+            foreach (var notification in entityDeleteUser!.Notifications.ToList())
+            {
+                _unitOfWork.NotificationRepository.Delete(notification);
+            }
+            foreach (var refreshToken in entityDeleteUser!.RefreshTokens.ToList())
+            {
+                _unitOfWork.RefreshTokenRepository.Delete(refreshToken);
+            }
+            _unitOfWork.UserRepository.Delete(entityDeleteUser);
+            await _unitOfWork.SaveAsync();
+
+            try
+            {
+                if (entityDeleteUser.AvatarURL != null && entityDeleteUser.AvatarURL.Contains("cloudinary"))
+                {
+                    await _cloudinaryService.DeleteImageByUrlAsync(entityDeleteUser.AvatarURL);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
+            return new BusinessResult(Const.SUCCESS_DELETE_USER_CODE, Const.SUCCESS_DELETE_USER_MESSAGE, true);
+           
         }
 
         public async Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel)
@@ -162,9 +218,21 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public Task<List<User>> GetAllUsersByRole(string roleName)
+        public async Task<BusinessResult> GetAllUsersByRole(string roleName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _unitOfWork.UserRepository.GetAllUsersByRole(roleName);
+                if (result.Count > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_GET_ALL_USER_BY_ROLE_CODE, Const.SUCCESS_GET_ALL_USER_BY_ROLE_MESSAGE, result);
+                }
+                return new BusinessResult(Const.FAIL_GET_ALL_USER_BY_ROLE_CODE, Const.FAIL_GET_ALL_USER_BY_ROLE_MESSAGE, false);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
         }
 
         public async Task<BusinessResult> GetUserByEmail(string email)
@@ -218,7 +286,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
                         {
                             UserId = existUser.UserId,
-                            RefreshTokenCode = "IPAS-" + "RFT-" + NumberHelper.GenerateRandomByDate(),
+                            RefreshTokenCode = NumberHelper.GenerateRandomCode("RFT"),
                             RefreshTokenValue = refreshToken,
                             CreateDate = DateTime.Now,
                             ExpiredDate = DateTime.Now.AddDays(tokenValidityInDays)
@@ -308,7 +376,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                                     await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
                                     {
                                         UserId = checkExistRefreshToken.UserId,
-                                        RefreshTokenCode = "IPAS-" + "RFT-" + NumberHelper.GenerateRandomByDate(),
+                                        RefreshTokenCode = NumberHelper.GenerateRandomCode("RFT"),
                                         RefreshTokenValue = newRefreshToken,
                                         CreateDate = DateTime.Now,
                                         ExpiredDate = checkExistRefreshToken.ExpiredDate
@@ -347,7 +415,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var newUser = new User()
                     {
                         Email = model.Email,
-                        UserCode = "IPAS-" + "USR-" + NumberHelper.GenerateRandomByDate(),
+                        UserCode = NumberHelper.GenerateRandomCode("USR"),
                         FullName = model.FullName,
                         CreateDate = DateTime.Now,
                         UpdateDate = DateTime.Now,
@@ -418,14 +486,103 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public Task<string> UpdateAvatarOfUser(IFormFile avatarOfUser, int id)
+        public async Task<BusinessResult> UpdateAvatarOfUser(IFormFile avatarOfUser, int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var checkExistUser = await _unitOfWork.UserRepository.GetUserByIdAsync(id);
+                if (checkExistUser == null)
+                {
+                    return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG);
+                }
+                var uploadImageLink = await _cloudinaryService.UploadImageAsync(avatarOfUser, "user/avatar");
+                if (uploadImageLink != null)
+                {
+                    checkExistUser.AvatarURL = uploadImageLink;
+                    var result = await _unitOfWork.SaveAsync();
+                    return new BusinessResult(Const.SUCCESS_UPLOAD_IMAGE_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, result > 0);
+                }
+                return new BusinessResult(Const.FAIL_UPLOAD_IMAGE_CODE, Const.FAIL_UPLOAD_IMAGE_MESSAGE, false);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
 
-        public Task<bool> UpdateUser(UpdateUserModel updateUserRequestModel)
+        public async Task<BusinessResult> UpdateUser(UpdateUserModel updateUserRequestModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(updateUserRequestModel.UserId);
+                if (existUser != null)
+                {
+                    // update account
+                    if (updateUserRequestModel.FullName != null)
+                    {
+                        existUser.FullName = updateUserRequestModel.FullName;
+                    }
+                    if (updateUserRequestModel.Address != null)
+                    {
+                        existUser.Address = updateUserRequestModel.Address;
+                    }
+                    if (updateUserRequestModel.PhoneNumber != null)
+                    {
+                        existUser.PhoneNumber = updateUserRequestModel.PhoneNumber;
+                    }
+                    if (updateUserRequestModel.Dob != null)
+                    {
+                        existUser.Dob = updateUserRequestModel.Dob;
+                    }
+                    if (updateUserRequestModel.Gender != null)
+                    {
+                        existUser.Gender = updateUserRequestModel.Gender;
+                    }
+                    if (updateUserRequestModel.AvatarURL != null)
+                    {
+                        existUser.AvatarURL = updateUserRequestModel.AvatarURL;
+                    }
+                    if (updateUserRequestModel.Role != null)
+                    {
+                        var checkRole = Enum.TryParse(typeof(RoleEnum), updateUserRequestModel.Role.ToString(), true, out var roleValid);
+                        if(checkRole)
+                        {
+                            existUser.RoleId = (int)roleValid;
+                        }
+                        else
+                        {
+                            return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG, false);
+                        }
+                    }
+                    existUser.IsDelete = updateUserRequestModel.IsDeleted;
+
+                    if (!string.IsNullOrEmpty(updateUserRequestModel.Password))
+                    {
+                        bool checkOldPassword = PasswordHelper.VerifyPassword(updateUserRequestModel.Password, existUser.Password);
+                        if (checkOldPassword)
+                        {
+                            string newPassword = PasswordHelper.HashPassword(updateUserRequestModel.Password);
+                            existUser.Password = newPassword;
+                        }
+                    }
+                    var result = await _unitOfWork.UserRepository.UpdateUserAsync(existUser);
+                    if (result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_UPDATE_USER_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, result);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.FAIL_UPDATE_USER_CODE, Const.FAIL_UPDATE_USER_MESSAGE, false);
+                    }
+                }
+                return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
 
         private async Task<string> GenerateAccessToken(string email, User user)
@@ -575,6 +732,144 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             // send email
             await _mailService.SendEmailAsync(newEmail);
             return true;
+        }
+
+        public async Task<BusinessResult> GetAllUsers(PaginationParameter paginationParameter)
+        {
+            try
+            {
+                Expression<Func<User, bool>> filter = null!;
+                Func<IQueryable<User>, IOrderedQueryable<User>> orderBy = null!;
+                if (!string.IsNullOrEmpty(paginationParameter.Search))
+                {
+                    int validInt = 0;
+                    var checkInt = int.TryParse(paginationParameter.Search, out validInt);
+                    DateTime validDate = DateTime.Now;
+                    bool validBool = false;
+                    if (checkInt)
+                    {
+                        filter = x => x.UserId == validInt;
+                    }
+                    else if (DateTime.TryParse(paginationParameter.Search, out validDate))
+                    {
+                        filter = x => x.CreateDate == validDate
+                                      || x.UpdateDate == validDate || x.Dob == validDate;
+                    }
+                    else if (Boolean.TryParse(paginationParameter.Search, out validBool))
+                    {
+                        filter = x => x.IsDelete == validBool;
+                    }
+                    else
+                    {
+                        filter = x => x.UserCode.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.FullName.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Email.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Status.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Gender.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.PhoneNumber.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Address.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Status.ToLower().Contains(paginationParameter.Search.ToLower());
+                    }
+                }
+                switch (paginationParameter.SortBy)
+                {
+                    case "userid":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.UserId)
+                                   : x => x.OrderBy(x => x.UserId)) : x => x.OrderBy(x => x.UserId);
+                        break;
+                    case "usercode":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.UserCode)
+                                   : x => x.OrderBy(x => x.UserCode)) : x => x.OrderBy(x => x.UserCode);
+                        break;
+                    case "fullname":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.FullName)
+                                   : x => x.OrderBy(x => x.FullName)) : x => x.OrderBy(x => x.FullName);
+                        break;
+                    case "status":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Status)
+                                   : x => x.OrderBy(x => x.Status)) : x => x.OrderBy(x => x.Status);
+                        break;
+                    case "gender":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Gender)
+                                   : x => x.OrderBy(x => x.Gender)) : x => x.OrderBy(x => x.Gender);
+                        break;
+                    case "email":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Email)
+                                   : x => x.OrderBy(x => x.Email)) : x => x.OrderBy(x => x.Email);
+                        break;
+                    case "role":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Role.RoleName)
+                                   : x => x.OrderBy(x => x.Role.RoleName)) : x => x.OrderBy(x => x.Role.RoleName);
+                        break;
+                    case "phone":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.PhoneNumber)
+                                   : x => x.OrderBy(x => x.PhoneNumber)) : x => x.OrderBy(x => x.PhoneNumber);
+                        break;
+                    case "address":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.Address)
+                                   : x => x.OrderBy(x => x.Address)) : x => x.OrderBy(x => x.Address);
+                        break;
+                    case "createDate":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.CreateDate)
+                                   : x => x.OrderBy(x => x.CreateDate)) : x => x.OrderBy(x => x.CreateDate);
+                        break;
+                    case "updateDate":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.UpdateDate)
+                                   : x => x.OrderBy(x => x.UpdateDate)) : x => x.OrderBy(x => x.UpdateDate);
+                        break;
+                    case "dob":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.Dob)
+                                   : x => x.OrderBy(x => x.Dob)) : x => x.OrderBy(x => x.Dob);
+                        break;
+                    default:
+                        orderBy = x => x.OrderBy(x => x.UserId);
+                        break;
+                }
+                string includeProperties = "Role";
+                var entities = await _unitOfWork.UserRepository.Get(filter, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
+                var pagin = new PageEntity<UserModel>();
+                pagin.List = _mapper.Map<IEnumerable<UserModel>>(entities).ToList();
+                pagin.TotalRecord = await _unitOfWork.UserRepository.Count();
+                pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, paginationParameter.PageSize);
+                if (pagin.List.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_GET_ALL_USER_CODE, Const.SUCCESS_GET_ALL_USER_MESSAGE, pagin);
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG, new PageEntity<UserModel>());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+           
         }
     }
 }

@@ -51,6 +51,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_DELETE_IMAGE_MESSAGE = "Delete image success";
         public static int SUCCESS_DELETE_VIDEO_CODE = 200;
         public static string SUCCESS_DELETE_VIDEO_MESSAGE = "Delete video success";
+        public static int SUCCESS_DELETE_USER_CODE = 200;
+        public static string SUCCESS_DELETE_USER_MESSAGE = "Delete user success";
+        public static int SUCCESS_GET_ALL_USER_CODE = 200;
+        public static string SUCCESS_GET_ALL_USER_MESSAGE = "Get all user success";
+        public static int SUCCESS_GET_ALL_USER_BY_ROLE_CODE = 200;
+        public static string SUCCESS_GET_ALL_USER_BY_ROLE_MESSAGE = "Get all user by role success";
+        public static int SUCCESS_UPDATE_USER_CODE = 200;
+        public static string SUCCESS_UPDATE_MESSAGE = "Update user success";
 
         #endregion
 
@@ -77,6 +85,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_DELETE_IMAGE_MESSAGE = "Delete image failed";
         public static int FAIL_DELETE_VIDEO_CODE = 500;
         public static string FAIL_DELETE_VIDEO_MESSAGE = "Delete video failed";
+        public static int FAIL_DELETE_USER_CODE = 500;
+        public static string FAIL_DELETE_USER_MESSAGE = "Delete user failed";
+        public static int FAIL_GET_ALL_USER_BY_ROLE_CODE = 500;
+        public static string FAIL_GET_ALL_USER_BY_ROLE_MESSAGE = "Get all user by role failed";
+        public static int FAIL_GET_ALL_USER_CODE = 500;
+        public static string FAIL_GET_ALL_USER_MESSAGE = "Get all user failed";
+        public static int FAIL_UPDATE_USER_CODE = 500;
+        public static string FAIL_UPDATE_USER_MESSAGE = "Update user failed";
         #endregion
 
         #region Warning Code
@@ -104,6 +120,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_RESET_PASSWORD_MSG = "Account does not exist or otp incorrect";
         public static int WARNING_CHECK_MAIL_REGISTER_CODE = 400;
         public static string WARNING_CHECK_MAIL_REGISER_MSG = "Email and OTP are required";
+        public static int WARNING_USER_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_USER_DOES_NOT_EXIST_MSG = "User does not existed";
+        public static int WARNING_GET_ALL_USER_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_ALL_USER_DOES_NOT_EXIST_MSG = "Does not have any user";
 
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Service.Base;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
@@ -28,12 +29,13 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
         public Task<BusinessResult> ConfirmResetPassword(ConfirmOtpModel confirmOtpModel);
         public Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel);
 
-        public Task<bool> UpdateUser(UpdateUserModel updateUserRequestModel);
+        public Task<BusinessResult> UpdateUser(UpdateUserModel updateUserRequestModel);
         public Task<BusinessResult> SoftDeleteUser(int userId);
         public Task<BusinessResult> BannedUser(int userId);
-        public Task<bool> DeleteUser(int userId);
+        public Task<BusinessResult> DeleteUser(int userId);
         public Task<BusinessResult> CreateUser(CreateAccountModel createAccountModel);
-        public Task<string> UpdateAvatarOfUser(IFormFile avatarOfUser, int id);
-        public Task<List<User>> GetAllUsersByRole(string roleName);
+        public Task<BusinessResult> UpdateAvatarOfUser(IFormFile avatarOfUser, int id);
+        public Task<BusinessResult> GetAllUsersByRole(string roleName);
+        public Task<BusinessResult> GetAllUsers(PaginationParameter paginationParameter);
     }
 }

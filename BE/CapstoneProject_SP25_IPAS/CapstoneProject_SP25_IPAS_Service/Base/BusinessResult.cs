@@ -8,25 +8,25 @@ namespace CapstoneProject_SP25_IPAS_Service.Base
 {
     public class BusinessResult : IBusinessResult
     {
-        public int Status { get; set; }
+        public int StatusCode { get; set; }
         public string? Message { get; set; }
         public object? Data { get; set; }
 
         public BusinessResult()
         {
-            Status = -1;
+            StatusCode = -1;
             Message = "Action fail";
         }
 
         public BusinessResult(int status, string message)
         {
-            Status = status;
+            StatusCode = status;
             Message = message;
         }
 
         public BusinessResult(int status, string message, object data)
         {
-            Status = status;
+            StatusCode = status;
             Message = message;
             Data = data;
         }

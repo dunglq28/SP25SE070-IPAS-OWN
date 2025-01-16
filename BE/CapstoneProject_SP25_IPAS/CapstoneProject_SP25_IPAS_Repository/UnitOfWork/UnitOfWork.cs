@@ -22,6 +22,13 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private UserRepository _userRepo;
         private RoleRepository _roleRepo;
         private RefreshTokenRepository _refreshRepo;
+        private ChatRoomRepository _chatRoomRepo;
+        private FarmRepository _farmRepo;
+        private TaskFeedbackRepository _taskFeedbackRepo;
+        private UserWorkLogRepository _userWorkLogRepo;
+        private PlanRepository _planRepo;
+        private NotificationRepository _notificationRepo;
+        private UserFarmRepository _userFarmRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
@@ -29,6 +36,13 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _userRepo = new UserRepository(context);
             _roleRepo = new RoleRepository(context);
             _refreshRepo = new RefreshTokenRepository(context);
+            _chatRoomRepo = new ChatRoomRepository(context);
+            _farmRepo = new FarmRepository(context);
+            _taskFeedbackRepo = new TaskFeedbackRepository(context);
+            _userWorkLogRepo = new UserWorkLogRepository(context);
+            _planRepo = new PlanRepository(context);
+            _notificationRepo = new NotificationRepository(context);
+            _userFarmRepo = new UserFarmRepository(context);
             _configuration = configuration;
         }
 
@@ -134,6 +148,90 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._refreshRepo = new RefreshTokenRepository(_context);
                 }
                 return _refreshRepo;
+            }
+        }
+
+        public ChatRoomRepository ChatRoomRepository
+        {
+            get
+            {
+                if (_chatRoomRepo == null)
+                {
+                    this._chatRoomRepo = new ChatRoomRepository(_context);
+                }
+                return _chatRoomRepo;
+            }
+        }
+
+        public FarmRepository FarmRepository
+        {
+            get
+            {
+                if (_farmRepo == null)
+                {
+                    this._farmRepo = new FarmRepository(_context);
+                }
+                return _farmRepo;
+            }
+        }
+
+        public TaskFeedbackRepository TaskFeedbackRepository
+        {
+            get
+            {
+                if (_taskFeedbackRepo == null)
+                {
+                    this._taskFeedbackRepo = new TaskFeedbackRepository(_context);
+                }
+                return _taskFeedbackRepo;
+            }
+        }
+
+        public UserWorkLogRepository UserWorkLogRepository
+        {
+            get
+            {
+                if (_userWorkLogRepo == null)
+                {
+                    this._userWorkLogRepo = new UserWorkLogRepository(_context);
+                }
+                return _userWorkLogRepo;
+            }
+        }
+
+        public PlanRepository PlanRepository
+        {
+            get
+            {
+                if(_planRepo == null)
+                {
+                    this._planRepo = new PlanRepository(_context);
+                }
+                return _planRepo;
+            }
+        }
+
+        public NotificationRepository NotificationRepository
+        {
+            get
+            {
+                if (_notificationRepo == null)
+                {
+                    this._notificationRepo = new NotificationRepository(_context);
+                }
+                return _notificationRepo;
+            }
+        }
+
+        public UserFarmRepository UserFarmRepository
+        {
+            get
+            {
+                if (_userFarmRepo == null)
+                {
+                    this._userFarmRepo = new UserFarmRepository(_context);
+                }
+                return _userFarmRepo;
             }
         }
     }

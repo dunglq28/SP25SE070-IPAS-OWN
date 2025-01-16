@@ -36,6 +36,7 @@ public partial class Farm
     public double? Width { get; set; }
 
     public string? Description { get; set; }
+    public string? Province { get; set; }
 
     public virtual ICollection<FarmCoordination> FarmCoordinations { get; set; } = new List<FarmCoordination>();
 
@@ -45,5 +46,5 @@ public partial class Farm
 
     public virtual ICollection<Process> Processes { get; set; } = new List<Process>();
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<UserFarm> UserFarms { get; set; } = new List<UserFarm>();
 }
