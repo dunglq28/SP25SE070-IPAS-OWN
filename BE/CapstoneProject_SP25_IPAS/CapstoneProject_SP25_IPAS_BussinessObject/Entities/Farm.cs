@@ -28,7 +28,11 @@ public partial class Farm
     public bool? IsDelete { get; set; }
 
     public string? Status { get; set; }
+
+    public string? Province { get; set; }
+
     public string? District { get; set; }
+
     public string? Ward { get; set; }
 
     public double? Length { get; set; }

@@ -15,10 +15,11 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         Task RollBackAsync();
         void Save();
         Task<int> SaveAsync();
-        //public PaymentRepository PaymentRepository { get; }
         public UserRepository UserRepository { get; }
         public RoleRepository RoleRepository { get; }
         public RefreshTokenRepository RefreshTokenRepository { get; }
+
+        public FarmRepository FarmRepository { get; }
 
     }
 }

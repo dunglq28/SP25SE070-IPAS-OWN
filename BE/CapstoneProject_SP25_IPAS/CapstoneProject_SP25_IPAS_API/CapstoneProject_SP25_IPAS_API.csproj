@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Request\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EditorConfigFiles Remove="F:\User\HocKi\Đồ án tốt nghiệp\SP25-SP25SE070-GreenProduction-AI\BE\CapstoneProject_SP25_IPAS\CapstoneProject_SP25_IPAS_API\.editorconfig" />
   </ItemGroup>
 
