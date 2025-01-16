@@ -13,20 +13,30 @@ body {
   line-height: 1.5;
 }
 
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
 .ant-menu-inline {
   background-color: #fff !important;
+  border-inline-end: none !important;
 }
 
-.ant-menu-submenu-title {
-  color: #000 !important;
+.ant-popover-inner {
+  padding: 10px !important;
 }
 
-.SubMenuItems {
+.subMenuItems {
   position: relative;
 }
 
-.SubMenuItems.active .ant-menu-submenu-title,
-.SubMenuItems .ant-menu-submenu-title:hover {
+.subMenuItems.active .ant-menu-submenu-title,
+.subMenuItems .ant-menu-submenu-title:hover {
   color: #326e2f !important;
   background-color: #bcd379 !important;
   font-weight: bold;

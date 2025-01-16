@@ -1,30 +1,30 @@
 @use "@/styles/variables.scss" as vars;
 
-.SidebarContainer {
+.sidebarWrapper {
   transition: 0.5s;
-  .Sidebar {
+  .sidebar {
     height: 100vh;
     user-select: none;
     position: sticky;
     top: 0;
     flex-direction: column;
 
-    .Logo {
+    .logo {
       width: 100%;
-      min-height: 50px;
-      margin-top: 10px;
+      min-height: 69.5px;
       align-items: center;
       transition: transform 1s ease-out;
-      padding: 12px 12px 0 12px;
-      margin-bottom: auto;
+      padding: 0 12px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid vars.$color_second;
 
-      .Avatar {
+      .avatar {
         flex-shrink: 0;
         width: 40px;
         height: 40px;
       }
 
-      .LogoText {
+      .logoText {
         margin-left: 10px;
         font-size: 22px;
         font-weight: bold;
@@ -35,7 +35,7 @@
       }
     }
 
-    .ArrowSidebar {
+    .arrowSidebar {
       position: absolute;
       right: -9px;
       top: 34px;
@@ -47,12 +47,12 @@
       height: 20px;
     }
 
-    .WrapperDivider {
+    .wrapperDivider {
       flex-direction: row;
       justify-content: center;
       height: 0px;
       margin: 10px 0;
-      .Divider {
+      .divider {
         width: 90%;
         min-width: 90%;
         margin: 0;
@@ -60,13 +60,13 @@
       }
     }
 
-    .WrapperTitle {
+    .wrapperTitle {
       padding-left: 12px;
       height: 0px;
       margin: 0px 0 10px 0;
     }
 
-    .MenuContainer {
+    .menuContainer {
       flex-direction: column;
       row-gap: 8px;
       overflow-y: hidden;
@@ -75,24 +75,24 @@
         overflow-y: auto;
       }
 
-      .MenuItems {
+      .menuItems {
         flex-grow: 1;
         padding-bottom: 10px;
         overflow: hidden;
         background-color: #fff;
         z-index: 999;
 
-        .SubMenuItemsTitle {
+        .subMenuItemsTitle {
           height: 2.25rem;
           // font-size: 16px;
         }
 
-        .SubMenuItem {
+        .subMenuItem {
           margin-left: 30px;
           background-color: #fff;
           transition: 0.3s;
 
-          .Item {
+          .item {
             align-items: center;
             transition: border-color 0.3s, background-color 0.3s,
               padding 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -115,7 +115,7 @@
             }
           }
 
-          .Active {
+          .active {
             background-color: vars.$color_second !important;
             color: vars.$color_primary;
             font-weight: bold;
@@ -124,33 +124,24 @@
       }
     }
 
-    /* Tùy chỉnh thanh cuộn cho các trình duyệt webkit (Chrome, Safari, Edge) */
-    .MenuContainer::-webkit-scrollbar {
-      width: 8px; /* Đặt chiều rộng của thanh cuộn */
-    }
-
-    /* Tùy chỉnh phần tay cầm của thanh cuộn */
-    .MenuContainer::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-    }
-
-    .SubMenuLine {
+    .subMenuLine {
       position: absolute;
       left: 30px;
       width: 3px;
       background-color: vars.$color_second;
     }
 
-    .MenuMinHeight {
+    .menuMinHeight {
       min-height: 110px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .MenuOverflowHidden {
+    .menuOverflowHidden {
       overflow: hidden;
     }
 
-    .Profile {
+    .profile {
       align-items: center;
       padding: 10px;
       height: 40px;
@@ -162,13 +153,13 @@
         background-color: vars.$color_logout_bg_hover;
       }
 
-      .LogoutIcon {
+      .logoutIcon {
         font-size: 25px;
         margin: 0 10px;
         color: vars.$color_logout_text;
       }
 
-      .LogoutText {
+      .logoutText {
         margin-top: 4px;
         white-space: nowrap;
         font-size: 16px;
@@ -180,12 +171,9 @@
   }
 }
 
-.MenuItem {
-  display: flex;
+.menuItem {
   align-items: center;
   // font-size: 16px;
-  background-color: #fff;
-  color: vars.$color_sidebar_text_inactive !important;
 
   &:hover {
     font-weight: bold;
@@ -194,7 +182,7 @@
   }
 }
 
-.MenuIcon {
+.menuIcon {
   vertical-align: -0.325rem !important;
   font-size: 20px !important;
   span {
@@ -202,7 +190,7 @@
   }
 }
 
-.Active {
+.active {
   background-color: vars.$color_second !important;
   color: vars.$color_primary !important;
   font-weight: bold;

@@ -2,7 +2,6 @@ import { Avatar, Divider, Flex, Layout, Menu, Tooltip, Typography } from "antd";
 import style from "./Sidebar.module.scss";
 import { Icons, Images } from "@/assets";
 import { useEffect, useRef, useState } from "react";
-import { EnvironmentOutlined } from "@ant-design/icons";
 import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import "@/App.css";
 import { PATHS } from "@/routes";
@@ -52,11 +51,24 @@ function Sidebar() {
     }
   };
 
-  const menuItems = [
+  const mergeActivePaths = (menuItems: MenuItem[]): MenuItem[] => {
+    return menuItems.map((item) => {
+      if (item.subMenuItems) {
+        // Gộp activePaths của tất cả các subMenuItems
+        const subMenuActivePaths = item.subMenuItems.flatMap((subItem) => subItem.activePaths);
+
+        // Loại bỏ trùng lặp và gộp thêm activePaths độc lập của mục cha
+        item.activePaths = Array.from(new Set([...item.activePaths, ...subMenuActivePaths]));
+      }
+      return item;
+    });
+  };
+
+  let menuItems: MenuItem[] = [
     {
       key: "Dashboard",
       label: "Dashboard",
-      icon: <Icons.checkSuccuss />,
+      icon: <Icons.dashboard />,
       to: PATHS.DASHBOARD,
       activePaths: [PATHS.DASHBOARD],
       category: "Main",
@@ -64,32 +76,55 @@ function Sidebar() {
     {
       key: "User Management",
       label: "User Management",
-      icon: <Icons.checkSuccuss />,
+      icon: <Icons.users />,
       to: PATHS.USER.USER_LIST,
       activePaths: [PATHS.USER.USER_LIST, PATHS.USER.USER_DETAIL],
       category: "Main",
     },
     {
+      key: "Season Management",
+      label: "Season Management",
+      icon: <Icons.seedling />,
+      activePaths: [""],
+      category: "Main",
+    },
+    {
       key: "Farm Management",
       label: "Farm Management",
-      icon: <EnvironmentOutlined />,
-      activePaths: [
-        PATHS.FARM.FARM_LIST,
-        PATHS.FARM.FARM_DETAIL,
-        PATHS.FARM.FARM_PLOT_LIST,
-        PATHS.FARM.FARM_PLOT_CREATE,
-      ],
+      icon: <Icons.farms />,
+      activePaths: [""],
       subMenuItems: [
         {
-          key: "Farm List",
-          label: "Farm List",
+          key: "Farm Information",
+          label: "Farm Information",
           icon: Images.radius,
           to: PATHS.FARM.FARM_LIST,
           activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
         },
         {
-          key: "Land Plot List",
-          label: "Land Plot List",
+          key: "Manage Plots and Rows",
+          label: "Manage Plots and Rows",
+          icon: Images.radius,
+          to: PATHS.FARM.FARM_LIST,
+          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+        },
+        {
+          key: "Manage Plants",
+          label: "Manage Plants",
+          icon: Images.radius,
+          to: PATHS.FARM.FARM_PLANT_LIST,
+          activePaths: [PATHS.FARM.FARM_PLANT_LIST],
+        },
+        {
+          key: "Manage Plant Lot",
+          label: "Manage Plant Lot",
+          icon: Images.radius,
+          to: PATHS.FARM.FARM_PLOT_LIST,
+          activePaths: [PATHS.FARM.FARM_PLOT_LIST, PATHS.FARM.FARM_PLOT_CREATE],
+        },
+        {
+          key: "Manage Criteria",
+          label: "Manage Criteria",
           icon: Images.radius,
           to: PATHS.FARM.FARM_PLOT_LIST,
           activePaths: [PATHS.FARM.FARM_PLOT_LIST, PATHS.FARM.FARM_PLOT_CREATE],
@@ -98,17 +133,54 @@ function Sidebar() {
       category: "Main",
     },
     {
-      key: "Process Management",
-      label: "Process Management",
-      icon: <EnvironmentOutlined />,
-      activePaths: [PATHS.PROCESS.PROCESS_LIST, PATHS.PROCESS.PROCESS_DETAIL],
+      key: "Care Plan Management",
+      label: "Care Plan Management",
+      icon: <Icons.hand />,
+      activePaths: [""],
+      category: "Main",
+    },
+    {
+      key: "AI Chatbox",
+      label: "AI Chatbox",
+      icon: <Icons.robot />,
+      activePaths: [""],
+      category: "Main",
+    },
+    {
+      key: "HR Management",
+      label: "HR Management",
+      icon: <Icons.people />,
+      activePaths: [""],
       subMenuItems: [
         {
-          key: "Process List",
-          label: "Process List",
+          key: "Manage Employees",
+          label: "Manage Employees",
           icon: Images.radius,
-          to: PATHS.PROCESS.PROCESS_LIST,
-          activePaths: [PATHS.PROCESS.PROCESS_LIST, PATHS.PROCESS.PROCESS_DETAIL],
+          to: PATHS.FARM.FARM_LIST,
+          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+        },
+        {
+          key: "Work Schedules",
+          label: "Work Schedules",
+          icon: Images.radius,
+          to: PATHS.FARM.FARM_LIST,
+          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+        },
+      ],
+      category: "Main",
+    },
+    {
+      key: "Third-Party Management",
+      label: "Third-Party Management",
+      icon: <Icons.share />,
+      activePaths: [""],
+      subMenuItems: [
+        {
+          key: "Manage Suppliers",
+          label: "Manage Suppliers",
+          icon: Images.radius,
+          to: PATHS.FARM.FARM_LIST,
+          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
         },
       ],
       category: "Main",
@@ -116,18 +188,20 @@ function Sidebar() {
     {
       key: "Setting",
       label: "Setting",
-      icon: <Icons.checkSuccuss />,
+      icon: <Icons.setting />,
       activePaths: [""],
       category: "Settings",
     },
     {
       key: "Help",
       label: "Help",
-      icon: <Icons.checkSuccuss />,
+      icon: <Icons.help />,
       activePaths: [""],
       category: "Settings",
     },
   ];
+
+  menuItems = mergeActivePaths(menuItems);
 
   useEffect(() => {
     const findMatchingPath = (paths: string[], pathname: string) => {
@@ -195,13 +269,16 @@ function Sidebar() {
 
   const renderMenuItem = (item: MenuItem) => {
     const isMainMenuActive = item.key === activeMenu.parentKey;
+    // const getIconClassName = (isMainMenuActive: boolean) => {
+    //   return `${style.menuIcon} ${!isMainMenuActive ? style.iconInActive : ""}`;
+    // };
 
     if (!item.subMenuItems) {
       return (
         <Menu.Item
           key={item.key}
-          icon={<Flex className={style.MenuIcon}>{item.icon}</Flex>}
-          className={`${style.MenuItem} ${isMainMenuActive ? style.Active : ""}`}
+          icon={<Flex className={style.menuIcon}>{item.icon}</Flex>}
+          className={`${style.menuItem} ${isMainMenuActive ? style.active : ""}`}
           onClick={() => handleNavigation(item.to)}
           data-menu-key={item.key}
         >
@@ -212,13 +289,13 @@ function Sidebar() {
     return (
       <Menu.SubMenu
         key={item.key}
-        className={`SubMenuItems ${isMainMenuActive ? "active" : ""}`}
-        icon={<Flex className={style.MenuIcon}>{item.icon}</Flex>}
-        title={isExpanded ? <span className={style.SubMenuItemsTitle}>{item.label}</span> : null}
+        className={`subMenuItems ${isMainMenuActive ? "active" : ""}`}
+        icon={<Flex className={style.menuIcon}>{item.icon}</Flex>}
+        title={isExpanded ? <span className={style.subMenuItemsTitle}>{item.label}</span> : null}
       >
         {isExpanded && (
           <div
-            className={style.SubMenuLine}
+            className={style.subMenuLine}
             style={{
               height: `${(item.subMenuItems!.length - 1) * 48 + 20}px`,
             }}
@@ -228,10 +305,10 @@ function Sidebar() {
         {item.subMenuItems!.map((subItem) => {
           const isSubItemActive = subItem.key === activeMenu.subItemKey;
           return isExpanded ? (
-            <Flex key={subItem.key} className={style.SubMenuItem}>
+            <Flex key={subItem.key} className={style.subMenuItem}>
               <img style={{ width: "24px" }} src={subItem.icon} alt={subItem.label} />
               <Flex
-                className={`${style.Item} ${isSubItemActive ? style.Active : ""}`}
+                className={`${style.item} ${isSubItemActive ? style.active : ""}`}
                 onClick={() => handleNavigation(subItem.to)}
                 data-menu-key={subItem.key}
               >
@@ -241,7 +318,7 @@ function Sidebar() {
           ) : (
             <Menu.Item
               key={subItem.key}
-              className={`${style.MenuItem} ${isSubItemActive ? style.Active : ""}`}
+              className={`${style.menuItem} ${isSubItemActive ? style.active : ""}`}
               onClick={() => handleNavigation(subItem.to)}
             >
               {subItem.label}
@@ -269,14 +346,14 @@ function Sidebar() {
 
     return (
       <Flex
-        className={`${style.MenuContainer} ${category === "Settings" ? style.MenuMinHeight : ""}`}
+        className={`${style.menuContainer} ${category === "Settings" ? style.menuMinHeight : ""}`}
         ref={sidebarRef}
       >
-        <Flex className={style.WrapperTitle}>
-          <Text className={style.Title}>{category}</Text>
+        <Flex className={style.wrapperTitle}>
+          <Text className={style.title}>{category}</Text>
         </Flex>
-        <Flex className={category === "Settings" ? style.MenuOverflowHidden : ""}>
-          <Menu mode="inline" defaultOpenKeys={defaultOpenKeys} className={style.MenuItems}>
+        <Flex className={category === "Settings" ? style.menuOverflowHidden : ""}>
+          <Menu mode="inline" defaultOpenKeys={defaultOpenKeys} className={style.menuItems}>
             {menuItems
               .filter((item) => item.category === category)
               .map((item) => renderMenuItem(item))}
@@ -292,22 +369,22 @@ function Sidebar() {
       collapsible
       collapsed={!isExpanded}
       trigger={null}
-      className={style.SidebarContainer}
+      className={style.sidebarWrapper}
     >
-      <Flex className={style.Sidebar}>
+      <Flex className={style.sidebar}>
         {/* Header */}
         <Flex>
           <Flex
-            className={style.Logo}
+            className={style.logo}
             style={{
               justifyContent: !isExpanded ? "center" : undefined,
             }}
           >
-            <Avatar src={Images.react} className={style.Avatar} />
-            {isExpanded && <Text className={style.LogoText}>Tan Trieu Pomelo</Text>}
+            <Avatar src={Images.react} className={style.avatar} />
+            {isExpanded && <Text className={style.logoText}>Tan Trieu Pomelo</Text>}
           </Flex>
           <Icons.arrowForward
-            className={style.ArrowSidebar}
+            className={style.arrowSidebar}
             onClick={toggleSidebar}
             style={{
               transform: `rotate(${isExpanded ? 180 : 0}deg)`,
@@ -316,30 +393,26 @@ function Sidebar() {
           />
         </Flex>
 
-        <Flex className={style.WrapperDivider}>
-          <Divider className={style.Divider} />
-        </Flex>
-
         {/* Main Menu */}
         {renderMenuSection("Main")}
 
-        <Flex className={style.WrapperDivider}>
-          <Divider className={style.Divider} />
+        <Flex className={style.wrapperDivider}>
+          <Divider className={style.divider} />
         </Flex>
 
         {/* Settings Menu */}
         {renderMenuSection("Settings")}
 
         <Flex
-          className={style.Profile}
+          className={style.profile}
           style={{
             justifyContent: !isExpanded ? "center" : undefined,
           }}
         >
           <Tooltip title={!isExpanded ? "Logout Account" : ""} placement="right">
-            <Icons.logout className={style.LogoutIcon} />
+            <Icons.logout className={style.logoutIcon} />
           </Tooltip>
-          {isExpanded && <Text className={style.LogoutText}>Logout Account</Text>}
+          {isExpanded && <Text className={style.logoutText}>Logout Account</Text>}
         </Flex>
       </Flex>
     </Sider>
