@@ -21,7 +21,6 @@ const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
             <Content className={style.Container}>
               <div className={style.Children}>{children}</div>
             </Content>
-            <Divider />
             <Footer />
           </Layout>
         </Layout>
