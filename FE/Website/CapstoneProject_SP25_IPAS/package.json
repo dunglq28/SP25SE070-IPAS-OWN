@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "antd": "^5.23.0",
+    "antd-style": "^3.7.1",
     "axios": "^1.7.9",
     "capstoneproject-sp25-ipas": "file:",
     "chart.js": "^4.4.7",
