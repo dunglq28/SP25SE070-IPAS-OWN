@@ -1,3 +1,4 @@
-export { default as Login } from "@/pages/Login/Login";
-export { default as Dashboard } from "@/pages/Dashboard/Dashboard";
-export { default as User } from "@/pages/User/User";
+export { default as Login } from "@/pages/Auth/Login/Login";
+export { default as Dashboard } from "@/pages/dashboard/Dashboard";
+export { default as User } from "@/pages/user/User";
+export { default as PlantList } from "@/pages/plant/PlantList";

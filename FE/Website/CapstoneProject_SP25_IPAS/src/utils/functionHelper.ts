@@ -64,6 +64,10 @@ export const formatCurrency = (amount: string): string => {
     .trim();
 };
 
+export const getCurrentDate = (): string => {
+  return moment().format("dddd, DD/MM/YYYY");
+};
+
 export const formatDate = (date: Date): string => {
   return moment(date).format("DD/MM/YYYY");
 };
