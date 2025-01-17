@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject_SP25_IPAS_Repository.Repository
 {
-    public class PlanRepository : GenericRepository<PlanRepository>, IPlanRepository
+    public class PlanRepository : GenericRepository<Plan>, IPlanRepository
     {
         private readonly IpasContext _context;
 

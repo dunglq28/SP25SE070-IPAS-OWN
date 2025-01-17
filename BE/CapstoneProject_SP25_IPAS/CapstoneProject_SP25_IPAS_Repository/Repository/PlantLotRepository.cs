@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject_SP25_IPAS_Repository.Repository
 {
-    public class FarmRepository : GenericRepository<Farm>, IFarmRepository
+    public class PlantLotRepository : GenericRepository<PlantLot>, IPlantLotRepository
     {
         private readonly IpasContext _context;
-        public FarmRepository(IpasContext context) : base(context)
+        public PlantLotRepository(IpasContext context) : base(context)
         {
             _context = context;
         }

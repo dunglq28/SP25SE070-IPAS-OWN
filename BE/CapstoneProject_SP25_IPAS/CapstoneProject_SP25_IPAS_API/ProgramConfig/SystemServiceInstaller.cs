@@ -38,11 +38,14 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IPlantLotRepository, PlantLotRepository>();
+            services.AddScoped<IPlantRepository, PlantRepository>();
 
             // Register servicies
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<IPlantLotService, PlantLotService>();
 
             services.AddHttpClient();
 

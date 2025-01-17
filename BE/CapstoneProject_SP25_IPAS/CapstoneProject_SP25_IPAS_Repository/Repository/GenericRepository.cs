@@ -76,7 +76,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             {
                 query = query.Where(filter);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
@@ -104,7 +104,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             {
                 query = orderBy(query);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split

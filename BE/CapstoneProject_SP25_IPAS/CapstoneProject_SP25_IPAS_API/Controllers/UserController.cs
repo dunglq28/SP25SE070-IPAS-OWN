@@ -39,13 +39,13 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet("get-user-by-id")]
-        public async Task<IActionResult> GetUserById([FromRoute] int id)
+        [HttpGet("get-user-by-id/{userId}")]
+        public async Task<IActionResult> GetUserById([FromRoute] int userId)
         {
             try
             {
 
-                var result = await _userService.GetUserById(id);
+                var result = await _userService.GetUserById(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet("get-user-by-email")]
+        [HttpGet("get-user-by-email/{email}")]
         public async Task<IActionResult> GetUserByEmail([FromRoute] string email)
         {
             try
@@ -115,7 +115,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 return BadRequest(response);
             }
         }
-        [HttpPost("banned-user")]
+        [HttpPut("banned-user/{userId}")]
         public async Task<IActionResult> BannedUser([FromRoute] int userId)
         {
             try
@@ -134,8 +134,8 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete("soft-delete-user")]
-        public async Task<IActionResult> SoftDeleteUser([FromRoute(Name = "id")] int userId)
+        [HttpDelete("soft-delete-user/{userId}")]
+        public async Task<IActionResult> SoftDeleteUser([FromRoute] int userId)
         {
             try
             {
@@ -153,12 +153,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete("delete-user")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        [HttpDelete("delete-user/{userId}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int userId)
         {
             try
             {
-                var result = await _userService.DeleteUser(id);
+                var result = await _userService.DeleteUser(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -173,12 +173,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPatch("update-avatar")]
-        public async Task<IActionResult> UpdateAvatarOfUser(IFormFile avatarOfUser, [FromRoute] int id)
+        [HttpPut("update-avatar/{userId}")]
+        public async Task<IActionResult> UpdateAvatarOfUser(IFormFile avatarOfUser, [FromRoute] int userId)
         {
             try
             {
-                var result = await _userService.UpdateAvatarOfUser(avatarOfUser, id);
+                var result = await _userService.UpdateAvatarOfUser(avatarOfUser, userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -193,7 +193,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet("get-all-user-by-role")]
+        [HttpGet("get-all-user-by-role/{roleName}")]
         public async Task<IActionResult> GetAllUserByRoleName([FromRoute] string roleName)
         {
             try

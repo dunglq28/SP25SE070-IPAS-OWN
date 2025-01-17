@@ -27,5 +27,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public PlanRepository PlanRepository { get; }
         public NotificationRepository NotificationRepository { get; }
         public UserFarmRepository UserFarmRepository { get; }
+        public PlantLotRepository PlantLotRepository { get; }
+        public PlantRepository PlantRepository { get; }
     }
 }

@@ -32,6 +32,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_SOFT_DELETE_USER_MSG = "Soft Delete User Success";
         public static int SUCCESS_BANNED_USER_CODE = 200;
         public static string SUCCESS_BANNED_USER_MSG = "Banned User Success";
+        public static string SUCCESS_UNBANNED_USER_MSG = "Active User Success";
         public static int SUCCESS_SEND_OTP_RESET_PASSWORD_CODE = 200;
         public static string SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG = "Otp has sended. Please check your mail";
         public static int SUCCESS_GET_USER_CODE = 200;
@@ -59,6 +60,18 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_GET_ALL_USER_BY_ROLE_MESSAGE = "Get all user by role success";
         public static int SUCCESS_UPDATE_USER_CODE = 200;
         public static string SUCCESS_UPDATE_MESSAGE = "Update user success";
+        public static int SUCCESS_GET_PLANT_LOT_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_PLANT_LOT_BY_ID_MESSAGE = "Get plant lot by id success";
+        public static int SUCCESS_CREATE_PLANT_LOT_CODE = 200;
+        public static string SUCCESS_CREATE_PLANT_LOT_MESSAGE = "Create plant lot success";
+        public static int SUCCESS_UPDATE_PLANT_LOT_CODE = 200;
+        public static string SUCCESS_UPDATE_PLANT_LOT_MESSAGE = "Update plant lot success";
+        public static int SUCCESS_DELETE_PLANT_LOT_CODE = 200;
+        public static string SUCCESS_DELETE_PLANT_LOT_MESSAGE = "Delete plant lot success";
+        public static int SUCCESS_GET_ALL_PLANT_LOT_CODE = 200;
+        public static string SUCCESS_GET_ALL_PLANT_LOT_MESSAGE = "Get all plant lot success";
+        public static int SUCCESS_CREATE_MANY_PLANT_FROM_PLANT_LOT_CODE = 200;
+        public static string SUCCESS_CREATE_MANY_PLANT_FROM_PLANT_LOT_MESSAGE = "Create many plant from plant lot success";
 
         #endregion
 
@@ -93,6 +106,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_GET_ALL_USER_MESSAGE = "Get all user failed";
         public static int FAIL_UPDATE_USER_CODE = 500;
         public static string FAIL_UPDATE_USER_MESSAGE = "Update user failed";
+        public static int FAIL_CREATE_PLANT_LOT_CODE = 500;
+        public static string FAIL_CREATE_PLANT_LOT_MESSAGE = "Create plant lot failed";
+        public static int FAIL_UPDATE_PLANT_LOT_CODE = 500;
+        public static string FAIL_UPDATE_PLANT_LOT_MESSAGE = "Update plant lot failed";
+        public static int FAIL_DELETE_PLANT_LOT_CODE = 500;
+        public static string FAIL_DELETE_PLANT_LOT_MESSAGE = "Delete plant lot failed";
+        public static int FAIL_CREATE_MANY_PLANT_FROM_PLANT_LOT_CODE = 500;
+        public static string FAIL_CREATE_MANY_PLANT_FROM_PLANT_LOT_MESSAGE = "Create many plant from plant lot failed";
         #endregion
 
         #region Warning Code
@@ -124,6 +145,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_USER_DOES_NOT_EXIST_MSG = "User does not existed";
         public static int WARNING_GET_ALL_USER_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_ALL_USER_DOES_NOT_EXIST_MSG = "Does not have any user";
+        public static int WARNING_GET_PLANT_LOT_BY_ID_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PLANT_LOT_BY_ID_DOES_NOT_EXIST_MSG = "Does not have any plant lot";
+        public static int WARNING_CREATE_MANY_PLANT_FROM_PLANT_LOT_CODE = 400;
+        public static string WARNING_CREATE_MANY_PLANT_FROM_PLANT_LOT_MSG = "Some criteria does not pass. Please check all criteria again";
 
         #endregion
     }

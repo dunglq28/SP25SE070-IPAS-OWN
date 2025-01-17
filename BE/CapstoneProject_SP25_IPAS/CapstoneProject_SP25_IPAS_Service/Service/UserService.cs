@@ -12,6 +12,7 @@ using CapstoneProject_SP25_IPAS_Service.IService;
 using CapstoneProject_SP25_IPAS_Service.Pagination;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Core;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
@@ -49,14 +50,29 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         public async Task<BusinessResult> BannedUser(int userId)
         {
             var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
-            if (existUser != null && !existUser.Status.ToLower().Equals("banned"))
+            if (existUser != null)
             {
-                existUser.Status = "Banned";
-                var result = await _unitOfWork.SaveAsync();
-                if (result > 0)
+                if(!existUser.Status.ToLower().Equals("banned"))
                 {
-                    return new BusinessResult(Const.SUCCESS_BANNED_USER_CODE, Const.SUCCESS_BANNED_USER_MSG);
+                    existUser.Status = "Banned";
+
+                    var result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_BANNED_USER_CODE, Const.SUCCESS_BANNED_USER_MSG);
+                    }
                 }
+                else
+                {
+                    existUser.Status = "Active";
+
+                    var result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_BANNED_USER_CODE, Const.SUCCESS_UNBANNED_USER_MSG);
+                    }
+                }
+               
                 return new BusinessResult(Const.FAIL_BANNED_USER_CODE, Const.FAIL_BANNED_USER_MSG);
             }
             return new BusinessResult(Const.WARNING_BANNED_USER_CODE, Const.WARNING_BANNED_USER_MSG);
@@ -102,6 +118,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         CreateDate = DateTime.Now,
                         UpdateDate = DateTime.Now,
                         AvatarURL = createAccountModel.AvatarUrl ?? "",
+                        Gender = createAccountModel.Gender
                     };
 
                     var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(createAccountModel.Email);
@@ -113,7 +130,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     {
                         user.Password = PasswordHelper.HashPassword(createAccountModel.Password);
                     }
-                    var role = await _unitOfWork.RoleRepository.GetRoleByName(createAccountModel.Role.ToString());
+                    var role = await _unitOfWork.RoleRepository.GetRoleById((int)createAccountModel.Role);
                     if (role != null)
                     {
                         user.RoleId = role.RoleId;
@@ -138,7 +155,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
 
         public async Task<BusinessResult> DeleteUser(int userId)
         {
-            string includeProperties = "Plans,TaskFeedbacks,UserWorkLogs,ChatRooms,Farms,Notifications,RefreshTokens";
+            string includeProperties = "Plans,TaskFeedbacks,UserWorkLogs,ChatRooms,UserFarms,Notifications,RefreshTokens";
             var entityDeleteUser = await _unitOfWork.UserRepository.GetByCondition(x => x.UserId == userId, includeProperties);
             if (entityDeleteUser == null)
             {
@@ -148,6 +165,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                 _unitOfWork.PlanRepository.Delete(plan);
             }
+            entityDeleteUser.Plans.Clear();
             foreach (var taskFeedback in entityDeleteUser!.TaskFeedbacks.ToList())
             {
                 _unitOfWork.TaskFeedbackRepository.Delete(taskFeedback);
@@ -162,6 +180,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
             foreach (var userFarm in entityDeleteUser!.UserFarms.ToList())
             {
+                var listFarm = await _unitOfWork.FarmRepository.GetByCondition(x => x.FarmId == userFarm.FarmId);
+                _unitOfWork.FarmRepository.Delete(listFarm);
                 _unitOfWork.UserFarmRepository.Delete(userFarm);
             }
             foreach (var notification in entityDeleteUser!.Notifications.ToList())
@@ -172,6 +192,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                 _unitOfWork.RefreshTokenRepository.Delete(refreshToken);
             }
+
             _unitOfWork.UserRepository.Delete(entityDeleteUser);
             await _unitOfWork.SaveAsync();
 
@@ -433,7 +454,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     {
                         newUser.Password = PasswordHelper.HashPassword(model.Password);
                     }
-                    var role = await _unitOfWork.RoleRepository.GetRoleByName(model.Role.ToString());
+                    var role = await _unitOfWork.RoleRepository.GetRoleById((int)model.Role);
                     if (role != null)
                     {
                         newUser.RoleId = role.RoleId;
@@ -498,6 +519,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 var uploadImageLink = await _cloudinaryService.UploadImageAsync(avatarOfUser, "user/avatar");
                 if (uploadImageLink != null)
                 {
+                    if(checkExistUser.AvatarURL != null)
+                    {
+                        await _cloudinaryService.DeleteImageByUrlAsync(checkExistUser.AvatarURL);
+                    }
                     checkExistUser.AvatarURL = uploadImageLink;
                     var result = await _unitOfWork.SaveAsync();
                     return new BusinessResult(Const.SUCCESS_UPLOAD_IMAGE_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, result > 0);
@@ -545,17 +570,21 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     }
                     if (updateUserRequestModel.Role != null)
                     {
-                        var checkRole = Enum.TryParse(typeof(RoleEnum), updateUserRequestModel.Role.ToString(), true, out var roleValid);
+                        var checkRole = Enum.IsDefined(typeof(RoleEnum), updateUserRequestModel.Role);
                         if(checkRole)
                         {
-                            existUser.RoleId = (int)roleValid;
+                            existUser.RoleId = (int)updateUserRequestModel.Role;
                         }
                         else
                         {
                             return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG, false);
                         }
                     }
-                    existUser.IsDelete = updateUserRequestModel.IsDeleted;
+                    if(existUser.IsDelete != null)
+                    {
+                        existUser.IsDelete = updateUserRequestModel.IsDeleted;
+                    }
+                    existUser.UpdateDate = DateTime.Now;
 
                     if (!string.IsNullOrEmpty(updateUserRequestModel.Password))
                     {

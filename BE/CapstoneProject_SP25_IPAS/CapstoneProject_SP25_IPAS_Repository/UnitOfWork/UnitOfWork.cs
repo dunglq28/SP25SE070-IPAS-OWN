@@ -29,6 +29,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private PlanRepository _planRepo;
         private NotificationRepository _notificationRepo;
         private UserFarmRepository _userFarmRepo;
+        private PlantLotRepository _plantLotRepo;
+        private PlantRepository _plantRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
@@ -43,6 +45,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _planRepo = new PlanRepository(context);
             _notificationRepo = new NotificationRepository(context);
             _userFarmRepo = new UserFarmRepository(context);
+            _plantLotRepo = new PlantLotRepository(context);
+            _plantRepo = new PlantRepository(context);
             _configuration = configuration;
         }
 
@@ -61,18 +65,17 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public void Dispose()
         {
             //Dispose(true);
-            //GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         public void Save()
         {
-            //_context.SaveChanges();
+            _context.SaveChanges();
         }
 
-        public Task<int> SaveAsync()
+        public async Task<int> SaveAsync()
         {
-            //return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -232,6 +235,30 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._userFarmRepo = new UserFarmRepository(_context);
                 }
                 return _userFarmRepo;
+            }
+        }
+
+        public PlantLotRepository PlantLotRepository
+        {
+            get
+            {
+                if (_plantLotRepo == null)
+                {
+                    this._plantLotRepo = new PlantLotRepository(_context);
+                }
+                return _plantLotRepo;
+            }
+        }
+
+        public PlantRepository PlantRepository
+        {
+            get
+            {
+                if (_plantRepo == null)
+                {
+                    this._plantRepo = new PlantRepository(_context);
+                }
+                return _plantRepo;
             }
         }
     }
