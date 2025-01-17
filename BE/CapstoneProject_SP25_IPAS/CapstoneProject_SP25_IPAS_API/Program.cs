@@ -16,6 +16,8 @@ using System.Text.Json;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureServices();
 builder.Services.AddDbContext<IpasContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -70,6 +72,11 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
         ClockSkew = TimeSpan.Zero
     };
+})
+.AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
 
 // Add CORS
@@ -91,7 +98,6 @@ builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSe
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 
-builder.Services.ConfigureServices();
 
 var app = builder.Build();
 

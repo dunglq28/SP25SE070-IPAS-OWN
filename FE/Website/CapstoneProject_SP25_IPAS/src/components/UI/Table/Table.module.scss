@@ -1,0 +1,61 @@
+@use "@/styles/variables.scss" as vars;
+
+.tbl {
+  border-radius: 8px;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  overflow-x: auto;
+
+  .table_content {
+  }
+
+  .table_header_container {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 999;
+  }
+
+  .tooltipText {
+    color: vars.$color_primary;
+    font-weight: bold;
+  }
+
+  .headerTbl {
+    color: black;
+    font-size: 15px;
+    text-align: center;
+    white-space: nowrap;
+
+    .headerCol {
+      justify-content: center;
+      align-items: center;
+
+      .headerTitle {
+        margin-top: 4px;
+      }
+
+      .iconSort {
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        transform: rotate(180deg);
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0.4;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .headerTbl.pointer {
+    cursor: pointer;
+  }
+
+  .selectedRow {
+    background-color: vars.$color_selected_row;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

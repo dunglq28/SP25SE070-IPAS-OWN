@@ -1,4 +1,4 @@
-import { Button, Divider, Modal, notification } from "antd";
+import { Button, Divider, Flex, Modal, Popover } from "antd";
 import { useEffect, useState } from "react";
 import style from "./ActionBar.module.scss";
 import { Icons } from "@/assets";
@@ -8,9 +8,10 @@ interface ActionBarProps {
   deleteSelectedItems: () => void;
 }
 
-export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, deleteSelectedItems }) => {
+const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, deleteSelectedItems }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isActionPopupVisible, setIsActionPopupVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(selectedCount > 0);
@@ -21,54 +22,75 @@ export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, deleteSelec
   const handleDeleteSelectedItems = () => {
     deleteSelectedItems();
     setIsModalVisible(false);
-    notification.success({
-      message: "Xoá thành công",
-      description: `${selectedCount} mục đã được xoá.`,
-    });
   };
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
+  const showActionPopup = () => {
+    setIsActionPopupVisible(true); // Hiển thị popup khi bấm "Actions"
+  };
+
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
+  const actionContent = (
+    <div className={style.popover_content}>
+      <Button className={style.action_popup_btn} onClick={showModal}>
+        Delete Items
+      </Button>
+      {/* Thêm các hành động khác nếu cần */}
+    </div>
+  );
+
   return (
     <>
-      <div className={style.action_bar_container}>
-        <div className={`${style.action_bar_content} ${!isVisible ? style.hide : ""}`}>
-          <Button className={style.action_bar_btn_selected} disabled>
-            {selectedCount} mục được chọn
-          </Button>
+      <Flex className={style.action_bar_container}>
+        <Flex className={`${style.action_bar_content} ${!isVisible ? style.hide : ""}`}>
+          <Flex className={style.action_bar_selected}>
+            <Flex className={style.number_selected_round}>
+              <span className={style.number}>{selectedCount} </span>
+            </Flex>
+            <Flex className={style.text_selected}>items selected</Flex>
+          </Flex>
 
-          <div className={style.divider_container}>
-            <Divider className={style.divider} orientation="center" />
-          </div>
+          <Flex className={style.divider_container}>
+            <Divider className={style.divider} type="vertical" />
+          </Flex>
 
           <Button
             className={style.action_bar_btn_delete}
             icon={<Icons.delete />}
             onClick={showModal}
           >
-            Xoá mục
+            Delete items
           </Button>
-        </div>
-      </div>
+
+          {/* <Popover content={actionContent} trigger="click" placement="bottom">
+            <Button className={style.action_bar_btn_actions}>
+              Actions <Icons.arrowDown />
+            </Button>
+          </Popover> */}
+        </Flex>
+      </Flex>
 
       <Modal
-        title="Xoá mục đã chọn"
+        title="Delete Selected Items"
         visible={isModalVisible}
         onCancel={handleCancel}
         onOk={handleDeleteSelectedItems}
-        okText="Xoá"
-        cancelText="Huỷ"
+        okText="Delete"
+        cancelText="Cancel"
       >
         <p>
-          Bạn có chắc chắn muốn xóa {selectedCount} mục đã chọn? Hành động này không thể hoàn tác.
+          Are you sure you want to delete the {selectedCount} selected items? This action cannot be
+          undone.
         </p>
       </Modal>
     </>
   );
 };
+
+export default ActionBar;

@@ -10,30 +10,19 @@ interface ManagementLayoutProps {
 }
 
 const ManagementLayout: React.FC<ManagementLayoutProps> = ({ children }) => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   return (
     <Flex>
       <SidebarAdmin />
 
-      <Layout style={{ flex: 1 }}>
+      <Layout className={style.layout}>
         <HeaderAdmin />
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb items={[{ title: "Home" }, { title: "Dashboard" }]} />;
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            Bill is a cat.
-          </div>
-          {/* {children} */}
+        <Content className={style.contentWrapper}>
+          <Flex className={style.content}>
+            <Breadcrumb items={[{ title: "Home" }, { title: "Dashboard" }]} />
+            {children}
+          </Flex>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
+        <Footer className={style.footer}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
