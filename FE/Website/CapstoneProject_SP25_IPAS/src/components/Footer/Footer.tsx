@@ -44,7 +44,7 @@
 import React from 'react';
 import { Layout, Row, Col, Typography, Space, Button, Input } from 'antd';
 import { FacebookOutlined, TwitterOutlined, InstagramOutlined } from '@ant-design/icons';
-import logo from "@/assets/images/logo 1.png";
+import logo from '@/assets/images/resources/logo 1.png'
 
 const { Title, Text } = Typography;
 
