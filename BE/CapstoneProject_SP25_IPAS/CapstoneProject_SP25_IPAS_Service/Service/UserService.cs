@@ -1,0 +1,875 @@
+﻿using AutoMapper;
+using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using CapstoneProject_SP25_IPAS_Common;
+using CapstoneProject_SP25_IPAS_Common.Enum;
+using CapstoneProject_SP25_IPAS_Common.Mail;
+using CapstoneProject_SP25_IPAS_Common.Utils;
+using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
+using CapstoneProject_SP25_IPAS_Service.Base;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
+using CapstoneProject_SP25_IPAS_Service.IService;
+using CapstoneProject_SP25_IPAS_Service.Pagination;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet.Core;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Crypto.Parameters;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CapstoneProject_SP25_IPAS_Service.Service
+{
+    public class UserService : IUserService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
+        private readonly IMailService _mailService;
+        private readonly ICloudinaryService _cloudinaryService;
+        private readonly IMapper _mapper;
+
+        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _configuration = configuration;
+            _mailService = mailService;
+            _cloudinaryService = cloudinaryService;
+            _mapper = mapper;
+        }
+
+        public async Task<BusinessResult> BannedUser(int userId)
+        {
+            var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (existUser != null && !existUser.Status.ToLower().Equals("banned"))
+            {
+                existUser.Status = "Banned";
+                var result = await _unitOfWork.SaveAsync();
+                if (result > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_BANNED_USER_CODE, Const.SUCCESS_BANNED_USER_MSG);
+                }
+                return new BusinessResult(Const.FAIL_BANNED_USER_CODE, Const.FAIL_BANNED_USER_MSG);
+            }
+            return new BusinessResult(Const.WARNING_BANNED_USER_CODE, Const.WARNING_BANNED_USER_MSG);
+
+        }
+
+        public async Task<BusinessResult> ConfirmResetPassword(ConfirmOtpModel confirmOtpModel)
+        {
+            try
+            {
+                var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(confirmOtpModel.Email);
+                if (checkExistUser != null && checkExistUser.Otp != null)
+                {
+                    if (checkExistUser.Otp.Equals(confirmOtpModel.OtpCode) && checkExistUser.ExpiredOtpTime >= DateTime.Now)
+                    {
+                        return new BusinessResult(Const.SUCCESS_CONFIRM_RESET_PASSWORD_CODE, Const.SUCCESS_CONFIRM_RESET_PASSWORD_MESSAGE, true);
+                    }
+                    return new BusinessResult(Const.FAIL_CONFIRM_RESET_PASSWORD_CODE, Const.FAIL_CONFIRM_RESET_PASSWORD_MESSAGE, false);
+                }
+                return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG, false);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
+        }
+
+        public async Task<BusinessResult> CreateUser(CreateAccountModel createAccountModel)
+        {
+            using(var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    User user = new User()
+                    {
+                        Email = createAccountModel.Email,
+                        UserCode = NumberHelper.GenerateRandomCode("USR"),
+                        FullName = createAccountModel.FullName,
+                        Status = "Active",
+                        RoleId = (int)createAccountModel.Role,
+                        IsDelete = false,
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        AvatarURL = createAccountModel.AvatarUrl ?? "",
+                    };
+
+                    var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(createAccountModel.Email);
+                    if(existUser != null)
+                    {
+                        return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG, false);
+                    }
+                    if(createAccountModel.Password != null)
+                    {
+                        user.Password = PasswordHelper.HashPassword(createAccountModel.Password);
+                    }
+                    var role = await _unitOfWork.RoleRepository.GetRoleByName(createAccountModel.Role.ToString());
+                    if (role != null)
+                    {
+                        user.RoleId = role.RoleId;
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG);
+                    }
+                    await _unitOfWork.UserRepository.AddUserAsync(user);
+                    await transaction.CommitAsync();
+                    return new BusinessResult(Const.SUCCESS_REGISTER_CODE, Const.SUCCESS_REGISTER_MSG);
+
+                }
+                catch (Exception ex)
+                {
+
+                    await transaction.RollbackAsync();
+                    return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+                }
+            }
+        }
+
+        public async Task<BusinessResult> DeleteUser(int userId)
+        {
+            string includeProperties = "Plans,TaskFeedbacks,UserWorkLogs,ChatRooms,Farms,Notifications,RefreshTokens";
+            var entityDeleteUser = await _unitOfWork.UserRepository.GetByCondition(x => x.UserId == userId, includeProperties);
+            if (entityDeleteUser == null)
+            {
+                return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG, false);
+            }
+            foreach (var plan in entityDeleteUser!.Plans.ToList())
+            {
+                _unitOfWork.PlanRepository.Delete(plan);
+            }
+            foreach (var taskFeedback in entityDeleteUser!.TaskFeedbacks.ToList())
+            {
+                _unitOfWork.TaskFeedbackRepository.Delete(taskFeedback);
+            }
+            foreach (var userWorkLog in entityDeleteUser!.UserWorkLogs.ToList())
+            {
+                _unitOfWork.UserWorkLogRepository.Delete(userWorkLog);
+            }
+            foreach (var chatRoom in entityDeleteUser!.ChatRooms.ToList())
+            {
+                _unitOfWork.ChatRoomRepository.Delete(chatRoom);
+            }
+            foreach (var userFarm in entityDeleteUser!.UserFarms.ToList())
+            {
+                _unitOfWork.UserFarmRepository.Delete(userFarm);
+            }
+            foreach (var notification in entityDeleteUser!.Notifications.ToList())
+            {
+                _unitOfWork.NotificationRepository.Delete(notification);
+            }
+            foreach (var refreshToken in entityDeleteUser!.RefreshTokens.ToList())
+            {
+                _unitOfWork.RefreshTokenRepository.Delete(refreshToken);
+            }
+            _unitOfWork.UserRepository.Delete(entityDeleteUser);
+            await _unitOfWork.SaveAsync();
+
+            try
+            {
+                if (entityDeleteUser.AvatarURL != null && entityDeleteUser.AvatarURL.Contains("cloudinary"))
+                {
+                    await _cloudinaryService.DeleteImageByUrlAsync(entityDeleteUser.AvatarURL);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
+            return new BusinessResult(Const.SUCCESS_DELETE_USER_CODE, Const.SUCCESS_DELETE_USER_MESSAGE, true);
+           
+        }
+
+        public async Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel)
+        {
+            try
+            {
+                var checkUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(resetPasswordModel.Email);
+                if (checkUser != null && checkUser.Otp.Equals(resetPasswordModel.OtpCode))
+                {
+                    checkUser.Password = PasswordHelper.HashPassword(resetPasswordModel.NewPassword);
+                    var result = await _unitOfWork.UserRepository.UpdateUserAsync(checkUser);
+                    if (result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_RESET_PASSWORD_CODE, Const.SUCCESS_RESET_PASSWORD_MSG, true);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.FAIL_RESET_PASSWORD_CODE, Const.FAIL_RESET_PASSWORD_MSG, false);
+                    }
+
+                }
+                return new BusinessResult(Const.WARNING_RESET_PASSWORD_CODE, Const.WARNING_RESET_PASSWORD_MSG, false);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
+        }
+
+        public async Task<BusinessResult> GetAllUsersByRole(string roleName)
+        {
+            try
+            {
+                var result = await _unitOfWork.UserRepository.GetAllUsersByRole(roleName);
+                if (result.Count > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_GET_ALL_USER_BY_ROLE_CODE, Const.SUCCESS_GET_ALL_USER_BY_ROLE_MESSAGE, result);
+                }
+                return new BusinessResult(Const.FAIL_GET_ALL_USER_BY_ROLE_CODE, Const.FAIL_GET_ALL_USER_BY_ROLE_MESSAGE, false);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
+            }
+        }
+
+        public async Task<BusinessResult> GetUserByEmail(string email)
+        {
+            var getUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if (getUser != null)
+            {
+                var result = _mapper.Map<UserModel>(getUser);
+                return new BusinessResult(Const.SUCCESS_GET_USER_CODE, Const.SUCCESS_GET_USER_BY_EMAIL_MSG, result);
+            }
+            return new BusinessResult(Const.FAIL_GET_USER_CODE, Const.FAIL_GET_USER_BY_EMAIL_MSG, null);
+        }
+
+        public async Task<BusinessResult> GetUserById(int userId)
+        {
+            var getUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            if (getUser != null)
+            {
+                var result = _mapper.Map<UserModel>(getUser);
+                return new BusinessResult(Const.SUCCESS_GET_USER_CODE, Const.FAIL_GET_USER_BY_ID_MSG, result);
+            }
+            return new BusinessResult(Const.FAIL_GET_USER_CODE, Const.FAIL_GET_USER_BY_ID_MSG, null);
+        }
+
+        public async Task<BusinessResult> LoginByEmailAndPassword(string email, string password)
+        {
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+                    if (existUser == null)
+                    {
+                        return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG);
+                    }
+
+                    var verifyPassword = PasswordHelper.VerifyPassword(password, existUser.Password);
+                    if (verifyPassword || existUser.Password == null)
+                    {
+                        if (existUser.Status.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
+                        {
+                            return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
+                        }
+                        _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+                        string accessToken = await GenerateAccessToken(email, existUser);
+
+                        _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
+                        string refreshToken = await GenerateRefreshToken(email, null, tokenValidityInDays);
+
+
+                        await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
+                        {
+                            UserId = existUser.UserId,
+                            RefreshTokenCode = NumberHelper.GenerateRandomCode("RFT"),
+                            RefreshTokenValue = refreshToken,
+                            CreateDate = DateTime.Now,
+                            ExpiredDate = DateTime.Now.AddDays(tokenValidityInDays)
+                        });
+                        await transaction.CommitAsync();
+                        return new BusinessResult(Const.SUCCESS_LOGIN_CODE, Const.SUCCESS_LOGIN_MSG, new AuthenModel()
+                        {
+                            AccessToken = accessToken,
+                            RefreshToken = refreshToken,
+                        });
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.WARNING_PASSWORD_INCORRECT_CODE, Const.WARNING__PASSWORD_INCORRECT_MSG);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    await transaction.RollbackAsync();
+                    return new BusinessResult(Const.FAIL_CREATE_CODE, ex.Message);
+                }
+            }
+        }
+
+        public async Task<BusinessResult> Logout(string refreshToken)
+        {
+            var checkExistRefreshToken = await _unitOfWork.RefreshTokenRepository.GetRefrshTokenByRefreshTokenValue(refreshToken);
+            if (checkExistRefreshToken != null)
+            {
+                var result = await _unitOfWork.RefreshTokenRepository.DeleteToken(refreshToken);
+                if (result)
+                {
+                    return new BusinessResult(Const.SUCCESS_LOGOUT_CODE, Const.SUCCESS_LOGOUT_MSG);
+                }
+                else
+                {
+                    return new BusinessResult(Const.FAIL_LOGOUT_CODE, Const.FAIL_LOGOUT_MSG);
+                }
+            }
+            return new BusinessResult(Const.WARNING_RFT_NOT_EXIST_CODE, Const.WARNING_RFT_NOT_EXIST_MSG);
+        }
+
+        public async Task<BusinessResult> RefreshToken(string jwtToken)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
+            var handler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = authSigningKey,
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["JWT:ValidIssuer"],
+                ValidateAudience = true,
+                ValidAudience = _configuration["JWT:ValidAudience"],
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            };
+            try
+            {
+                SecurityToken validatedToken;
+                var principal = handler.ValidateToken(jwtToken, validationParameters, out validatedToken);
+                var email = principal.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+                if (email != null)
+                {
+                    if (principal != null)
+                    {
+                        var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+                        if (existUser != null)
+                        {
+                            var checkExistRefreshToken = await _unitOfWork.RefreshTokenRepository.GetRefrshTokenByRefreshTokenValue(jwtToken);
+                            if (checkExistRefreshToken == null)
+                            {
+                                return new BusinessResult(Const.WARNING_RFT_NOT_EXIST_CODE, Const.WARNING_RFT_NOT_EXIST_MSG);
+
+                            }
+                            else
+                            {
+                                if (checkExistRefreshToken.ExpiredDate >= DateTime.Now)
+                                {
+                                    var newAccessToken = await GenerateAccessToken(email, existUser);
+                                    _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int newTokenValidityInMinutes);
+
+                                    var newRefreshToken = await GenerateRefreshToken(email, checkExistRefreshToken.ExpiredDate, 0);
+                                    _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
+
+                                    await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
+                                    {
+                                        UserId = checkExistRefreshToken.UserId,
+                                        RefreshTokenCode = NumberHelper.GenerateRandomCode("RFT"),
+                                        RefreshTokenValue = newRefreshToken,
+                                        CreateDate = DateTime.Now,
+                                        ExpiredDate = checkExistRefreshToken.ExpiredDate
+                                    });
+                                    return new BusinessResult(Const.SUCCESS_RFT_CODE, Const.SUCCESS_RFT_MSG, new AuthenModel
+                                    {
+                                        AccessToken = newAccessToken,
+                                        RefreshToken = newRefreshToken
+                                    });
+
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RefreshTokenRepository.DeleteToken(jwtToken);
+                                    return new BusinessResult(Const.WARNING_INVALID_REFRESH_TOKEN_CODE, Const.WARNING_INVALID_REFRESH_TOKEN_MSG);
+                                }
+                            }
+                        }
+                    }
+                }
+                return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<BusinessResult> RegisterAsync(SignUpModel model)
+        {
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    var newUser = new User()
+                    {
+                        Email = model.Email,
+                        UserCode = NumberHelper.GenerateRandomCode("USR"),
+                        FullName = model.FullName,
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        AvatarURL = model.Avatar ?? "",
+                        Status = "Active",
+                        IsDelete = false,
+                    };
+
+                    var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(model.Email);
+                    if (checkExistUser != null)
+                    {
+                        return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG);
+                    }
+                    if (model.Password != null)
+                    {
+                        newUser.Password = PasswordHelper.HashPassword(model.Password);
+                    }
+                    var role = await _unitOfWork.RoleRepository.GetRoleByName(model.Role.ToString());
+                    if (role != null)
+                    {
+                        newUser.RoleId = role.RoleId;
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG);
+                    }
+                    await _unitOfWork.UserRepository.AddUserAsync(newUser);
+                    await transaction.CommitAsync();
+                    return new BusinessResult(Const.SUCCESS_REGISTER_CODE, Const.SUCCESS_REGISTER_MSG);
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+                }
+            }
+        }
+
+        public async Task<BusinessResult> RequestResetPassword(string email)
+        {
+            var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if (existUser != null)
+            {
+                if (existUser.Status.ToLower() == "Active".ToLower() && existUser.IsDelete == false)
+                {
+                    bool checkSendOtp = await CreateOtpAsync(email);
+                    return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
+                }
+            }
+            return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG, false);
+        }
+
+        public async Task<BusinessResult> SoftDeleteUser(int userId)
+        {
+            try
+            {
+                var softDeleteUser = await _unitOfWork.UserRepository.SoftDeleteUserAsync(userId);
+                if (softDeleteUser > 0)
+                {
+                    return new BusinessResult(Const.SUCCESS_SOFT_DELETE_USER_CODE, Const.SUCCESS_SOFT_DELETE_USER_MSG);
+                }
+                return new BusinessResult(Const.FAIL_SOFT_DELETE_USER_CODE, Const.FAIL_SOFT_DELETE_USER_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<BusinessResult> UpdateAvatarOfUser(IFormFile avatarOfUser, int id)
+        {
+            try
+            {
+                var checkExistUser = await _unitOfWork.UserRepository.GetUserByIdAsync(id);
+                if (checkExistUser == null)
+                {
+                    return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG);
+                }
+                var uploadImageLink = await _cloudinaryService.UploadImageAsync(avatarOfUser, "user/avatar");
+                if (uploadImageLink != null)
+                {
+                    checkExistUser.AvatarURL = uploadImageLink;
+                    var result = await _unitOfWork.SaveAsync();
+                    return new BusinessResult(Const.SUCCESS_UPLOAD_IMAGE_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, result > 0);
+                }
+                return new BusinessResult(Const.FAIL_UPLOAD_IMAGE_CODE, Const.FAIL_UPLOAD_IMAGE_MESSAGE, false);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<BusinessResult> UpdateUser(UpdateUserModel updateUserRequestModel)
+        {
+            try
+            {
+                var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(updateUserRequestModel.UserId);
+                if (existUser != null)
+                {
+                    // update account
+                    if (updateUserRequestModel.FullName != null)
+                    {
+                        existUser.FullName = updateUserRequestModel.FullName;
+                    }
+                    if (updateUserRequestModel.Address != null)
+                    {
+                        existUser.Address = updateUserRequestModel.Address;
+                    }
+                    if (updateUserRequestModel.PhoneNumber != null)
+                    {
+                        existUser.PhoneNumber = updateUserRequestModel.PhoneNumber;
+                    }
+                    if (updateUserRequestModel.Dob != null)
+                    {
+                        existUser.Dob = updateUserRequestModel.Dob;
+                    }
+                    if (updateUserRequestModel.Gender != null)
+                    {
+                        existUser.Gender = updateUserRequestModel.Gender;
+                    }
+                    if (updateUserRequestModel.AvatarURL != null)
+                    {
+                        existUser.AvatarURL = updateUserRequestModel.AvatarURL;
+                    }
+                    if (updateUserRequestModel.Role != null)
+                    {
+                        var checkRole = Enum.TryParse(typeof(RoleEnum), updateUserRequestModel.Role.ToString(), true, out var roleValid);
+                        if(checkRole)
+                        {
+                            existUser.RoleId = (int)roleValid;
+                        }
+                        else
+                        {
+                            return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG, false);
+                        }
+                    }
+                    existUser.IsDelete = updateUserRequestModel.IsDeleted;
+
+                    if (!string.IsNullOrEmpty(updateUserRequestModel.Password))
+                    {
+                        bool checkOldPassword = PasswordHelper.VerifyPassword(updateUserRequestModel.Password, existUser.Password);
+                        if (checkOldPassword)
+                        {
+                            string newPassword = PasswordHelper.HashPassword(updateUserRequestModel.Password);
+                            existUser.Password = newPassword;
+                        }
+                    }
+                    var result = await _unitOfWork.UserRepository.UpdateUserAsync(existUser);
+                    if (result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_UPDATE_USER_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, result);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.FAIL_UPDATE_USER_CODE, Const.FAIL_UPDATE_USER_MESSAGE, false);
+                    }
+                }
+                return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        private async Task<string> GenerateAccessToken(string email, User user)
+        {
+            var role = await _unitOfWork.RoleRepository.GetRoleById(user.RoleId);
+            var authClaims = new List<Claim>();
+            if (role != null)
+            {
+                authClaims.Add(new Claim("email", email));
+                authClaims.Add(new Claim("role", role.RoleName));
+                authClaims.Add(new Claim("UserId", user.UserId.ToString()));
+                authClaims.Add(new Claim("Status", user.Status.ToString()));
+                authClaims.Add(new Claim("FullName", user.FullName));
+                authClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+
+            }
+            var accessToken = GenerateJWTToken.CreateAccessToken(authClaims, _configuration, DateTime.UtcNow);
+            return new JwtSecurityTokenHandler().WriteToken(accessToken);
+        }
+
+        private async Task<string> GenerateRefreshToken(string email, DateTime? beginTimeRefreshToken, int expiredDays)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            var role = await _unitOfWork.RoleRepository.GetRoleById(user.RoleId);
+            var authClaims = new List<Claim>
+            {
+                 new Claim("email", email),
+                 new Claim("role", role.RoleName),
+                 new Claim("UserId", user.UserId.ToString()),
+                 new Claim("Status", user.Status.ToString()),
+                 new Claim("FullName", user.FullName),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+            JwtSecurityToken refreshToken = null;
+            if (beginTimeRefreshToken != null)
+            {
+                DateTime utcTime = (beginTimeRefreshToken ?? DateTime.UtcNow).ToUniversalTime();
+                refreshToken = GenerateJWTToken.CreateRefreshToken(authClaims, _configuration, utcTime, expiredDays);
+            }
+            else
+            {
+                refreshToken = GenerateJWTToken.CreateRefreshToken(authClaims, _configuration, DateTime.UtcNow, expiredDays);
+            }
+            return new JwtSecurityTokenHandler().WriteToken(refreshToken).ToString();
+        }
+
+        private async Task<bool> CreateOtpAsync(string email)
+        {
+            try
+            {
+                string otpCode = NumberHelper.GenerateSixDigitNumber().ToString();
+                var expiredTime = DateTime.Now.AddMinutes(5);
+                var checkExistUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+                if (checkExistUser != null)
+                {
+                    if (checkExistUser.Otp != null)
+                    {
+                        checkExistUser.Otp = otpCode;
+                        checkExistUser.ExpiredOtpTime = expiredTime;
+                        await _unitOfWork.UserRepository.UpdateUserAsync(checkExistUser);
+                    }
+                    else
+                    {
+                        await _unitOfWork.UserRepository.AddOtpToUser(email, otpCode, expiredTime);
+                    }
+                    bool checkSendMail = await SendOtpResetPasswordAsync(email, otpCode);
+                    return checkSendMail;
+                }
+                else
+                {
+                    throw new Exception("Account does not exist. Can not send Otp");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<bool> SendOtpResetPasswordAsync(string email, string otpCode)
+        {
+            // create new email
+            MailRequest newEmail = new MailRequest()
+            {
+                ToEmail = email,
+                Subject = "IPAS Reset Password",
+                Body = SendOTPTemplate.EmailSendOTPResetPassword(email, otpCode)
+            };
+
+            // send email
+            await _mailService.SendEmailAsync(newEmail);
+            return true;
+        }
+
+        public async Task<BusinessResult> RegisterSendMailAsync(string email)
+        {
+            var checkExistAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if(checkExistAccount != null)
+            {
+                return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG, false);
+            }
+            bool checkSendOtp = await CreateOtpRegisterAsync(email);
+            return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
+        }
+
+        public BusinessResult VerifyOtpRegisterAsync(string email, string otp)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp))
+                return new BusinessResult(Const.WARNING_CHECK_MAIL_REGISTER_CODE, Const.WARNING_CHECK_MAIL_REGISER_MSG, false);
+
+            var expectedOtp = NumberHelper.GenerateOtp(email);
+
+            if (otp == expectedOtp)
+                return new BusinessResult(Const.SUCCESS_OTP_VALID_CODE, Const.SUCCESS_OTP_VALID_MESSAGE, true);
+            else
+                return new BusinessResult(Const.FAIL_CONFIRM_RESET_PASSWORD_CODE, Const.FAIL_CONFIRM_RESET_PASSWORD_MESSAGE, false);
+        }
+
+
+        private async Task<bool> CreateOtpRegisterAsync(string email)
+        {
+            try
+            {
+                string otpCode = NumberHelper.GenerateOtp(email);
+                bool checkSendMail = await SendOtpRegisterAccountAsync(email, otpCode);
+                return checkSendMail;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<bool> SendOtpRegisterAccountAsync(string email, string otpCode)
+        {
+            // create new email
+            MailRequest newEmail = new MailRequest()
+            {
+                ToEmail = email,
+                Subject = "IPAS Register Account",
+                Body = RegisterOTPTemplate.EmailSendOTPRegisterAccount(email, otpCode)
+            };
+
+            // send email
+            await _mailService.SendEmailAsync(newEmail);
+            return true;
+        }
+
+        public async Task<BusinessResult> GetAllUsers(PaginationParameter paginationParameter)
+        {
+            try
+            {
+                Expression<Func<User, bool>> filter = null!;
+                Func<IQueryable<User>, IOrderedQueryable<User>> orderBy = null!;
+                if (!string.IsNullOrEmpty(paginationParameter.Search))
+                {
+                    int validInt = 0;
+                    var checkInt = int.TryParse(paginationParameter.Search, out validInt);
+                    DateTime validDate = DateTime.Now;
+                    bool validBool = false;
+                    if (checkInt)
+                    {
+                        filter = x => x.UserId == validInt;
+                    }
+                    else if (DateTime.TryParse(paginationParameter.Search, out validDate))
+                    {
+                        filter = x => x.CreateDate == validDate
+                                      || x.UpdateDate == validDate || x.Dob == validDate;
+                    }
+                    else if (Boolean.TryParse(paginationParameter.Search, out validBool))
+                    {
+                        filter = x => x.IsDelete == validBool;
+                    }
+                    else
+                    {
+                        filter = x => x.UserCode.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.FullName.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Email.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Status.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Gender.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.PhoneNumber.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Address.ToLower().Contains(paginationParameter.Search.ToLower())
+                                      || x.Status.ToLower().Contains(paginationParameter.Search.ToLower());
+                    }
+                }
+                switch (paginationParameter.SortBy)
+                {
+                    case "userid":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.UserId)
+                                   : x => x.OrderBy(x => x.UserId)) : x => x.OrderBy(x => x.UserId);
+                        break;
+                    case "usercode":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.UserCode)
+                                   : x => x.OrderBy(x => x.UserCode)) : x => x.OrderBy(x => x.UserCode);
+                        break;
+                    case "fullname":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.FullName)
+                                   : x => x.OrderBy(x => x.FullName)) : x => x.OrderBy(x => x.FullName);
+                        break;
+                    case "status":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Status)
+                                   : x => x.OrderBy(x => x.Status)) : x => x.OrderBy(x => x.Status);
+                        break;
+                    case "gender":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Gender)
+                                   : x => x.OrderBy(x => x.Gender)) : x => x.OrderBy(x => x.Gender);
+                        break;
+                    case "email":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Email)
+                                   : x => x.OrderBy(x => x.Email)) : x => x.OrderBy(x => x.Email);
+                        break;
+                    case "role":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                   ? x => x.OrderByDescending(x => x.Role.RoleName)
+                                   : x => x.OrderBy(x => x.Role.RoleName)) : x => x.OrderBy(x => x.Role.RoleName);
+                        break;
+                    case "phone":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.PhoneNumber)
+                                   : x => x.OrderBy(x => x.PhoneNumber)) : x => x.OrderBy(x => x.PhoneNumber);
+                        break;
+                    case "address":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.Address)
+                                   : x => x.OrderBy(x => x.Address)) : x => x.OrderBy(x => x.Address);
+                        break;
+                    case "createDate":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.CreateDate)
+                                   : x => x.OrderBy(x => x.CreateDate)) : x => x.OrderBy(x => x.CreateDate);
+                        break;
+                    case "updateDate":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.UpdateDate)
+                                   : x => x.OrderBy(x => x.UpdateDate)) : x => x.OrderBy(x => x.UpdateDate);
+                        break;
+                    case "dob":
+                        orderBy = !string.IsNullOrEmpty(paginationParameter.Direction)
+                                    ? (paginationParameter.Direction.ToLower().Equals("desc")
+                                     ? x => x.OrderByDescending(x => x.Dob)
+                                   : x => x.OrderBy(x => x.Dob)) : x => x.OrderBy(x => x.Dob);
+                        break;
+                    default:
+                        orderBy = x => x.OrderBy(x => x.UserId);
+                        break;
+                }
+                string includeProperties = "Role";
+                var entities = await _unitOfWork.UserRepository.Get(filter, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
+                var pagin = new PageEntity<UserModel>();
+                pagin.List = _mapper.Map<IEnumerable<UserModel>>(entities).ToList();
+                pagin.TotalRecord = await _unitOfWork.UserRepository.Count();
+                pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, paginationParameter.PageSize);
+                if (pagin.List.Any())
+                {
+                    return new BusinessResult(Const.SUCCESS_GET_ALL_USER_CODE, Const.SUCCESS_GET_ALL_USER_MESSAGE, pagin);
+                }
+                else
+                {
+                    return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG, new PageEntity<UserModel>());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+           
+        }
+    }
+}

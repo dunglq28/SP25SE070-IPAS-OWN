@@ -1,0 +1,39 @@
+.button_auth {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    // background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    border-radius: 20px;
+    font-size: x-small;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    width: auto;
+
+    @media (max-width: 768px) {
+        margin-top: 15px;
+    }
+}
+
+
+.button_auth_signin {
+    background-color: #ffffff;
+    color: #326E2F;
+    transition: all 0.3s ease;
+}
+
+.button_auth_signin:hover {
+    color: #ffffff;
+    background-color: #326E2F;
+}
+
+.button_auth_signup {
+    background-color: #EDDD5E;
+    color: #326E2F;
+    transition: all 0.3s ease;
+}
+
+.button_auth_signup:hover {
+    background-color: #eee5a2;
+    color: #0d350b;
+}

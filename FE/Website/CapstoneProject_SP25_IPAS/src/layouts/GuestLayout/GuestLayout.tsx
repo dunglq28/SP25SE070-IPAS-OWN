@@ -12,7 +12,7 @@ interface GuestLayoutProps {
 
 const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
   return (
-    <Layout className={style.Wrapper}>
+    <Layout>
       {/* container */}
       <Layout>
         <Layout>
@@ -21,7 +21,6 @@ const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
             <Content className={style.Container}>
               <div className={style.Children}>{children}</div>
             </Content>
-            <Divider />
             <Footer />
           </Layout>
         </Layout>

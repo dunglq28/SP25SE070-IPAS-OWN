@@ -1,0 +1,27 @@
+.pricingSection {
+    padding: 20px 70px;
+    background-color: #ffffff;
+
+}
+
+.pricingCards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pricingSection p.text1 {
+    color: black;
+    background-color: #BCD379;
+    padding: 6px 20px;
+    display: inline-block;
+    font-size: small;
+    border-radius: 15px;
+}
+
+.pricingSection p.text2 {
+    font-size: 2rem;
+    margin: 0px;
+    color: #326E2F;
+}

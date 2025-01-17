@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BCrypt.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -45,6 +46,29 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
                 var decrypted = decryptor.TransformFinalBlock(Convert.FromBase64String(base64EncodeData), 0, base64EncodeData.Length);
                 return Encoding.UTF8.GetString(decrypted);
             }
+        }
+
+        public static string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.EnhancedHashPassword(password, HashType.SHA256);
+        }
+
+        public static bool VerifyPassword(string password, string hashPassword)
+        {
+            return BCrypt.Net.BCrypt.EnhancedVerify(password, hashPassword, HashType.SHA256);
+        }
+
+        public static string GeneratePassword()
+        {
+            Random random = new Random();
+            string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var password = new char[6];
+            for (int i = 0; i < password.Length; i++)
+            {
+                int index = random.Next(allowedChars.Length);
+                password[i] = allowedChars[index];
+            }
+            return new string(password);
         }
     }
 }

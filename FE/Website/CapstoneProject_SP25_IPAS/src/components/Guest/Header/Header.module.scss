@@ -1,0 +1,74 @@
+.img {
+    margin: 5px;
+    width: 50%;
+}
+
+.nav {
+    display: flex;
+    gap: 1.5rem;
+    
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    &.scrolled {
+      background: #326E2F;
+  }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 20px;
+  }
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 500;
+    position: relative;
+    font-size: 1rem;
+  }
+  
+  .nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .nav a {
+    padding-right: 1.5rem;
+    font-size: smaller;
+    color: white;
+  }
+
+    .nav a:hover {
+        color: #EDDD5E;
+    }
+  
+  .nav a::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #EDDD5E;
+    border-radius: 50%;
+  }
+
+.authButtons {
+    display: flex;
+    gap: 1rem;
+    margin-right: 15px;
+}
