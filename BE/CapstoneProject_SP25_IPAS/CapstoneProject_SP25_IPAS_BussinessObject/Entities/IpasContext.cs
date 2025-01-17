@@ -290,6 +290,8 @@ public partial class IpasContext : DbContext
             entity.Property(e => e.SoilType).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+            entity.Property(e => e.Province).HasMaxLength(300);
+            entity.Property(e => e.Address);
         });
 
         modelBuilder.Entity<FarmCoordination>(entity =>
@@ -299,7 +301,6 @@ public partial class IpasContext : DbContext
             entity.ToTable("FarmCoordination");
 
             entity.Property(e => e.FarmCoordinationId).HasColumnName("FarmCoordinationID");
-            entity.Property(e => e.FarmCoordinationCode).HasMaxLength(50);
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.FarmCoordinations)
@@ -952,25 +953,26 @@ public partial class IpasContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK__User__RoleID__3B40CD36");
+        });
 
-            entity.HasMany(d => d.Farms).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserFarm",
-                    r => r.HasOne<Farm>().WithMany()
-                        .HasForeignKey("FarmId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UserFarm__FarmID__3C34F16F"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UserFarm__UserID__3D2915A8"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "FarmId").HasName("PK__UserFarm__995F7705E01214A8");
-                        j.ToTable("UserFarm");
-                        j.IndexerProperty<int>("UserId").HasColumnName("UserID");
-                        j.IndexerProperty<int>("FarmId").HasColumnName("FarmID");
-                    });
+        modelBuilder.Entity<UserFarm>(entity =>
+        {
+            entity.HasKey(e => new { e.FarmId, e.UserId }).HasName("PK__UserFarm__2F2CA10852B78F7B");
+
+            entity.ToTable("UserFarm");
+
+            entity.Property(e => e.FarmId).HasColumnName("FarmID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserFarms)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserFarm__User__3R2D39E1");
+
+            entity.HasOne(d => d.Farm).WithMany(p => p.UserFarms)
+                .HasForeignKey(d => d.FarmId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserFarm__FarmL__25617C17");
         });
 
         modelBuilder.Entity<UserWorkLog>(entity =>

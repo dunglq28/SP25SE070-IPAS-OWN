@@ -49,5 +49,5 @@ public partial class Farm
 
     public virtual ICollection<Process> Processes { get; set; } = new List<Process>();
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<UserFarm> UserFarms { get; set; } = new List<UserFarm>();
 }

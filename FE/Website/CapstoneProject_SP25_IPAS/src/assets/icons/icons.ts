@@ -9,3 +9,4 @@ export { CiTimer as timer } from "react-icons/ci";
 
 export { RiDeleteBin6Line as delete } from "react-icons/ri";
 export { IoIosArrowForward as arrowForward } from "react-icons/io";
+export { MdLogout as logout } from "react-icons/md";

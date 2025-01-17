@@ -36,7 +36,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
                 query = query.Where(filter);
             }
 
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProperty in includeProperties.Split
                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -76,7 +76,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             {
                 query = query.Where(filter);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
@@ -104,22 +104,13 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             {
                 query = orderBy(query);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrWhiteSpace(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProperty);
-                }
-            }
-            if (!thenIncludeProperties.IsNullOrEmpty())
-            {
-
-                foreach (var thenIncludeProperty in thenIncludeProperties.Split
-                    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(thenIncludeProperty);
                 }
             }
             return await query.AsNoTracking().ToListAsync();
@@ -130,6 +121,11 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
         public virtual async Task Insert(TEntity entity)
         {
             await dbSet.AddAsync(entity);
+        }
+
+        public async Task InsertRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await dbSet.AddRangeAsync(entities);
         }
 
         public virtual void Delete(object id)
@@ -145,6 +141,11 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
                 dbSet.Attach(entityToDelete);
             }
             dbSet.Remove(entityToDelete);
+        }
+
+        public void RemoveRange(IEnumerable<TEntity> entities)
+        {
+            dbSet.RemoveRange(entities);
         }
 
         public virtual void Update(TEntity entityToUpdate)

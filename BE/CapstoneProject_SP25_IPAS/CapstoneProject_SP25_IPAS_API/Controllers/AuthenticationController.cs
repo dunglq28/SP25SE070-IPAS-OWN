@@ -1,5 +1,4 @@
-﻿using CapstoneProject_SP25_IPAS_API.Payloads.Request;
-using CapstoneProject_SP25_IPAS_API.Payloads.Response;
+﻿using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
 using CapstoneProject_SP25_IPAS_Service.Base;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using System.Security.Claims;
+using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {

@@ -43,13 +43,13 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.FarmBsModels
 
         public virtual ICollection<FarmCoordinationModel> FarmCoordinations { get; set; } = new List<FarmCoordinationModel>();
 
-        //public virtual ICollection<LandPlot> LandPlots { get; set; } = new List<LandPlot>();
+        public virtual ICollection<LandPlotModel> LandPlots { get; set; } = new List<LandPlotModel>();
 
         //public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
         //public virtual ICollection<Process> Processes { get; set; } = new List<Process>();
 
-        //public virtual ICollection<User> Users { get; set; } = new List<User>();
+        public virtual ICollection<UserFarmModel> UserFarms { get; set; } = new List<UserFarmModel>();
     }
 }
 

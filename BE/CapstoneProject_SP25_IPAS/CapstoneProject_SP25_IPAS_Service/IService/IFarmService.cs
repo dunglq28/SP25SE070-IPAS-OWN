@@ -1,4 +1,5 @@
 ﻿using CapstoneProject_SP25_IPAS_BussinessObject.RequestModel.FarmRequest;
+using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Service.Base;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -13,7 +14,7 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
     {
         public Task<BusinessResult> GetFarmByID(int farmId);
 
-        public Task<BusinessResult> GetFarmPagination();
+        public Task<BusinessResult> GetAllFarmPagination(PaginationParameter paginationParameter);
 
         public Task<BusinessResult> CreateFarm(FarmCreateModel farmCreateModel);
 
@@ -27,6 +28,6 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
 
         public Task<BusinessResult> UpdateFarmLogo(int farmId, IFormFile LogoURL);
 
-        public Task<BusinessResult> UpdateFarmCoordination(int farmId, List);
+        public Task<BusinessResult> UpdateFarmCoordination(int farmId, List<FarmCoordinationCreateModel> farmCoordinationUpdate);
     }
 }

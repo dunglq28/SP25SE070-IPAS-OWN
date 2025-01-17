@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Repository.IRepository;
 using CapstoneProject_SP25_IPAS_Repository.Repository;
 using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
 using CapstoneProject_SP25_IPAS_Service.IService;
 using CapstoneProject_SP25_IPAS_Service.Mapping;
 using CapstoneProject_SP25_IPAS_Service.Service;
+using Microsoft.Extensions.Configuration;
 
 namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
 {
@@ -29,12 +31,22 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             // Register repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepostiory, UserRepository>();
+            services.AddScoped<IFarmRepository, FarmRepository>();
+            services.AddScoped<IUserFarmRepository, UserFarmRepository>();
+            services.AddScoped<IUserWorkLogRepository, UserWorkLogRepository>();
+            services.AddScoped<IUserFarmRepository, UserFarmRepository>();
+            services.AddScoped<IPlanRepository, PlanRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<ITaskFeedbackRepository, TaskFeedbackRepository>();
+            services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             // Register servicies
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<IFarmService, FarmService>();
 
             services.AddHttpClient();
 

@@ -8,8 +8,8 @@ namespace CapstoneProject_SP25_IPAS_BussinessObject.RequestModel.FarmRequest
 {
     public class FarmCoordinationCreateModel
     {
-        public double? Longitude { get; set; }
+        public double Longitude { get; set; }
 
-        public double? Lagtitude { get; set; }
+        public double Lagtitude { get; set; }
     }
 }
