@@ -1,3 +1,7 @@
+:root {
+  --color-selection: #a8e6a3;
+}
+
 #root {
   height: 100%;
   width: 100%;
@@ -11,6 +15,10 @@
 body {
   font-size: 16px;
   line-height: 1.5;
+}
+
+::selection {
+  background-color: var(--color-selection);
 }
 
 *::-webkit-scrollbar {

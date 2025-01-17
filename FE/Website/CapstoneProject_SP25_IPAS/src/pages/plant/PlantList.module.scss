@@ -1,4 +1,16 @@
+@import "../../styles/share.scss";
+
 .container {
-  width: 100%;
-  flex-direction: column;
+  @extend .container;
+
+  .searchWrapper {
+    @extend .searchWrapper;
+  }
+
+  .plant {
+    @extend .table;
+    .tableText {
+      @extend .tableText;
+    }
+  }
 }

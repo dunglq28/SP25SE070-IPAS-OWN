@@ -6,32 +6,10 @@ import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import "@/App.css";
 import { PATHS } from "@/routes";
 import { useSidebarStore } from "@/stores";
+import { ActiveMenu, MenuItem } from "@/types";
 
 const { Sider } = Layout;
 const { Text } = Typography;
-
-interface MenuItem {
-  key: string;
-  label: string;
-  icon: React.ReactNode;
-  subMenuItems?: SubMenuItem[];
-  to?: string;
-  activePaths: string[];
-  category: string;
-}
-
-interface SubMenuItem {
-  key: string;
-  label: string;
-  icon: string;
-  to?: string;
-  activePaths: string[];
-}
-
-interface ActiveMenu {
-  parentKey: string | null;
-  subItemKey: string | null;
-}
 
 function Sidebar() {
   const navigate = useNavigate();

@@ -1,27 +1,22 @@
-.Wrapper {
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 10px;
-  background-color: #e2e8f0;
+@use "@/styles/variables.scss" as vars;
 
-  .Wrapper_Content {
-    width: 100%;
-    height: 100%;
-  }
-  .Container {
-    flex-direction: column;
-    flex: 1;
-    .OverflowHidden {
-      overflow: hidden;
-    }
+.layout {
+  background-color: vars.$color_bg_main;
+  overflow: hidden;
+  flex: 1;
 
-    .OverflowAuto {
+  .contentWrapper {
+    // width: 100%;
+
+    .content {
+      flex-direction: column;
+      flex: 1;
+      margin: 30px 32px;
       overflow: auto;
     }
-    .Children {
-      padding-top: 10px;
-      flex: 1;
-    }
+  }
+
+  .footer {
+    text-align: center;
   }
 }
