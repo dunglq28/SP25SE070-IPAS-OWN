@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using CapstoneProject_SP25_IPAS_BussinessObject.GoogleUserInfo;
 using CapstoneProject_SP25_IPAS_Common;
 using CapstoneProject_SP25_IPAS_Common.Enum;
 using CapstoneProject_SP25_IPAS_Common.Mail;
@@ -16,28 +17,34 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using CapstoneProject_SP25_IPAS_BussinessObject.GoogleUser;
+using System.Net.Http.Headers;
+using System.Linq.Expressions;
+using CapstoneProject_SP25_IPAS_Common.Upload;
 
 namespace CapstoneProject_SP25_IPAS_Service.Service
 {
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IMailService _mailService;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
+        private readonly HttpClient _httpClient;
 
-        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
+             public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -495,7 +502,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 {
                     return new BusinessResult(Const.WARNING_USER_DOES_NOT_EXIST_CODE, Const.WARNING_USER_DOES_NOT_EXIST_MSG);
                 }
-                var uploadImageLink = await _cloudinaryService.UploadImageAsync(avatarOfUser, "user/avatar");
+                var uploadImageLink = await _cloudinaryService.UploadImageAsync(avatarOfUser, CloudinaryPath.USER_AVARTAR);
                 if (uploadImageLink != null)
                 {
                     checkExistUser.AvatarURL = uploadImageLink;
@@ -681,7 +688,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         public async Task<BusinessResult> RegisterSendMailAsync(string email)
         {
             var checkExistAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
-            if(checkExistAccount != null)
+            if (checkExistAccount != null)
             {
                 return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG, false);
             }
@@ -870,6 +877,98 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
            
+        }
+
+
+        public async Task<BusinessResult> LoginGoogleHandler(string googleToken)
+        {
+            try
+            {
+
+                // Validate Google Token and fetch user info
+                var googleResult = await ValidateGoogleTokenAsync(googleToken);
+                // neu token khong hop le
+                if (googleResult.StatusCode == 500)
+                    return new BusinessResult(Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE, Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG);
+
+                var userInfo = (GoogleTokenInfo)googleResult.Data!;
+                // kiem tra neu email duoc lay thanh cong thi tiep tuc 
+                if (string.IsNullOrEmpty(userInfo.Email))
+                {
+                    return new BusinessResult(Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE, Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG);
+                }
+                else
+                {
+                    // Kiểm tra người dùng tồn tại
+                    var existUser = await _unitOfWork.UserRepository.GetByCondition(x => x.Email.Equals(userInfo.Email));
+                    // nếu người dùng không tồn tại -- co the cho dk nguoi dung tai day de tranh truong hop bat register thu cong
+                    if (existUser == null)
+                    {
+                        return new BusinessResult(Const.FAIL_LOGIN_WITH_GOOGLE_CODE, Const.FAIL_LOGIN_WITH_GOOGLE_MSG);
+                    }
+                    // nếu người dùng bị ban
+                    if (existUser.Status.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
+                    {
+                        return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
+                    }
+                    // nếu tồn tại
+                    using (var transaction = await _unitOfWork.BeginTransactionAsync())
+                    {
+                        _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+                        string accessToken = await GenerateAccessToken(userInfo.Email, existUser);
+
+                        _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
+                        string refreshToken = await GenerateRefreshToken(userInfo.Email, null, tokenValidityInDays);
+
+
+                        await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
+                        {
+                            UserId = existUser.UserId,
+                            RefreshTokenCode = NumberHelper.GenerateRandomCode("RFT"),
+                            RefreshTokenValue = refreshToken,
+                            CreateDate = DateTime.Now,
+                            ExpiredDate = DateTime.Now.AddDays(tokenValidityInDays)
+                        });
+                        await transaction.CommitAsync();
+                        return new BusinessResult(Const.SUCCESS_LOGIN_CODE, Const.SUCCESS_LOGIN_MSG, new AuthenModel()
+                        {
+                            AccessToken = accessToken,
+                            RefreshToken = refreshToken,
+                        });
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+
+        private async Task<BusinessResult> ValidateGoogleTokenAsync(string googleToken)
+        {
+            var validationUrl = $"{_configuration["Authentication:Google:validateGoogleTokenEndpoint"]}id_token={googleToken}";
+            var response = await _httpClient.GetAsync(validationUrl);
+
+            if (!response.IsSuccessStatusCode) return new BusinessResult(Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE, Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG, new { success = false });
+
+            var content = await response.Content.ReadAsStringAsync();
+            var usertoken = JsonConvert.DeserializeObject<GoogleTokenInfo>(content);
+            return new BusinessResult(Const.SUCCESS_VALIDATE_TOKEN_GOOGLE_CODE, Const.SUCCESS_TOKEN_GOOGLE_VALIDATE_MSG, usertoken!);
+        }
+
+        private async Task<BusinessResult> FetchGoogleUserInfoAsync(string googleToken)
+        {
+            var peopleApiUrl = _configuration["Authentication:Google:userDetectEndpoint"];
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", googleToken);
+
+            var response = await _httpClient.GetAsync(peopleApiUrl);
+            if (!response.IsSuccessStatusCode) return new BusinessResult(Const.FAIL_USER_INFO_FETCH_CODE, Const.FAIL_USER_INFO_FETCH_MSG, new { success = false }); ;
+
+            var content = await response.Content.ReadAsStringAsync();
+            var userGoogleInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(content);
+            return new BusinessResult(Const.SUCCESS_FECTH_GOOGLE_USER_INFO_CODE, Const.SUCCESS_FECTH_GOOGLE_USER_INFO_MSG, userGoogleInfo!);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
     public class PaginationParameter
     {
         [FromQuery(Name = "pageIndex")]
-        public int PageIndex { get; set; }
+        public int PageIndex { get; set; } = 1;
         [FromQuery(Name = "pageSize")]
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = 10;
         [FromQuery(Name = "searchKey")]
         public string? Search { get; set; }
         [FromQuery(Name = "sortBy")]

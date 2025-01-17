@@ -18,7 +18,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private IDbContextTransaction _transaction;
 
 
-        //private PaymentRepository _paymentRepo;
+        // Repository
         private UserRepository _userRepo;
         private RoleRepository _roleRepo;
         private RefreshTokenRepository _refreshRepo;
@@ -29,10 +29,12 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private PlanRepository _planRepo;
         private NotificationRepository _notificationRepo;
         private UserFarmRepository _userFarmRepo;
+        private FarmCoordinationRepository _farmCoordinationRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
             _userRepo = new UserRepository(context);
             _roleRepo = new RoleRepository(context);
             _refreshRepo = new RefreshTokenRepository(context);
@@ -43,36 +45,36 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _planRepo = new PlanRepository(context);
             _notificationRepo = new NotificationRepository(context);
             _userFarmRepo = new UserFarmRepository(context);
-            _configuration = configuration;
+            _farmCoordinationRepo = new FarmCoordinationRepository(context);
         }
 
-
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (!this.disposed)
-        //    {
-        //        if (disposing)
-        //        {
-        //            _context.Dispose();
-        //        }
-        //    }
-        //    this.disposed = true;
-        //}
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
         public void Dispose()
         {
-            //Dispose(true);
-            //GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Save()
         {
-            //_context.SaveChanges();
+            _context.SaveChanges();
         }
 
-        public Task<int> SaveAsync()
+        public async Task<int> SaveAsync()
         {
-            //return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
+            //throw new NotImplementedException();
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -104,17 +106,6 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _transaction = null!;
         }
 
-        //public PaymentRepository PaymentRepository
-        //{
-        //    get
-        //    {
-        //        if (_paymentRepo == null)
-        //        {
-        //            this._paymentRepo = new PaymentRepository(_context);
-        //        }
-        //        return _paymentRepo;
-        //    }
-        //}
         public UserRepository UserRepository
         {
             get
@@ -160,18 +151,6 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._chatRoomRepo = new ChatRoomRepository(_context);
                 }
                 return _chatRoomRepo;
-            }
-        }
-
-        public FarmRepository FarmRepository
-        {
-            get
-            {
-                if (_farmRepo == null)
-                {
-                    this._farmRepo = new FarmRepository(_context);
-                }
-                return _farmRepo;
             }
         }
 
@@ -232,6 +211,29 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._userFarmRepo = new UserFarmRepository(_context);
                 }
                 return _userFarmRepo;
+            }
+        }
+
+        public FarmRepository FarmRepository
+        {
+            get
+            {
+                if (_farmRepo == null)
+                {
+                    this._farmRepo = new FarmRepository(_context);
+                }
+                return _farmRepo;
+            }
+        }
+        public FarmCoordinationRepository FarmCoordinationRepository
+        {
+            get
+            {
+                if (_farmCoordinationRepo == null)
+                {
+                    this._farmCoordinationRepo = new FarmCoordinationRepository(_context);
+                }
+                return _farmCoordinationRepo;
             }
         }
     }

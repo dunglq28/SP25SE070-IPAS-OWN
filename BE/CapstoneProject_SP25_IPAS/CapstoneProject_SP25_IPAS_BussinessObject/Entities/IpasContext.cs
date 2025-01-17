@@ -301,7 +301,6 @@ public partial class IpasContext : DbContext
             entity.ToTable("FarmCoordination");
 
             entity.Property(e => e.FarmCoordinationId).HasColumnName("FarmCoordinationID");
-            entity.Property(e => e.FarmCoordinationCode).HasMaxLength(50);
             entity.Property(e => e.FarmId).HasColumnName("FarmID");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.FarmCoordinations)
@@ -962,7 +961,7 @@ public partial class IpasContext : DbContext
 
             entity.ToTable("UserFarm");
 
-            entity.Property(e => e.FarmId).HasColumnName("WorkLogID");
+            entity.Property(e => e.FarmId).HasColumnName("FarmID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserFarms)

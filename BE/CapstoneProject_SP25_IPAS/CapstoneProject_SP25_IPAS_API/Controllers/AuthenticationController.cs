@@ -2,9 +2,14 @@
 using CapstoneProject_SP25_IPAS_Service.Base;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
-using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using System.Security.Claims;
+using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
@@ -13,10 +18,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IUserService userService)
+        public AuthenticationController(IUserService userService, IConfiguration config)
         {
             _userService = userService;
+            _configuration = config;
         }
 
         [HttpPost("register/send-otp")]
@@ -70,7 +77,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var result = await _userService.RegisterAsync(model);
                     return Ok(result);
@@ -89,19 +96,37 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginWithEmail([FromBody] AccountRequestModel accountRequestModel)
+        public async Task<IActionResult> LoginWithEmailAndPassword([FromBody] AccountRequestModel accountRequestModel)
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var result = await _userService.LoginByEmailAndPassword(accountRequestModel.Email, accountRequestModel.Password);
-                    return Ok(result);  
+                    return Ok(result);
                 }
                 else
                 {
                     return ValidationProblem(ModelState);
                 }
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+        [HttpPost("login-with-google")]
+        public async Task<IActionResult> LoginGoogle([FromBody] string googleToken)
+        {
+            try
+            {
+                var Login = await _userService.LoginGoogleHandler(googleToken);
+                return Ok(Login);
             }
             catch (Exception ex)
             {
@@ -139,7 +164,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         {
             try
             {
-                var result = await _userService.RefreshToken(removeRefreshTokenModel.RefreshToken); 
+                var result = await _userService.RefreshToken(removeRefreshTokenModel.RefreshToken);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -154,7 +179,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost("forget-password")]
-        public async Task<IActionResult> RequestResetPassword([FromBody] EmailModel emailModel) 
+        public async Task<IActionResult> RequestResetPassword([FromBody] EmailModel emailModel)
         {
             try
             {
@@ -212,3 +237,4 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
 
     }
 }
+
