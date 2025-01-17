@@ -12,7 +12,7 @@ interface GuestLayoutProps {
 
 const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
   return (
-    <Layout className={style.Wrapper}>
+    <Layout>
       {/* container */}
       <Layout>
         <Layout>
