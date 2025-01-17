@@ -2,6 +2,7 @@ import { Dashboard, Login, User } from "@/pages";
 
 import { GuestLayout, HeaderOnly, ManagementLayout } from "@/layouts";
 import { PATHS } from "./Paths";
+import Landing from "@/pages/LandingPage/Landing";
 
 interface RouteItem {
   path: string;
@@ -10,6 +11,7 @@ interface RouteItem {
 }
 
 export const publicRoutes: RouteItem[] = [
+  { path: PATHS.AUTH.LOGIN, component: Landing, layout: GuestLayout },
   { path: PATHS.AUTH.LOGIN, component: Login, layout: GuestLayout },
   { path: PATHS.DASHBOARD, component: Dashboard, layout: ManagementLayout },
   { path: PATHS.USER.USER_LIST, component: User, layout: ManagementLayout },
