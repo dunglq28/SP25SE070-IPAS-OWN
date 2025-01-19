@@ -32,6 +32,9 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private PlantLotRepository _plantLotRepo;
         private PlantRepository _plantRepo;
         private FarmCoordinationRepository _farmCoordinationRepo;
+        private CriteriaTypeRepository _criteriaTypeRepo;
+        private CriteriaRepository _criteriaRepo;
+        private PartnerRepository _partnerRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
@@ -49,6 +52,9 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _userFarmRepo = new UserFarmRepository(context);
             _plantLotRepo = new PlantLotRepository(context);
             _plantRepo = new PlantRepository(context);
+            _criteriaTypeRepo = new CriteriaTypeRepository(context);
+            _criteriaRepo = new CriteriaRepository(context);
+            _partnerRepo = new PartnerRepository(context);
             _configuration = configuration;
             _farmCoordinationRepo = new FarmCoordinationRepository(context);
         }
@@ -240,6 +246,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._plantRepo = new PlantRepository(_context);
                 }
                 return _plantRepo;
+            }
+        }
         public FarmRepository FarmRepository
         {
             get
@@ -260,6 +268,42 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._farmCoordinationRepo = new FarmCoordinationRepository(_context);
                 }
                 return _farmCoordinationRepo;
+            }
+        }
+
+        public CriteriaTypeRepository CriteriaTypeRepository
+        {
+            get
+            {
+                if (_criteriaTypeRepo == null)
+                {
+                    this._criteriaTypeRepo = new CriteriaTypeRepository(_context);
+                }
+                return _criteriaTypeRepo;
+            }
+        }
+
+        public PartnerRepository PartnerRepository
+        {
+            get
+            {
+                if (_partnerRepo == null)
+                {
+                    this._partnerRepo = new PartnerRepository(_context);
+                }
+                return _partnerRepo;
+            }
+        }
+
+        public CriteriaRepository CriteriaRepository
+        {
+            get
+            {
+                if (_criteriaRepo == null)
+                {
+                    this._criteriaRepo = new CriteriaRepository(_context);
+                }
+                return _criteriaRepo;
             }
         }
     }

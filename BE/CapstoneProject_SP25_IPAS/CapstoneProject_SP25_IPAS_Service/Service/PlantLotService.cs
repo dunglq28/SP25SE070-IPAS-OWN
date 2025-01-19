@@ -37,7 +37,21 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         {
             try
             {
-                var checkFullIsActiveCriteria = criterias.Where(x => x.IsActive == true).ToList();
+                bool checkIsSystem = true;
+                foreach (var criteria in criterias)
+                {
+                    var result = await _unitOfWork.CriteriaRepository.GetByCondition(x => x.CriteriaId == criteria.CriteriaId);
+                    if(result == null)
+                    {
+                        checkIsSystem = false;
+                    }
+
+                }
+                if(!checkIsSystem)
+                {
+                    return new BusinessResult(Const.FAIL_CREATE_MANY_PLANT_BECAUSE_CRITERIA_INVALID_CODE, Const.FAIL_CREATE_MANY_PLANT_BECAUSE_CRITERIA_INVALID_MESSAGE, false);
+                }
+                var checkFullIsActiveCriteria = criterias.Where(x => x.IsChecked == true).ToList();
                 if (checkFullIsActiveCriteria.Count() == criterias.Count())
                 {
                     for (int i = 0; i < quantity; i++)
@@ -93,6 +107,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
 
                         await _unitOfWork.PlantLotRepository.Insert(plantLot);
                         var checkInsertPlantLot = await _unitOfWork.SaveAsync();
+                        await transaction.CommitAsync();
                         if (checkInsertPlantLot > 0)
                         {
                             return new BusinessResult(Const.SUCCESS_CREATE_PLANT_LOT_CODE, Const.SUCCESS_CREATE_PLANT_LOT_MESSAGE, true);
@@ -101,7 +116,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     }
                     catch (Exception ex)
                     {
-
+                        await transaction.RollbackAsync();
                         return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
                     }
 
@@ -224,11 +239,11 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         orderBy = x => x.OrderBy(x => x.PlantLotId);
                         break;
                 }
-                string includeProperties = "Partners";
+                string includeProperties = "Partner";
                 var entities = await _unitOfWork.PlantLotRepository.Get(filter, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
                 var pagin = new PageEntity<PlantLotModel>();
                 pagin.List = _mapper.Map<IEnumerable<PlantLotModel>>(entities).ToList();
-                pagin.TotalRecord = await _unitOfWork.UserRepository.Count();
+                pagin.TotalRecord = await _unitOfWork.PlantLotRepository.Count();
                 pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, paginationParameter.PageSize);
                 if (pagin.List.Any())
                 {
@@ -250,10 +265,11 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         {
             try
             {
-                var plantLot = await _unitOfWork.PlantLotRepository.GetByID(plantLotId);
+                var plantLot = await _unitOfWork.PlantLotRepository.GetByCondition(x => x.PlantLotId == plantLotId, "Partner");
                 if(plantLot != null)
                 {
-                    return new BusinessResult(Const.SUCCESS_GET_PLANT_LOT_BY_ID_CODE, Const.SUCCESS_GET_PLANT_LOT_BY_ID_MESSAGE, plantLot);
+                    var result = _mapper.Map<PlantLotModel>(plantLot);
+                    return new BusinessResult(Const.SUCCESS_GET_PLANT_LOT_BY_ID_CODE, Const.SUCCESS_GET_PLANT_LOT_BY_ID_MESSAGE, result);
                 }
                 else
                 {

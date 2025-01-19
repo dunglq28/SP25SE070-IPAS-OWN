@@ -31,6 +31,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_SOFT_DELETE_USER_MSG = "Soft Delete User Success";
         public static int SUCCESS_BANNED_USER_CODE = 200;
         public static string SUCCESS_BANNED_USER_MSG = "Banned User Success";
+        public static string SUCCESS_UNBANNED_USER_MSG = "Active User Success";
         public static int SUCCESS_SEND_OTP_RESET_PASSWORD_CODE = 200;
         public static string SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG = "Otp has sended. Please check your mail";
         public static int SUCCESS_GET_USER_CODE = 200;
@@ -100,6 +101,37 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_UPDATE_FARM_LOGO_CODE = 200;
         public static string SUCCESS_UPDATE_FARM_LOGO_MSG = "Update farm success";
         #endregion
+
+        #region CriteriaType code
+        public static int SUCCESS_GET_CRITERIA_TYPE_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_CRITERIA_TYPE_BY_ID_MESSAGE = "Get criteria type by id success";
+        public static int SUCCESS_GET_CRITERIA_TYPE_BY_NAME_CODE = 200;
+        public static string SUCCESS_GET_CRITERIA_TYPE_BY_NAME_MESSAGE = "Get criteria type by name success";
+        public static int SUCCESS_CREATE_CRITERIA_TYPE_CODE = 200;
+        public static string SUCCESS_CREATE_CRITERIA_TYPE_MESSAGE = "Create criteria type success";
+        public static int SUCCESS_UPDATE_CRITERIA_TYPE_CODE = 200;
+        public static string SUCCESS_UPDATE_CRITERIA_TYPE_MESSAGE = "Update criteria type success";
+        public static int SUCCESS_DELETE_CRITERIA_TYPE_CODE = 200;
+        public static string SUCCESS_DELETE_CRITERIA_TYPE_MESSAGE = "Delete criteria type success";
+        public static int SUCCESS_GET_ALL_CRITERIA_TYPE_CODE = 200;
+        public static string SUCCESS_GET_ALL_CRITERIA_TYPE_MESSAGE = "Get all criteria type success";
+        #endregion
+
+        #region Partner code
+        public static int SUCCESS_GET_PARTNER_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_PARTNER_BY_ID_MESSAGE = "Get partner by id success";
+        public static int SUCCESS_GET_PARTNER_BY_ROLE_NAME_CODE = 200;
+        public static string SUCCESS_GET_PARTNER_BY_ROLE_NAME_MESSAGE = "Get partner by role name success";
+        public static int SUCCESS_CREATE_PARTNER_CODE = 200;
+        public static string SUCCESS_CREATE_PARTNER_MESSAGE = "Create partner success";
+        public static int SUCCESS_UPDATE_PARTNER_CODE = 200;
+        public static string SUCCESS_UPDATE_PARTNER_MESSAGE = "Update partner success";
+        public static int SUCCESS_DELETE_PARTNER_CODE = 200;
+        public static string SUCCESS_DELETE_PARTNER_MESSAGE = "Delete partner success";
+        public static int SUCCESS_GET_ALL_PARTNER_CODE = 200;
+        public static string SUCCESS_GET_ALL_PARTNER_MESSAGE = "Get all partner success";
+        #endregion
+
         #region User code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
@@ -148,6 +180,19 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_DELETE_PLANT_LOT_MESSAGE = "Delete plant lot failed";
         public static int FAIL_CREATE_MANY_PLANT_FROM_PLANT_LOT_CODE = 500;
         public static string FAIL_CREATE_MANY_PLANT_FROM_PLANT_LOT_MESSAGE = "Create many plant from plant lot failed";
+        public static int FAIL_CREATE_MANY_PLANT_BECAUSE_CRITERIA_INVALID_CODE = 500;
+        public static string FAIL_CREATE_MANY_PLANT_BECAUSE_CRITERIA_INVALID_MESSAGE = "Some criteria invalid";
+        #endregion
+
+        #region CriteriaType Fail code
+        public static int FAIL_CREATE_CRITERIA_TYPE_CODE = 500;
+        public static string FAIL_CREATE_CRITERIA_TYPE_MESSAGE = "Create criteria type failed";
+        public static int FAIL_UPDATE_CRITERIA_TYPE_CODE = 500;
+        public static string FAIL_UPDATE_CRITERIA_TYPE_MESSAGE = "Update criteria type failed";
+        public static int FAIL_DELETE_CRITERIA_TYPE_CODE = 500;
+        public static string FAIL_DELETE_CRITERIA_TYPE_MESSAGE = "Delete criteria type failed";
+        public static int FAIL_GET_CRITERIA_TYPE_CODE = 500;
+        public static string FAIL_GET_CRITERIA_TYPE_MESSAGE = "Get criteria type failed";
         #endregion
 
         #region Farm Fail code
@@ -165,12 +210,23 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_UPDATE_FARM_LOGO_MSG = "Farm Update fail";
         #endregion
 
+        #region Partner Fail code
+        public static int FAIL_CREATE_PARTNER_CODE = 500;
+        public static string FAIL_CREATE_PARTNER_MESSAGE = "Create partner failed";
+        public static int FAIL_UPDATE_PARTNER_CODE = 500;
+        public static string FAIL_UPDATE_PARTNER_MESSAGE = "Update partner failed";
+        public static int FAIL_DELETE_PARTNER_CODE = 500;
+        public static string FAIL_DELETE_PARTNER_MESSAGE = "Delete partner failed";
+        public static int FAIL_GET_PARTNER_CODE = 500;
+        public static string FAIL_GET_PARTNER_MESSAGE = "Get partner failed";
+        #endregion
+
 
         #region Warning Code
 
-        public static int WARNING_INVALID_LOGIN_CODE = 4;
+        public static int WARNING_INVALID_LOGIN_CODE = 400;
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wrong";
-        public static int WARNING_INVALID_REFRESH_TOKEN_CODE = 4;
+        public static int WARNING_INVALID_REFRESH_TOKEN_CODE = 400;
         public static string WARNING_INVALID_REFRESH_TOKEN_MSG = "Refresh Token is expired time. Please log out";
         #endregion
 
@@ -205,11 +261,21 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_CREATE_MANY_PLANT_FROM_PLANT_LOT_MSG = "Some criteria does not pass. Please check all criteria again";
         #endregion
 
+        #region CriteriaType
+        public static int WARNING_GET_CRITERIA_TYPE_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_CRITERIA_TYPE_DOES_NOT_EXIST_MSG = "Does not have any criteria type";
+        #endregion
+
         #region FarmService
         public static int WARNING_GET_FARM_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_FARM_NOT_EXIST_MSG = "Farm Resource not found";
         public static int WARNING_GET_ALL_FARM_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_ALL_FARM_DOES_NOT_EXIST_MSG = "Does not have any farm";
+        #endregion
+
+        #region CriteriaType
+        public static int WARNING_GET_PARTNER_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PARTNER_DOES_NOT_EXIST_MSG = "Does not have any partner";
         #endregion
     }
 }

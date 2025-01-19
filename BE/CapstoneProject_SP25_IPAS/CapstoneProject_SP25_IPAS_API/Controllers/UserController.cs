@@ -1,4 +1,5 @@
-﻿using CapstoneProject_SP25_IPAS_Common.Utils;
+﻿using CapstoneProject_SP25_IPAS_API.Payload;
+using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
 using CapstoneProject_SP25_IPAS_Service.IService;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
@@ -19,7 +20,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
 
-        [HttpGet("get-all")]
+        [HttpGet(APIRoutes.User.getUserWithPagination, Name = "getAllUserPaginationAsync")]
         public async Task<IActionResult> GetAllUser(PaginationParameter paginationParameter)
         {
             try
@@ -39,7 +40,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet("get-user-by-id/{userId}")]
+        [HttpGet(APIRoutes.User.getUserById, Name = "getUserById")]
         public async Task<IActionResult> GetUserById([FromRoute] int userId)
         {
             try
@@ -59,7 +60,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet("get-user-by-email/{email}")]
+        [HttpGet(APIRoutes.User.getUserByEmail, Name = "getUserByEmail")]
         public async Task<IActionResult> GetUserByEmail([FromRoute] string email)
         {
             try
@@ -78,7 +79,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 return BadRequest(response);
             }
         }
-        [HttpPost("create-user")]
+        [HttpPost(APIRoutes.User.createUser, Name = "createUser")]
         public async Task<IActionResult> CreateUserInternal([FromBody] CreateAccountModel createAccountRequestModel)
         {
             try
@@ -97,7 +98,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut("update-user")]
+        [HttpPut(APIRoutes.User.updateUserInfo, Name = "updateUser")]
         public async Task<IActionResult> UpdateUser(UpdateUserModel updateUserRequestModel)
         {
             try
@@ -115,7 +116,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 return BadRequest(response);
             }
         }
-        [HttpPut("banned-user/{userId}")]
+        [HttpPut(APIRoutes.User.bannedUser, Name = "bannedUser")]
         public async Task<IActionResult> BannedUser([FromRoute] int userId)
         {
             try
@@ -134,7 +135,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete("soft-delete-user/{userId}")]
+        [HttpDelete(APIRoutes.User.softedDeleteUser, Name = "softedDeleteUser")]
         public async Task<IActionResult> SoftDeleteUser([FromRoute] int userId)
         {
             try
@@ -153,7 +154,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete("delete-user/{userId}")]
+        [HttpDelete(APIRoutes.User.permanenlyDelete, Name = "deletedUser")]
         public async Task<IActionResult> DeleteUser([FromRoute] int userId)
         {
             try
@@ -173,7 +174,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut("update-avatar/{userId}")]
+        [HttpPut(APIRoutes.User.updateUserAvatar, Name = "updateAvatarUser")]
         public async Task<IActionResult> UpdateAvatarOfUser(IFormFile avatarOfUser, [FromRoute] int userId)
         {
             try
@@ -193,7 +194,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet("get-all-user-by-role/{roleName}")]
+        [HttpGet(APIRoutes.User.getAllUserByRole, Name = "getAllUserByRole")]
         public async Task<IActionResult> GetAllUserByRoleName([FromRoute] string roleName)
         {
             try

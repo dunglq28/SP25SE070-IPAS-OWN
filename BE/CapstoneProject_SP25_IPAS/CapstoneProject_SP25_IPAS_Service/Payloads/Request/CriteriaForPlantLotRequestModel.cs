@@ -8,7 +8,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Payloads.Request
 {
     public class CriteriaForPlantLotRequestModel
     {
-        public int CriteriaId { get; set; }
+        public int? CriteriaId { get; set; }
 
         public string? CriteriaCode { get; set; }
 
@@ -18,7 +18,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Payloads.Request
 
         public int? Priority { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool? IsChecked { get; set; }
 
         public int? CriteriaTypeId { get; set; }
     }

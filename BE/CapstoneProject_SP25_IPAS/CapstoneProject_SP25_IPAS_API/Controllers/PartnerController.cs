@@ -1,31 +1,31 @@
 ﻿using CapstoneProject_SP25_IPAS_API.Payload;
 using CapstoneProject_SP25_IPAS_Common.Utils;
-using CapstoneProject_SP25_IPAS_Service.BusinessModel.PlantLotModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.PartnerModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
-using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantLotController : ControllerBase
+    public class PartnerController : ControllerBase
     {
-        private readonly IPlantLotService _plantLotService;
+        private readonly IPartnerService _partnerService;
 
-        public PlantLotController(IPlantLotService plantLotService)
+        public PartnerController(IPartnerService partnerService)
         {
-            _plantLotService = plantLotService;
+            _partnerService = partnerService;
         }
 
-        [HttpGet(APIRoutes.PlantLot.getPlantLotWithPagination, Name = "getPlantLotWithPagination")]
-        public async Task<IActionResult> GetAllPlantLot(PaginationParameter paginationParameter)
+        [HttpGet(APIRoutes.Partner.getPartnerWithPagination, Name = "getPartnerWithPagination")]
+        public async Task<IActionResult> GetAllPartner(PaginationParameter paginationParameter)
         {
             try
             {
-                var result = await _plantLotService.GetAllPlantLots(paginationParameter);
+                var result = await _partnerService.GetAllPartnerPagination(paginationParameter);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,12 +39,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet(APIRoutes.PlantLot.getPlantLotById, Name = "getPlantLotById")]
-        public async Task<IActionResult> GetPlantLotById([FromRoute] int id)
+        [HttpGet(APIRoutes.Partner.getPartnerById, Name = "getPartnerById")]
+        public async Task<IActionResult> GetPartnerById([FromRoute] int id)
         {
             try
             {
-                var result = await _plantLotService.GetPlantLotById(id);
+                var result = await _partnerService.GetPartnerByID(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -58,17 +58,16 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost(APIRoutes.PlantLot.createPlantLot, Name = "createPlantLot")]
-        public async Task<IActionResult> CreatePlantLot([FromBody] CreatePlantLotModel createPlantLotModel)
+        [HttpPost(APIRoutes.Partner.createPartner, Name = "createPartner")]
+        public async Task<IActionResult> CreateaPartner(CreatePartnerModel createPartnerModel)
         {
             try
             {
-                var result = await _plantLotService.CreatePlantLot(createPlantLotModel);
+                var result = await _partnerService.CreatePartner(createPartnerModel);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
                 var response = new BaseResponse()
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
@@ -78,36 +77,16 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut(APIRoutes.PlantLot.updatePlantLotInfo, Name = "updatePlantLotInfo")]
-        public async Task<IActionResult> UpdatePlantLot([FromBody] UpdatePlantLotModel updatePlantLotModel)
+        [HttpPut(APIRoutes.Partner.updatePartnerInfo, Name = "updatePartnerInfo")]
+        public async Task<IActionResult> UpdatePartner(UpdatePartnerModel updatePartnerModel)
         {
             try
             {
-                var result = await _plantLotService.UpdatePlantLot(updatePlantLotModel);
+                var result = await _partnerService.UpdatePartnerInfo(updatePartnerModel);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-        [HttpDelete(APIRoutes.PlantLot.permanenlyDelete, Name = "permanentlyDeletePlantLot")]
-        public async Task<IActionResult> DeletePlantLot([FromRoute] int id)
-        {
-            try
-            {
-                var result = await _plantLotService.DeletePlantLot(id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
                 var response = new BaseResponse()
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
@@ -117,17 +96,16 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost(APIRoutes.PlantLot.createManyPlantFromPlantLot, Name = "createmanyPlantFromPlantLot")]
-        public async Task<IActionResult> CreateManyPlant([FromBody] List<CriteriaForPlantLotRequestModel> criteriaForPlantLotRequestModels, [FromQuery] int quantity)
+        [HttpDelete(APIRoutes.Partner.permanenlyDelete, Name = "permanentlyDeletePartner")]
+        public async Task<IActionResult> DeletePartner([FromRoute] int id)
         {
             try
             {
-                var result = await _plantLotService.CreateManyPlant(criteriaForPlantLotRequestModels, quantity);
+                var result = await _partnerService.PermanentlyDeletePartner(id);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
                 var response = new BaseResponse()
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
@@ -137,5 +115,23 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
+        [HttpGet(APIRoutes.Partner.getPartnerByRoleName, Name = "getPartnerByRoleName")]
+        public async Task<IActionResult> GetPartnerByRoleName([FromRoute] string roleName)
+        {
+            try
+            {
+                var result = await _partnerService.GetPartnerByRoleName(roleName);
+                return Ok(result);  
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
     }
 }

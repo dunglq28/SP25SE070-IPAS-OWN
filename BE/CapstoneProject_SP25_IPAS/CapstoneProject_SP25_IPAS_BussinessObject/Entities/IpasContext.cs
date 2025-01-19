@@ -457,7 +457,6 @@ public partial class IpasContext : DbContext
             entity.ToTable("LandPlotCoordination");
 
             entity.Property(e => e.LandPlotCoordinationId).HasColumnName("LandPlotCoordinationID");
-            entity.Property(e => e.LandPlotCoordinationCode).HasMaxLength(50);
             entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.LandPlotCoordinations)

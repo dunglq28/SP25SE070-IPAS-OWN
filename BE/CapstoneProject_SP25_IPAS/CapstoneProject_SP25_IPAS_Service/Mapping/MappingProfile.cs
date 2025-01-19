@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.CriteriaTypeModels;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.PartnerModel;
 
 namespace CapstoneProject_SP25_IPAS_Service.Mapping
 {
@@ -39,7 +41,15 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             CreateMap<UserFarm, UserFarmModel>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) 
                 .ForMember(dest => dest.Farm, opt => opt.MapFrom(src => src.Farm))
-                .ReverseMap(); 
+                .ReverseMap();
+
+            CreateMap<CriteriaType, CriteriaTypeModel>()
+                .ForMember(dest => dest.GrowthStageName, opt => opt.MapFrom(src => src.GrowthStage.GrowthStageName))
+                .ForMember(dest => dest.ListCriteria, opt => opt.MapFrom(src => src.Criteria))
+                .ReverseMap();
+
+            CreateMap<Partner, PartnerModel>()
+               .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName)).ReverseMap();
 
         }
     }

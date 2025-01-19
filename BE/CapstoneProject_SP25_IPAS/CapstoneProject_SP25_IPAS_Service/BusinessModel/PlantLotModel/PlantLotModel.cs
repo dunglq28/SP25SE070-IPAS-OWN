@@ -27,6 +27,8 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.PlantLotModel
 
         public string? Note { get; set; }
 
+        public int? PartnerId { get; set; }
+
         public string? PartnerName { get; set; }
     }
 }

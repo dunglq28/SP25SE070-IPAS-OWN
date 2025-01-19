@@ -1,8 +1,7 @@
 ﻿using CapstoneProject_SP25_IPAS_API.Payload;
 using CapstoneProject_SP25_IPAS_Common.Utils;
-using CapstoneProject_SP25_IPAS_Service.BusinessModel.PlantLotModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.CriteriaTypeModels;
 using CapstoneProject_SP25_IPAS_Service.IService;
-using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,59 +10,21 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantLotController : ControllerBase
+    public class CriteriaTypeController : ControllerBase
     {
-        private readonly IPlantLotService _plantLotService;
+        private readonly ICriteriaTypeService _criteriaTypeService;
 
-        public PlantLotController(IPlantLotService plantLotService)
+        public CriteriaTypeController(ICriteriaTypeService criteriaTypeService)
         {
-            _plantLotService = plantLotService;
+            _criteriaTypeService = criteriaTypeService;
         }
 
-        [HttpGet(APIRoutes.PlantLot.getPlantLotWithPagination, Name = "getPlantLotWithPagination")]
-        public async Task<IActionResult> GetAllPlantLot(PaginationParameter paginationParameter)
+        [HttpGet(APIRoutes.CriteriaType.getCriteriaTypeWithPagination, Name = "getCriteriaTypeWithPagination")]
+        public async Task<IActionResult> GetAllCriteriaType(PaginationParameter paginationParameter)
         {
             try
             {
-                var result = await _plantLotService.GetAllPlantLots(paginationParameter);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpGet(APIRoutes.PlantLot.getPlantLotById, Name = "getPlantLotById")]
-        public async Task<IActionResult> GetPlantLotById([FromRoute] int id)
-        {
-            try
-            {
-                var result = await _plantLotService.GetPlantLotById(id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpPost(APIRoutes.PlantLot.createPlantLot, Name = "createPlantLot")]
-        public async Task<IActionResult> CreatePlantLot([FromBody] CreatePlantLotModel createPlantLotModel)
-        {
-            try
-            {
-                var result = await _plantLotService.CreatePlantLot(createPlantLotModel);
+                var result = await _criteriaTypeService.GetAllCriteriaTypePagination(paginationParameter);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -78,31 +39,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut(APIRoutes.PlantLot.updatePlantLotInfo, Name = "updatePlantLotInfo")]
-        public async Task<IActionResult> UpdatePlantLot([FromBody] UpdatePlantLotModel updatePlantLotModel)
+        [HttpGet(APIRoutes.CriteriaType.getCriteriaTypeById, Name = "getCriteriaTypeById")]
+        public async Task<IActionResult> GetCriteriaTypeById([FromRoute] int id)
         {
             try
             {
-                var result = await _plantLotService.UpdatePlantLot(updatePlantLotModel);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-        [HttpDelete(APIRoutes.PlantLot.permanenlyDelete, Name = "permanentlyDeletePlantLot")]
-        public async Task<IActionResult> DeletePlantLot([FromRoute] int id)
-        {
-            try
-            {
-                var result = await _plantLotService.DeletePlantLot(id);
+                var result = await _criteriaTypeService.GetCriteriaTypeByID(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -117,17 +59,74 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost(APIRoutes.PlantLot.createManyPlantFromPlantLot, Name = "createmanyPlantFromPlantLot")]
-        public async Task<IActionResult> CreateManyPlant([FromBody] List<CriteriaForPlantLotRequestModel> criteriaForPlantLotRequestModels, [FromQuery] int quantity)
+        [HttpGet(APIRoutes.CriteriaType.getCriteriaTypeByName, Name = "getCriteriaTypeByName")]
+        public async Task<IActionResult> GetCriteriaTypeByName([FromRoute] string name)
         {
             try
             {
-                var result = await _plantLotService.CreateManyPlant(criteriaForPlantLotRequestModels, quantity);
+                var result = await _criteriaTypeService.GetCriteriaTypeByName(name);
                 return Ok(result);
             }
             catch (Exception ex)
             {
 
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost(APIRoutes.CriteriaType.createCriteriaType, Name = "createCriteriaType")]
+        public async Task<IActionResult> CreateCriteriaType(CreateCriteriaTypeModel createCriteriaTypeModel)
+        {
+            try
+            {
+                var result = await _criteriaTypeService.CreateCriteriaType(createCriteriaTypeModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut(APIRoutes.CriteriaType.updateCriteriaTypeInfo, Name = "updateCriteriaType")]
+        public async Task<IActionResult> UpdateCriteriaType(UpdateCriteriaTypeModel updateCriteriaTypeModel)
+        {
+            try
+            {
+                var result = await _criteriaTypeService.UpdateCriteriaTypeInfo(updateCriteriaTypeModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpDelete(APIRoutes.CriteriaType.permanenlyDelete, Name = "permentlyDeleteCriteriaType")]
+        public async Task<IActionResult> DeleteCriteriaType([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _criteriaTypeService.PermanentlyDeleteCriteriaType(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
                 var response = new BaseResponse()
                 {
                     StatusCode = StatusCodes.Status400BadRequest,

@@ -29,5 +29,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public FarmCoordinationRepository FarmCoordinationRepository { get; }
         public PlantLotRepository PlantLotRepository { get; }
         public PlantRepository PlantRepository { get; }
+        public CriteriaTypeRepository CriteriaTypeRepository { get; }
+        public CriteriaRepository CriteriaRepository { get; }
+        public PartnerRepository PartnerRepository { get; }
     }
 }
