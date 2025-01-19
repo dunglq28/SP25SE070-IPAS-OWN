@@ -1,7 +1,8 @@
 export const PATHS = {
   // Authentication
   AUTH: {
-    LOGIN: "/",
+    LANDING: "/",
+    LOGIN: "/sign-in",
   },
 
   // Dashboard
