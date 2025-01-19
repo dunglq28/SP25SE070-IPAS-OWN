@@ -130,6 +130,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.CarePlan).WithMany(p => p.CarePlanSchedules)
                 .HasForeignKey(d => d.CarePlanId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__CarePlanS__CareP__2180FB33");
         });
 
@@ -149,6 +150,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Room).WithMany(p => p.ChatMessages)
                 .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ChatMessa__RoomI__114A936A");
         });
 
@@ -166,6 +168,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.CreateByNavigation).WithMany(p => p.ChatRooms)
                 .HasForeignKey(d => d.CreateBy)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ChatRoom__Create__123EB7A3");
         });
 
@@ -181,11 +184,13 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Criteria).WithMany(p => p.CriteriaGraftedPlants)
                 .HasForeignKey(d => d.CriteriaId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__CriteriaG__Crite__55F4C372");
 
             entity.HasOne(d => d.GraftedPlant).WithMany(p => p.CriteriaGraftedPlants)
                 .HasForeignKey(d => d.GraftedPlantId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__CriteriaG__Graft__55009F39");
         });
@@ -202,11 +207,13 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Criteria).WithMany(p => p.CriteriaHarvestTypes)
                 .HasForeignKey(d => d.CriteriaId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CriteriaHarvestType_Criteria");
 
             entity.HasOne(d => d.HarvestType).WithMany(p => p.CriteriaHarvestTypes)
                 .HasForeignKey(d => d.HarvestTypeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CriteriaHarvestType_HarvestType");
         });
@@ -223,6 +230,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.GrowthStage).WithMany(p => p.CriteriaTypes)
                .HasForeignKey(d => d.GrowthStageID)
+               .OnDelete(DeleteBehavior.Cascade)
                .HasConstraintName("FK__GrowthStage__CriteriaType__154EB7A3");
         });
 
@@ -238,6 +246,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.CriteriaType).WithMany(p => p.Criteria)
                 .HasForeignKey(d => d.CriteriaTypeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Criteria__Criter__3587F3E0");
         });
 
@@ -305,6 +314,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Farm).WithMany(p => p.FarmCoordinations)
                 .HasForeignKey(d => d.FarmId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__FarmCoord__FarmI__1332DBDC");
         });
 
@@ -327,14 +337,17 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Plan).WithMany(p => p.GraftedPlants)
                 .HasForeignKey(d => d.PlanId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__GraftedPl__PlanI__540C7B00");
 
             entity.HasOne(d => d.Plant).WithMany(p => p.GraftedPlants)
                 .HasForeignKey(d => d.PlantId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__GraftedPl__Plant__531856C7");
 
             entity.HasOne(d => d.PlantLot).WithMany(p => p.GraftedPlants)
                 .HasForeignKey(d => d.PlantLotID)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__GraftedPl__PlantLot__234556C7");
         });
 
@@ -371,6 +384,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Crop).WithMany(p => p.HarvestHistories)
                 .HasForeignKey(d => d.CropId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__HarvestHi__CropI__3E1D39E1");
         });
 
@@ -397,16 +411,19 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.HarvestHistory).WithMany(p => p.HarvestTypeHistories)
                 .HasForeignKey(d => d.HarvestHistoryId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__HarvestTy__Harve__40058253");
 
             entity.HasOne(d => d.HarvestType).WithMany(p => p.HarvestTypeHistories)
                 .HasForeignKey(d => d.HarvestTypeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__HarvestTy__Harve__3F115E1A");
 
             entity.HasOne(d => d.Plant).WithMany(p => p.HarvestTypeHistories)
                 .HasForeignKey(d => d.PlantId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_HarvestTypeHistory_Plant");
         });
 
@@ -429,6 +446,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Farm).WithMany(p => p.LandPlots)
                 .HasForeignKey(d => d.FarmId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__LandPlot__FarmID__2739D489");
         });
 
@@ -439,11 +457,11 @@ public partial class IpasContext : DbContext
             entity.ToTable("LandPlotCoordination");
 
             entity.Property(e => e.LandPlotCoordinationId).HasColumnName("LandPlotCoordinationID");
-            entity.Property(e => e.LandPlotCoordinationCode).HasMaxLength(50);
             entity.Property(e => e.LandPlotId).HasColumnName("LandPlotID");
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.LandPlotCoordinations)
                 .HasForeignKey(d => d.LandPlotId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__LandPlotC__LandP__31B762FC");
         });
 
@@ -464,6 +482,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.LandRows)
                 .HasForeignKey(d => d.LandPlotId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__LandRow__LandPlo__22751F6C");
         });
 
@@ -484,10 +503,12 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.NotificationType).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.NotificationTypeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Notificat__Notif__5224328E");
 
             entity.HasOne(d => d.User).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Notification_User");
         });
 
@@ -522,10 +543,12 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Farm).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.FarmId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Order__FarmID__1F98B2C1");
 
             entity.HasOne(d => d.Package).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.PackageId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Order__PackageID__208CD6FA");
         });
 
@@ -555,6 +578,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Package).WithMany(p => p.PackageDetails)
                 .HasForeignKey(d => d.PackageId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__PackageDe__Packa__2180FB33");
         });
 
@@ -576,6 +600,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Partners)
                 .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Partner__RoleID__22751F6C");
         });
 
@@ -598,6 +623,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Payment__OrderID__236943A5");
         });
 
@@ -628,34 +654,42 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Assignor).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.AssignorId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plan__AssignorID__1EA48E88");
 
             entity.HasOne(d => d.Crop).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.CropId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plan__CropID__208CD6FA");
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.LandPlotId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plan__LandPlotID__1DB06A4F");
 
             entity.HasOne(d => d.Plant).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.PlantId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plan__PlantID__1CBC4616");
 
             entity.HasOne(d => d.Process).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.ProcessId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Plan_Process");
 
             entity.HasOne(d => d.TypeWork).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.TypeWorkId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plan__TypeWorkID__1F98B2C1");
 
             entity.HasOne(d => d.GrowthStage).WithMany(p => p.Plans)
                .HasForeignKey(d => d.GrowthStageID)
+               .OnDelete(DeleteBehavior.Cascade)
                .HasConstraintName("FK__Plan__GrowthStage__154GD6A5");
 
             entity.HasOne(d => d.PlantLot).WithMany(p => p.Plans)
                .HasForeignKey(d => d.PlantLotID)
+               .OnDelete(DeleteBehavior.Cascade)
                .HasConstraintName("FK__PlantLot__Plan__125DE7K2");
         });
 
@@ -683,16 +717,19 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Cultivar).WithMany(p => p.Plants)
                 .HasForeignKey(d => d.CultivarId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plant__CultivarI__1AD3FDA4");
 
             entity.HasOne(d => d.LandRow).WithMany(p => p.Plants)
                 .HasForeignKey(d => d.LandRowId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Plant__LandRowID__1BC821DD");
 
           
 
             entity.HasOne(d => d.PlantReference).WithMany(p => p.InversePlantReference)
                 .HasForeignKey(d => d.PlantReferenceId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Plant_Plant");
         });
 
@@ -706,11 +743,13 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Criteria).WithMany(p => p.PlantCriteria)
                 .HasForeignKey(d => d.CriteriaId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__CriteriaT__Crite__37703C52");
 
             entity.HasOne(d => d.Plant).WithMany(p => p.PlantCriteria)
                 .HasForeignKey(d => d.PlantId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__CriteriaT__Plant__367C1819");
         });
@@ -730,6 +769,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Plant).WithMany(p => p.PlantGrowthHistories)
                 .HasForeignKey(d => d.PlantId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__PlantNote__Plant__32AB8735");
         });
 
@@ -749,6 +789,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Partner).WithMany(p => p.PlantLots)
                 .HasForeignKey(d => d.PartnerId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_PlantLot_Partner");
         });
 
@@ -768,6 +809,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.PlantGrowthHistory).WithMany(p => p.PlantResources)
                 .HasForeignKey(d => d.PlantGrowthHistoryId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_PlantResource_PlantGrowthHistory");
         });
 
@@ -790,14 +832,17 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Farm).WithMany(p => p.Processes)
                 .HasForeignKey(d => d.FarmId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Process__FarmID__32AB8735");
 
             entity.HasOne(d => d.ProcessStyle).WithMany(p => p.Processes)
                 .HasForeignKey(d => d.ProcessStyleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Process__Process__339FAB6E");
 
             entity.HasOne(d => d.GrowthStage).WithMany(p => p.Processes)
                .HasForeignKey(d => d.GrowthStageID)
+               .OnDelete(DeleteBehavior.Cascade)
                .HasConstraintName("FK__Process__GrowthStage__157CH7B6");
         });
 
@@ -816,10 +861,12 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Process).WithMany(p => p.ProcessData)
                 .HasForeignKey(d => d.ProcessId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ProcessDa__Proce__3493CFA7");
 
             entity.HasOne(d => d.SubProcess).WithMany(p => p.ProcessData)
                 .HasForeignKey(d => d.SubProcessId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ProcessDa__SubPr__3587F3E0");
         });
 
@@ -851,6 +898,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__RefreshTo__UserI__367C1819");
         });
 
@@ -885,10 +933,12 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Process).WithMany(p => p.SubProcesses)
                 .HasForeignKey(d => d.ProcessId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__SubProces__Proce__37703C52");
 
             entity.HasOne(d => d.ProcessStyle).WithMany(p => p.SubProcesses)
                 .HasForeignKey(d => d.ProcessStyleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__SubProces__Proce__3864608B");
         });
 
@@ -906,10 +956,12 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Manager).WithMany(p => p.TaskFeedbacks)
                 .HasForeignKey(d => d.ManagerId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__TaskFeedb__Manag__395884C4");
 
             entity.HasOne(d => d.WorkLog).WithMany(p => p.TaskFeedbacks)
                 .HasForeignKey(d => d.WorkLogId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__TaskFeedb__WorkL__339FAB6E");
         });
 
@@ -952,6 +1004,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__User__RoleID__3B40CD36");
         });
 
@@ -966,11 +1019,13 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.UserFarms)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserFarm__User__3R2D39E1");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.UserFarms)
                 .HasForeignKey(d => d.FarmId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserFarm__FarmL__25617C17");
         });
@@ -986,6 +1041,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.UserWorkLogs)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserWorkL__UserI__3E1D39E1");
 
@@ -1011,14 +1067,17 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.Crop).WithMany(p => p.WorkLogs)
                 .HasForeignKey(d => d.CropId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__WorkLog__CropID__245D67DE");
 
             entity.HasOne(d => d.HarvestHistory).WithMany(p => p.WorkLogs)
                 .HasForeignKey(d => d.HarvestHistoryId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_WorkLog_HarvestHistory");
 
             entity.HasOne(d => d.Schedule).WithMany(p => p.WorkLogs)
                 .HasForeignKey(d => d.ScheduleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__WorkLog__Schedul__236943A5");
         });
 
@@ -1038,6 +1097,7 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.WorkLog).WithMany(p => p.WorkLogResources)
                 .HasForeignKey(d => d.WorkLogId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__WorkLogRe__WorkL__29221CFB");
         });
 
@@ -1068,11 +1128,13 @@ public partial class IpasContext : DbContext
 
             entity.HasOne(d => d.LandPlot).WithMany(p => p.LandPlotCrops)
                 .HasForeignKey(d => d.LandPlotID)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LandPlotCrop_LandPlot");
 
             entity.HasOne(d => d.Crop).WithMany(p => p.LandPlotCrops)
                 .HasForeignKey(d => d.CropID)
+                .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LandPlotCrop_Crop");
         });

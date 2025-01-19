@@ -7,6 +7,7 @@ using CapstoneProject_SP25_IPAS_Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CapstoneProject_SP25_IPAS_API.Payload;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
@@ -21,7 +22,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             _cloudinaryService = service;
         }
 
-        [HttpPost("upload-image")]
+        [HttpPost(APIRoutes.Resource.uploadImage, Name = "uploadImage")]
         //[Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> UploadImageToCloudinary(IFormFile uploadImageFile)
         {
@@ -50,7 +51,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete("delete-image-by-url")]
+        [HttpDelete(APIRoutes.Resource.deleteImageByURL, Name = "deleteImageByURL")]
         public async Task<IActionResult> DeleteImageByURL([FromBody] DeleteImageURLModel deleteImageURLModel)
         {
             try
@@ -79,7 +80,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
 
-        [HttpPost("upload-video")]
+        [HttpPost(APIRoutes.Resource.uploadvideo, Name = "uploadVideo")]
         public async Task<IActionResult> UploadVideo(IFormFile uploadVideoFile)
         {
             if (uploadVideoFile == null || uploadVideoFile.Length == 0)
@@ -111,7 +112,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete("delete-video-by-url")]
+        [HttpDelete(APIRoutes.Resource.deleteVideoByURL, Name = "deleteVideoByURL")]
         public async Task<IActionResult> DeleteVideoByURL([FromBody] DeleteVideoURLModel deleteVideoURLModel) 
         {
             try
@@ -129,8 +130,13 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
             catch (Exception ex)
             {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
 
-                throw;
+                return BadRequest(response);
             }
         }
     }

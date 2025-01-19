@@ -7,11 +7,11 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels
     {
         public int UserId { get; set; }
 
-        public string Password { get; set; } = "";
+        public string? Password { get; set; } = "";
 
         [Required(ErrorMessage = "Tên là bắt buộc")]
         [Display(Name = "Full name")]
-        public string FullName { get; set; } = null!;
+        public string? FullName { get; set; } = null!;
 
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Số điện thoại không hợp lệ")]

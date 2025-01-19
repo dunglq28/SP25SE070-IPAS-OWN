@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject_SP25_IPAS_Common.Enum
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RoleEnum
     {
         ADMIN = 1,
         OWNER = 2,
         MANAGER = 3,
         EMPLOYEE = 4,
+        PARTNER = 5,
     }
 }
