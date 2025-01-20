@@ -1,4 +1,4 @@
-﻿using CapstoneProject_SP25_IPAS_Repository.IRepository;
+using CapstoneProject_SP25_IPAS_Repository.IRepository;
 using CapstoneProject_SP25_IPAS_Repository.Repository;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -27,5 +27,10 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public NotificationRepository NotificationRepository { get; }
         public UserFarmRepository UserFarmRepository { get; }
         public FarmCoordinationRepository FarmCoordinationRepository { get; }
+        public PlantLotRepository PlantLotRepository { get; }
+        public PlantRepository PlantRepository { get; }
+        public CriteriaTypeRepository CriteriaTypeRepository { get; }
+        public CriteriaRepository CriteriaRepository { get; }
+        public PartnerRepository PartnerRepository { get; }
     }
 }

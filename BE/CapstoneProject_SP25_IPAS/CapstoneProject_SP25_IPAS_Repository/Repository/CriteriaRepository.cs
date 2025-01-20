@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject_SP25_IPAS_Repository.Repository
 {
-    public class PlanRepository : GenericRepository<Plan>, IPlanRepository
+    public class CriteriaRepository : GenericRepository<Criteria>, ICriteriaRepository
     {
         private readonly IpasContext _context;
 
-        public PlanRepository(IpasContext context) : base(context)
+        public CriteriaRepository(IpasContext context) : base(context)
         {
             _context = context;
         }
