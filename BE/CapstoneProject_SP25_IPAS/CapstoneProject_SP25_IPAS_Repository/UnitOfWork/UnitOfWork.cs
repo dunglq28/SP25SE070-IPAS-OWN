@@ -29,7 +29,13 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private PlanRepository _planRepo;
         private NotificationRepository _notificationRepo;
         private UserFarmRepository _userFarmRepo;
+        private PlantLotRepository _plantLotRepo;
+        private PlantRepository _plantRepo;
         private FarmCoordinationRepository _farmCoordinationRepo;
+        private CriteriaTypeRepository _criteriaTypeRepo;
+        private CriteriaRepository _criteriaRepo;
+        private PartnerRepository _partnerRepo;
+        private GrowthStageRepository _growthStageRepo;
         private LandPlotRepository _landPlotRepo;
         private LandPlotCoordinationRepository _landPlotCoordinationRepo;
 
@@ -47,6 +53,13 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _planRepo = new PlanRepository(context);
             _notificationRepo = new NotificationRepository(context);
             _userFarmRepo = new UserFarmRepository(context);
+            _plantLotRepo = new PlantLotRepository(context);
+            _plantRepo = new PlantRepository(context);
+            _criteriaTypeRepo = new CriteriaTypeRepository(context);
+            _criteriaRepo = new CriteriaRepository(context);
+            _partnerRepo = new PartnerRepository(context);
+            _growthStageRepo = new GrowthStageRepository(context);
+            _configuration = configuration;
             _farmCoordinationRepo = new FarmCoordinationRepository(context);
             _landPlotRepo = new LandPlotRepository(context);
             _landPlotCoordinationRepo = new LandPlotCoordinationRepository(context);
@@ -218,6 +231,29 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             }
         }
 
+        public PlantLotRepository PlantLotRepository
+        {
+            get
+            {
+                if (_plantLotRepo == null)
+                {
+                    this._plantLotRepo = new PlantLotRepository(_context);
+                }
+                return _plantLotRepo;
+            }
+        }
+
+        public PlantRepository PlantRepository
+        {
+            get
+            {
+                if (_plantRepo == null)
+                {
+                    this._plantRepo = new PlantRepository(_context);
+                }
+                return _plantRepo;
+            }
+        }
         public FarmRepository FarmRepository
         {
             get
@@ -261,6 +297,54 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._landPlotCoordinationRepo = new LandPlotCoordinationRepository(_context);
                 }
                 return _landPlotCoordinationRepo;
+            }
+        }
+
+        public CriteriaTypeRepository CriteriaTypeRepository
+        {
+            get
+            {
+                if (_criteriaTypeRepo == null)
+                {
+                    this._criteriaTypeRepo = new CriteriaTypeRepository(_context);
+                }
+                return _criteriaTypeRepo;
+            }
+        }
+
+        public PartnerRepository PartnerRepository
+        {
+            get
+            {
+                if (_partnerRepo == null)
+                {
+                    this._partnerRepo = new PartnerRepository(_context);
+                }
+                return _partnerRepo;
+            }
+        }
+
+        public CriteriaRepository CriteriaRepository
+        {
+            get
+            {
+                if (_criteriaRepo == null)
+                {
+                    this._criteriaRepo = new CriteriaRepository(_context);
+                }
+                return _criteriaRepo;
+            }
+        }
+
+        public GrowthStageRepository GrowthStageRepository
+        {
+            get
+            {
+                if (_growthStageRepo == null)
+                {
+                    this._growthStageRepo = new GrowthStageRepository(_context);
+                }
+                return _growthStageRepo;
             }
         }
     }

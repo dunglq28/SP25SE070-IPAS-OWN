@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { publicRoutes } from "./routes/RouterApp";
 import { GuestLayout } from "./layouts";
+import 'aos/dist/aos.css';
 
 function App() {
   return (

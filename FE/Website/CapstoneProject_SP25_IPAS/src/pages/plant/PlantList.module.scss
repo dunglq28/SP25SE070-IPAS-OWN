@@ -1,0 +1,16 @@
+@import "../../styles/share.scss";
+
+.container {
+  @extend .container;
+
+  .searchWrapper {
+    @extend .searchWrapper;
+  }
+
+  .plant {
+    @extend .table;
+    .tableText {
+      @extend .tableText;
+    }
+  }
+}

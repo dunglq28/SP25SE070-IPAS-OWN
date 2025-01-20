@@ -17,7 +17,7 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels
         [Display(Name = "Full name")]
         public string FullName { get; set; } = null!;
 
-        public int? Gender { get; set; }
+        public string? Gender { get; set; }
         public string? PhoneNumber { get; set; }
 
         public string? Address { get; set; }

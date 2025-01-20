@@ -17,6 +17,7 @@ export const PATHS = {
   FARM: {
     FARM_LIST: "/farms",
     FARM_DETAIL: "/farms/:id",
+    FARM_PLANT_LIST: "/farms/plants",
     FARM_PLOT_LIST: "/farms/land-plots",
     FARM_PLOT_CREATE: "/farms/land-plot/create",
   },

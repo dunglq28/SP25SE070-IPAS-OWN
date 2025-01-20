@@ -53,6 +53,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             if (checkUser != null)
             {
                 checkUser.IsDelete = true;
+                checkUser.DeleteDate = DateTime.Now;
                 var result = await _context.SaveChangesAsync();
                 return result;
             }
