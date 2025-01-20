@@ -36,11 +36,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task<BusinessResult> CreateFarm(FarmCreateModel farmCreateModel)
+        public async Task<BusinessResult> CreateFarm(FarmCreateRequest farmCreateModel)
         {
             try
             {
-
                 using (var transaction = await _unitOfWork.BeginTransactionAsync())
                 {
 
@@ -268,7 +267,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         await transaction.CommitAsync();
                         return new BusinessResult(Const.SUCCESS_UPDATE_FARM_CODE, Const.SUCCESS_UPDATE_FARM_MSG, new { success = true });
                     }
-                    else return new BusinessResult(Const.FAIL_UPDATE_FARM_CODE, Const.FAIL_UPDATE_FARM_MSG);
+                    else return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_TO_SAVE_TO_DATABASE);
                 }
             }
             catch (Exception ex)
@@ -300,7 +299,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         await transaction.CommitAsync();
                         return new BusinessResult(Const.SUCCESS_DELETE_SOFTED_FARM_CODE, Const.SUCCESS_DELETE_SOFTED_FARM_MSG, farm);
                     }
-                    else return new BusinessResult(Const.SUCCESS_DELETE_SOFTED_FARM_CODE, Const.SUCCESS_DELETE_SOFTED_FARM_MSG, new { success = false });
+                    else return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_TO_SAVE_TO_DATABASE, new { success = false });
                 }
             }
             catch (Exception ex)
@@ -309,7 +308,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public async Task<BusinessResult> UpdateFarmInfo(FarmUpdateModel farmUpdateModel)
+        public async Task<BusinessResult> UpdateFarmInfo(FarmUpdateRequest farmUpdateModel)
         {
             try
             {
@@ -324,7 +323,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         return new BusinessResult(Const.WARNING_GET_FARM_NOT_EXIST_CODE, Const.WARNING_GET_FARM_NOT_EXIST_MSG);
                     }
                     // Lấy danh sách thuộc tính từ model
-                    foreach (var prop in typeof(FarmUpdateModel).GetProperties())
+                    foreach (var prop in typeof(FarmUpdateRequest).GetProperties())
                     {
                         var newValue = prop.GetValue(farmUpdateModel);
                         if (newValue != null && !string.IsNullOrEmpty(newValue.ToString()))
@@ -344,7 +343,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         await transaction.CommitAsync();
                         return new BusinessResult(Const.SUCCESS_UPDATE_FARM_CODE, Const.SUCCESS_UPDATE_FARM_MSG, farmEntityUpdate);
                     }
-                    else return new BusinessResult(Const.FAIL_UPDATE_FARM_CODE, Const.FAIL_UPDATE_FARM_MSG);
+                    else return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_TO_SAVE_TO_DATABASE);
                 }
             }
             catch (Exception ex)
@@ -370,62 +369,69 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         }
 
 
-        public async Task<BusinessResult> UpdateFarmCoordination(int farmId, List<FarmCoordinationCreateModel> updatedCoordinationsList)
+        public async Task<BusinessResult> UpdateFarmCoordination(int farmId, List<CoordinationCreateRequest> updatedCoordinationsList)
         {
-            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            try
             {
-                // Lấy các tọa độ hiện tại
-                Expression<Func<FarmCoordination, bool>> condition = x => x.FarmId == farmId && x.Farm.IsDelete != true;
-                var existingCoordinationList = await _unitOfWork.FarmCoordinationRepository.GetAllNoPaging(condition);
 
-                // Chuyển đổi danh sách thành HashSet để so sánh
-                var existingCoordinates = existingCoordinationList
-                    .Select(x => new { Lat = x.Lagtitude ?? 0, Lng = x.Longitude ?? 0 }) // Ép kiểu tránh null
-                    .ToHashSet();
+                using (var transaction = await _unitOfWork.BeginTransactionAsync())
+                {
+                    // Lấy các tọa độ hiện tại
+                    Expression<Func<FarmCoordination, bool>> condition = x => x.FarmId == farmId && x.Farm.IsDelete != true;
+                    var existingCoordinationList = await _unitOfWork.FarmCoordinationRepository.GetAllNoPaging(condition);
 
-                var newCoordinates = updatedCoordinationsList
-                    .Select(x => new { Lat = x.Lagtitude, Lng = x.Longitude }) // Đổi tên key tránh lỗi trùng
-                    .ToHashSet();
+                    // Chuyển đổi danh sách thành HashSet để so sánh
+                    var existingCoordinates = existingCoordinationList
+                        .Select(x => new { Lat = x.Lagtitude ?? 0, Lng = x.Longitude ?? 0 }) // Ép kiểu tránh null
+                        .ToHashSet();
 
-                // Tìm các điểm bị xóa (có trong danh sách cũ nhưng không có trong danh sách mới)
-                var coordinatesToDelete = existingCoordinationList
-                    .Where(x => !newCoordinates.Contains(new { Lat = x.Lagtitude!.Value, Lng = x.Longitude!.Value }))
-                    .ToList();
+                    var newCoordinates = updatedCoordinationsList
+                        .Select(x => new { Lat = x.Lagtitude, Lng = x.Longitude }) // Đổi tên key tránh lỗi trùng
+                        .ToHashSet();
 
-                // Tìm các điểm cần thêm mới (có trong danh sách mới nhưng không có trong danh sách cũ)
-                var coordinatesToAdd = updatedCoordinationsList
-                    .Where(x => !existingCoordinates.Contains(new { Lat = x.Lagtitude, Lng = x.Longitude }))
-                    .Select(x => new FarmCoordination
+                    // Tìm các điểm bị xóa (có trong danh sách cũ nhưng không có trong danh sách mới)
+                    var coordinatesToDelete = existingCoordinationList
+                        .Where(x => !newCoordinates.Contains(new { Lat = x.Lagtitude!.Value, Lng = x.Longitude!.Value }))
+                        .ToList();
+
+                    // Tìm các điểm cần thêm mới (có trong danh sách mới nhưng không có trong danh sách cũ)
+                    var coordinatesToAdd = updatedCoordinationsList
+                        .Where(x => !existingCoordinates.Contains(new { Lat = x.Lagtitude, Lng = x.Longitude }))
+                        .Select(x => new FarmCoordination
+                        {
+                            FarmId = farmId,
+                            Lagtitude = x.Lagtitude,
+                            Longitude = x.Longitude
+                        })
+                        .ToList();
+
+                    // Xóa các điểm không còn tồn tại
+                    if (coordinatesToDelete.Any())
                     {
-                        FarmId = farmId,
-                        Lagtitude = x.Lagtitude,
-                        Longitude = x.Longitude
-                    })
-                    .ToList();
+                        _unitOfWork.FarmCoordinationRepository.RemoveRange(coordinatesToDelete); // Sửa DeleteRange
+                    }
 
-                // Xóa các điểm không còn tồn tại
-                if (coordinatesToDelete.Any())
-                {
-                    _unitOfWork.FarmCoordinationRepository.RemoveRange(coordinatesToDelete); // Sửa DeleteRange
-                }
+                    // Thêm các điểm mới
+                    if (coordinatesToAdd.Any())
+                    {
+                        await _unitOfWork.FarmCoordinationRepository.InsertRangeAsync(coordinatesToAdd); // Sửa InsertRangeAsync
+                    }
 
-                // Thêm các điểm mới
-                if (coordinatesToAdd.Any())
-                {
-                    await _unitOfWork.FarmCoordinationRepository.InsertRangeAsync(coordinatesToAdd); // Sửa InsertRangeAsync
+                    var result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                    {
+                        await transaction.CommitAsync();
+                        var resultSave = await _unitOfWork.FarmCoordinationRepository.GetAllNoPaging(x => x.FarmId == farmId);
+                        return new BusinessResult(Const.SUCCESS_UPDATE_FARM_COORDINATION_CODE, Const.SUCCESS_UPDATE_FARM_COORDINATION_MSG, resultSave);
+                    }
+                    else
+                    {
+                        return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_TO_SAVE_TO_DATABASE);
+                    }
                 }
-
-                var result = await _unitOfWork.SaveAsync();
-                if (result > 0)
-                {
-                    await transaction.CommitAsync();
-                    var resultSave = await _unitOfWork.FarmCoordinationRepository.GetAllNoPaging(x => x.FarmId == farmId);
-                    return new BusinessResult(Const.SUCCESS_UPDATE_FARM_COORDINATION_CODE, Const.SUCCESS_UPDATE_FARM_COORDINATION_MSG, resultSave);
-                }
-                else
-                {
-                    return new BusinessResult(Const.FAIL_UPDATE_FARM_COORDINATION_CODE, Const.FAIL_UPDATE_FARM_COORDINATION_MSG);
-                }
+            } catch (Exception ex)
+            {
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
     }

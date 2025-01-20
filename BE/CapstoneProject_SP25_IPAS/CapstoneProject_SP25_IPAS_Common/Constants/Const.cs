@@ -15,7 +15,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region Error Codes
 
         public static int ERROR_EXCEPTION = 400;
-
+        public static string FAIL_TO_SAVE_TO_DATABASE = "Save to database fail";
         #endregion
 
         #region Success Codes
@@ -63,20 +63,20 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_GET_ALL_USER_BY_ROLE_MESSAGE = "Get all user by role success";
         public static int SUCCESS_UPDATE_USER_CODE = 200;
         public static string SUCCESS_UPDATE_MESSAGE = "Update user success";
-        public static int SUCCESS_GET_FARM_ALL_PAGINATION_CODE = 200;
-        public static string SUCCESS_GET_FARM_ALL_PAGINATION_FARM_MSG = "Get all pagination farm success";
         #endregion
         #region FarmService code
         public static int SUCCESS_GET_FARM_CODE = 200;
         public static string SUCCESS_FARM_GET_MSG = "Get farm by id success";
         public static int SUCCESS_GET_ALL_FARM_WITH_PAGIN_CODE = 200;
         public static string SUCCESS_GET_ALL_FARM_WITH_PAGIN_EMPTY_CODE = "Get all farm empty";
+        public static int SUCCESS_GET_FARM_ALL_PAGINATION_CODE = 200;
+        public static string SUCCESS_GET_FARM_ALL_PAGINATION_FARM_MSG = "Get all pagination farm success";
         public static int SUCCESS_CREATE_FARM_CODE = 201;
         public static string SUCCESS_CREATE_FARM_MSG = "Create farm success";
         public static int SUCCESS_UPDATE_FARM_CODE = 200;
         public static string SUCCESS_UPDATE_FARM_MSG = "Update farm success";
         public static int SUCCESS_UPDATE_FARM_COORDINATION_CODE = 200;
-        public static string SUCCESS_UPDATE_FARM_COORDINATION_MSG = "Update farm success";
+        public static string SUCCESS_UPDATE_FARM_COORDINATION_MSG = "Update farm coordination success";
         public static int SUCCESS_DELETE_PERMANENTLY_FARM_CODE = 200;
         public static string SUCCESS_DELETE_PERMANENTLY_FARM_MSG = "Delete farm softed success";
         public static int SUCCESS_DELETE_SOFTED_FARM_CODE = 200;
@@ -86,7 +86,17 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_GET_ALL_FARM_OF_USER_FOUND_MSG = "Get all farm of user success.";
         public static int SUCCESS_UPDATE_FARM_LOGO_CODE = 200;
         public static string SUCCESS_UPDATE_FARM_LOGO_MSG = "Update farm success";
-
+        public static int SUCCESS_DELETE_FARM_PLANPLOT_CODE = 200;
+        public static string SUCCESS_DELTE_FARM_LANDPLOT_MSG = "Update farm success";
+        // landplot
+        public static int SUCCESS_GET_ALL_LANDPLOT_IN_FARM_CODE = 200;
+        public static string SUCCESS_GET_ALL_LANDPLOT_IN_FARM_MSG = "Get all landplot of farm success";
+        public static int SUCCESS_UPDATE_LANDPLOT_COORDINATION_CODE = 200;
+        public static string SUCCESS_UPDATE_LANDPLOT_COORDINATION_MSG = "Update landplot coordination success";
+        public static int SUCCESS_UPDATE_LANDPLOT_CODE = 200;
+        public static string SUCCESS_UPDATE_LANDPLOT_MSG = "Update landplot success";
+        public static int SUCCESS_CREATE_LANDPLOT_CODE = 201;
+        public static string SUCCESS_CREATE_LANDPLOT_MSG = "Create landplot success";
         #endregion
 
         #endregion
@@ -144,6 +154,8 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_DELETE_SOFTED_FARM_MSG = "Delete farm softed fail";
         public static int FAIL_UPDATE_FARM_LOGO_CODE = 201;
         public static string FAIL_UPDATE_FARM_LOGO_MSG = "Farm Update fail";
+        public static int FAIL_DELETE_FARM_LANDPLOT_CODE = 500;
+        public static string FAIL_DELETE_FARM_LANDPLOT_MSG = "Delete landplot of farm have server error";
         #endregion
 
         #endregion
@@ -184,6 +196,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_GET_FARM_NOT_EXIST_MSG = "Farm Resource not found";
         public static int WARNING_GET_ALL_FARM_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_ALL_FARM_DOES_NOT_EXIST_MSG = "Does not have any farm";
+        public static int WARNING_GET_LANDPLOT_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_LANDPLOT_NOT_EXIST_MSG = "Land plot does not exist in this farm.";
+        public static string WARNING_GET_ALL_LANDPLOT_NOT_EXIST_MSG = "Land plot does not exist in this farm.";
+
         #endregion
 
         #endregion

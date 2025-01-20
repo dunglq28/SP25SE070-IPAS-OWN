@@ -26,13 +26,19 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             .ReverseMap();
             CreateMap<FarmCoordination, FarmCoordinationModel>();
 
-            CreateMap<LandPlot, LandPlotModel>();
+            CreateMap<LandPlot, LandPlotModel>()
+                .ForMember(dest => dest.LandPlotCoordinations, opt => opt.MapFrom(src => src.LandPlotCoordinations))
+                //.ForMember(dest => dest.LandRows, opt => opt.MapFrom(src => src.LandRows))
+                //.ForMember(dest => dest.Plans, opt => opt.MapFrom(src => src.Plans))
+                //.ForMember(dest => dest.LandPlotCrops, opt => opt.MapFrom(src => src.LandPlotCrops))
+                .ReverseMap();
 
             CreateMap<UserFarm, UserFarmModel>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) 
                 .ForMember(dest => dest.Farm, opt => opt.MapFrom(src => src.Farm))
-                .ReverseMap(); 
+                .ReverseMap();
 
+            CreateMap<LandPlotCoordination, LandPlotCoordinationModel>().ReverseMap();
         }
     }
 }
