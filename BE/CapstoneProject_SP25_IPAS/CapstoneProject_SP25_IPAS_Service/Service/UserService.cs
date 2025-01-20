@@ -629,6 +629,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                 authClaims.Add(new Claim("email", email));
                 authClaims.Add(new Claim("role", role.RoleName));
+                authClaims.Add(new Claim("roleId", role.RoleId.ToString()));
                 authClaims.Add(new Claim("UserId", user.UserId.ToString()));
                 authClaims.Add(new Claim("Status", user.Status.ToString()));
                 authClaims.Add(new Claim("FullName", user.FullName));
@@ -647,6 +648,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                  new Claim("email", email),
                  new Claim("role", role.RoleName),
+                 new Claim("roleId", role.RoleId.ToString()),
                  new Claim("UserId", user.UserId.ToString()),
                  new Claim("Status", user.Status.ToString()),
                  new Claim("FullName", user.FullName),

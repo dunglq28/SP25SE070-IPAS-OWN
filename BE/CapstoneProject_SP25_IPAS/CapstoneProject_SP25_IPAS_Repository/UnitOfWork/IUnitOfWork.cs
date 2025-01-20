@@ -32,5 +32,6 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public CriteriaTypeRepository CriteriaTypeRepository { get; }
         public CriteriaRepository CriteriaRepository { get; }
         public PartnerRepository PartnerRepository { get; }
+        public GrowthStageRepository GrowthStageRepository { get; }
     }
 }

@@ -90,5 +90,14 @@
             public const string getPartnerByRoleName = Base + "/partners/get-partner-by-role-name/{roleName}";
         }
 
+        public static class GrowthStage
+        {
+            public const string createGrowthStage = Base + "/growthStages";
+            public const string getGrowthStageById = Base + "/growthStages/get-growthStage-by-id/{id}";
+            public const string getGrowthStageWithPagination = Base + "/growthStages";
+            public const string permanenlyDelete = Base + "/growthStages/delete-permanenly/{id}";
+            public const string updateGrowthStageInfo = Base + "/growthStages/update-growthStage-info";
+        }
+
     }
 }

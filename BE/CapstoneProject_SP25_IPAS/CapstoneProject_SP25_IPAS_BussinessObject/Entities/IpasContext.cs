@@ -1028,6 +1028,12 @@ public partial class IpasContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserFarm__FarmL__25617C17");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserFarms)
+               .HasForeignKey(d => d.RoleId)
+               .OnDelete(DeleteBehavior.Cascade)
+               .OnDelete(DeleteBehavior.ClientSetNull)
+               .HasConstraintName("FK__UserFarm__Role__25617C17");
         });
 
         modelBuilder.Entity<UserWorkLog>(entity =>
