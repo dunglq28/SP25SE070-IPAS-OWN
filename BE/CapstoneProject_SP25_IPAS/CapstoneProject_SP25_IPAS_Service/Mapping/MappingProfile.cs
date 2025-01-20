@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.CriteriaTypeModels;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.PartnerModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.GrowthStageModel;
 
 namespace CapstoneProject_SP25_IPAS_Service.Mapping
 {
@@ -50,6 +51,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
 
             CreateMap<Partner, PartnerModel>()
                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName)).ReverseMap();
+
+            CreateMap<GrowthStage, GrowthStageModel>().ReverseMap();
 
         }
     }

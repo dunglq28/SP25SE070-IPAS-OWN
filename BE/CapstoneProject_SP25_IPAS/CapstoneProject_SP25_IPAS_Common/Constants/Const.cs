@@ -132,6 +132,19 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_GET_ALL_PARTNER_MESSAGE = "Get all partner success";
         #endregion
 
+        #region GrowthStage code
+        public static int SUCCESS_GET_GROWTHSTAGE_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_GROWTHSTAGE_BY_ID_MESSAGE = "Get GrowthStage by id success";
+        public static int SUCCESS_CREATE_GROWTHSTAGE_CODE = 200;
+        public static string SUCCESS_CREATE_GROWTHSTAGE_MESSAGE = "Create GrowthStage success";
+        public static int SUCCESS_UPDATE_GROWTHSTAGE_CODE = 200;
+        public static string SUCCESS_UPDATE_GROWTHSTAGE_MESSAGE = "Update GrowthStage success";
+        public static int SUCCESS_DELETE_GROWTHSTAGE_CODE = 200;
+        public static string SUCCESS_DELETE_GROWTHSTAGE_MESSAGE = "Delete GrowthStage success";
+        public static int SUCCESS_GET_ALL_GROWTHSTAGE_CODE = 200;
+        public static string SUCCESS_GET_ALL_GROWTHSTAGE_MESSAGE = "Get all GrowthStage success";
+        #endregion
+
         #region User code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
@@ -221,6 +234,17 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_GET_PARTNER_MESSAGE = "Get partner failed";
         #endregion
 
+        #region GrowthStage Fail code
+        public static int FAIL_CREATE_GROWTHSTAGE_CODE = 500;
+        public static string FAIL_CREATE_GROWTHSTAGE_MESSAGE = "Create GrowthStage failed";
+        public static int FAIL_UPDATE_GROWTHSTAGE_CODE = 500;
+        public static string FAIL_UPDATE_GROWTHSTAGE_MESSAGE = "Update GrowthStage failed";
+        public static int FAIL_DELETE_GROWTHSTAGE_CODE = 500;
+        public static string FAIL_DELETE_GROWTHSTAGE_MESSAGE = "Delete GrowthStage failed";
+        public static int FAIL_GET_GROWTHSTAGE_CODE = 500;
+        public static string FAIL_GET_GROWTHSTAGE_MESSAGE = "Get GrowthStage failed";
+        #endregion
+
 
         #region Warning Code
 
@@ -276,6 +300,11 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region CriteriaType
         public static int WARNING_GET_PARTNER_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_PARTNER_DOES_NOT_EXIST_MSG = "Does not have any partner";
+        #endregion
+
+        #region GrowthStage
+        public static int WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_MSG = "Does not have any GrowthStage";
         #endregion
     }
 }
