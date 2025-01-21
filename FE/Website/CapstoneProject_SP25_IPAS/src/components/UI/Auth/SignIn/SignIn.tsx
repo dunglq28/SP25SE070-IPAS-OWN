@@ -55,7 +55,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                     </Form.Item>
                 </div>
 
-                <a href="#" className={style["forgetpw"]}>
+                <a href="/forgot-password" className={style["forgetpw"]}>
                     Forgot Password?
                 </a>
 

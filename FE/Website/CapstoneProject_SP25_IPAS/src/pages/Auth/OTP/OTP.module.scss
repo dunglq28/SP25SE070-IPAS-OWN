@@ -1,0 +1,54 @@
+.container {
+    padding: 40px;
+    background-color: #ffffff;
+    height: 100vh;
+  }
+
+.verifyBtn {
+    background: linear-gradient(108deg, #BCD379 0%, #326E2F 100%);
+    animation-duration: 0s !important;
+
+    &:hover {
+        animation-duration: 0s !important;
+        background: #cad3af !important;
+        color: #326E2F !important;
+        border: #326E2F !important;
+
+    }
+}
+
+.resendButton {
+    background-color: #f0f0f0;
+    border-color: #d9d9d9;
+
+    &:hover {
+        background-color: #e6e6e6;
+        border-color: #bfbfbf;
+    }
+}
+
+.timer {
+    color: red;
+}
+
+.timerContainer {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.back {
+    display: inline-block;
+    color: #d9d9d9;
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    width: 100%;
+    text-align: center;
+  
+    &:hover {
+      color: #1d4e23;
+      text-decoration: underline;
+    }
+  }
