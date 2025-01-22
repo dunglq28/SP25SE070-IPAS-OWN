@@ -751,7 +751,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         {
             try
             {
-                string otpCode = NumberHelper.GenerateOtp(email);
+                string otpCode = NumberHelper.GenerateSixDigitNumber().ToString();
                 bool checkSendMail = await SendOtpRegisterAccountAsync(email, otpCode);
                 return checkSendMail;
 
