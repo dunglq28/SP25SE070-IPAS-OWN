@@ -1,4 +1,4 @@
-﻿namespace CapstoneProject_SP25_IPAS_API.Payload
+namespace CapstoneProject_SP25_IPAS_API.Payload
 {
     public static class APIRoutes
     {
@@ -11,15 +11,28 @@
 
         public static class Farm
         {
-            public const string createFarm = Base + "/farms";
-            public const string getFarmById = Base + "/farms/get-farm-by-id";
-            public const string getAllFarmOfUser = Base + "/farms/get-farm-of-user";
-            public const string getFarmWithPagination = Base + "/farms";
-            public const string permanenlyDelete = Base + "/farms/delete-permanenly";
-            public const string softedDeleteFarm = Base + "/farms/softed-delete-farm";
-            public const string updateFarmInfo = Base + "/farms/update-farm-info";
-            public const string updateFarmLogo = Base + "/farms/update-farm-logo";
-            public const string updateFarmCoordination = Base + "/farms/update-farm-coordination";
+            public const string prefix = Base + "/farms";
+            public const string createFarm = prefix + "";
+            public const string getFarmById = prefix + "/get-farm-by-id";
+            public const string getAllFarmOfUser = prefix + "/get-farm-of-user";
+            public const string getFarmWithPagination = prefix + "";
+            public const string permanenlyDelete = prefix + "/delete-permanenly";
+            public const string softedDeleteFarm = prefix + "/softed-delete-farm";
+            public const string updateFarmInfo = prefix + "/update-farm-info";
+            public const string updateFarmLogo = prefix + "/update-farm-logo";
+            public const string updateFarmCoordination = prefix + "/update-farm-coordination";
+        }
+
+        public static class LandPlot
+        {
+            public const string prefix = Base + "/landplots";
+            public const string createLandPlot = prefix + "";
+            public const string getAllLandPlotNoPagin = prefix + "";
+            public const string updateLandPlotCoordination = prefix + "/update-coordination";
+            public const string updateLandPlotInfo = prefix + "/update-info";
+            public const string deleteLandPlotOfFarm = prefix + "";
+            public const string getLandPlotById = prefix + "";
+
         }
 
         public static class User
@@ -65,6 +78,13 @@
             public const string updateCriteriaTypeInfo = Base + "/criteriaTypes/update-criteriaType-info";
             public const string getCriteriaTypeByName = Base + "/criteriaTypes/get-criteriaType-by-name/{name}";
         }
+        public static class Criteria
+        {
+            public const string prefix = Base + "/criterias";
+            public const string updateListCriteriaType = prefix + "/update-list-criteria";
+            public const string getCriteriaById = prefix + "/get-criteriaType-by-id/{id}";
+            public const string updateCriteriaInfo = prefix + "/update-criteria-info";
+        }
 
         public static class Authentication
         {
@@ -99,7 +119,7 @@
             public const string updateGrowthStageInfo = Base + "/growthStages/update-growthStage-info";
         }
 
-        public static class ProcessStyle
+         public static class ProcessStyle
         {
             public const string createProcessStyle = Base + "/processStyles";
             public const string getProcessStyleById = Base + "/processStyles/get-processStyle-by-id/{id}";
@@ -119,6 +139,5 @@
             public const string getProcessByName = Base + "/processs/get-process-by-name/{name}";
             public const string getProcessDataOfProcess = Base + "/processs/{id}/processData";
         }
-
     }
 }

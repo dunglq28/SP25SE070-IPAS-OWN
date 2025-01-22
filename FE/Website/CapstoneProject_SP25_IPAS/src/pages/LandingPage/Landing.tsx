@@ -1,10 +1,8 @@
-import FeatureSection from "@/components/Guest/FeatureSection/FeatureSection";
 import style from "./Landing.module.scss";
-import heroImage from "@/assets/images/po2final.png";
+import { Images } from "@/assets";
 import { useEffect } from "react";
 import AOS from "aos";
-import PricingSection from "@/components/Guest/PricingSection/PricingSection";
-import ReviewSection from "@/components/Guest/ReviewSection/ReviewSection";
+import { PricingSection, ReviewSection, FeatureSection } from "@/components";
 
 function Landing() {
     useEffect(() => {
@@ -20,7 +18,7 @@ function Landing() {
             <section className={style.hero}>
                 <div
                     className={style.heroImage}
-                    style={{ backgroundImage: `url(${heroImage})` }}
+                    style={{ backgroundImage: `url(${Images.background})` }}
                 >
                     <div className={style.heroContent} data-aos="fade-up">
                         <h1 data-aos="fade-down">IPAS:</h1>

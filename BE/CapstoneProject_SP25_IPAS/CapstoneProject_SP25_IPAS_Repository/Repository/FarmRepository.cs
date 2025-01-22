@@ -56,7 +56,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
                 .Where(x => x.FarmId == farmId && x.IsDelete == false)
                 .Include(x => x.UserFarms)
                 .ThenInclude(x => x.User)
-                //.Include( x => x.LandPlots)
+                .Include( x => x.LandPlots)
                 //.Include(x => x.Processes)
                 .Include(x => x.FarmCoordinations)
                 .FirstOrDefaultAsync();

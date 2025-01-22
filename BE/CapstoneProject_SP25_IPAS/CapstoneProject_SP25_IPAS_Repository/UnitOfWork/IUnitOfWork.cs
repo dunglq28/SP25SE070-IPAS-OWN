@@ -1,3 +1,4 @@
+using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using CapstoneProject_SP25_IPAS_Repository.IRepository;
 using CapstoneProject_SP25_IPAS_Repository.Repository;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -37,5 +38,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public ProcessRepository ProcessRepository { get; }
         public SubProcessRepository SubProcessRepository { get; }
         public ProcessDataRepository ProcessDataRepository { get; }
+        public LandPlotRepository LandPlotRepository { get; }
+        public LandPlotCoordinationRepository LandPlotCoordinationRepository { get; }
+
     }
 }

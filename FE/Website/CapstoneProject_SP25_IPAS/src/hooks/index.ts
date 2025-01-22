@@ -1,3 +1,2 @@
 export { default as useStyle } from "./useStyle";
-export { default as useSort } from "./useSort";
-
+export { default as useFetchData } from "./useFetchData";

@@ -40,6 +40,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private ProcessRepository _processRepo;
         private SubProcessRepository _subProcessRepo;
         private ProcessDataRepository _processDataRepo;
+        private LandPlotRepository _landPlotRepo;
+        private LandPlotCoordinationRepository _landPlotCoordinationRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
@@ -67,6 +69,8 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _processDataRepo = new ProcessDataRepository(context);
             _configuration = configuration;
             _farmCoordinationRepo = new FarmCoordinationRepository(context);
+            _landPlotRepo = new LandPlotRepository(context);
+            _landPlotCoordinationRepo = new LandPlotCoordinationRepository(context);
         }
 
         private bool disposed = false;
@@ -155,7 +159,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         {
             get
             {
-                if(_refreshRepo == null)
+                if (_refreshRepo == null)
                 {
                     this._refreshRepo = new RefreshTokenRepository(_context);
                 }
@@ -203,7 +207,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         {
             get
             {
-                if(_planRepo == null)
+                if (_planRepo == null)
                 {
                     this._planRepo = new PlanRepository(_context);
                 }
@@ -278,6 +282,29 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._farmCoordinationRepo = new FarmCoordinationRepository(_context);
                 }
                 return _farmCoordinationRepo;
+            }
+        }
+        public LandPlotRepository LandPlotRepository
+        {
+            get
+            {
+                if (_landPlotRepo == null)
+                {
+                    this._landPlotRepo = new LandPlotRepository(_context);
+                }
+                return _landPlotRepo;
+            }
+        }
+
+        public LandPlotCoordinationRepository LandPlotCoordinationRepository
+        {
+            get
+            {
+                if(_landPlotCoordinationRepo == null)
+                {
+                    this._landPlotCoordinationRepo = new LandPlotCoordinationRepository(_context);
+                }
+                return _landPlotCoordinationRepo;
             }
         }
 

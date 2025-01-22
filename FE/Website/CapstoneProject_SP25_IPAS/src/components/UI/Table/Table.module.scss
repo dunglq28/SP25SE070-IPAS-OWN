@@ -7,14 +7,8 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   overflow-x: auto;
 
-  .table_content {
-  }
-
-  .table_header_container {
-    position: sticky;
-    top: 0;
-    background-color: #fff;
-    z-index: 999;
+  .checkboxNum {
+    margin-left: 4px;
   }
 
   .tooltipText {
@@ -54,8 +48,5 @@
 
   .selectedRow {
     background-color: vars.$color_selected_row;
-    &:hover {
-      opacity: 0.9;
-    }
   }
 }

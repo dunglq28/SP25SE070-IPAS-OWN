@@ -1,7 +1,6 @@
 @use "@/styles/variables.scss" as vars;
 
 .header {
-  // position: sticky;
   align-items: center;
   padding: 0 20px;
   width: 100%;
@@ -113,6 +112,10 @@
         color: vars.$color_dropdown;
       }
     }
+  }
+
+  .paddingRight {
+    padding-right: 12px;
   }
 }
 

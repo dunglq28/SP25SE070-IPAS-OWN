@@ -9,21 +9,28 @@ export {
   RiArrowDropDownLine as arrowDropDownLine,
   RiSeedlingLine as seedling,
 } from "react-icons/ri";
-export { IoIosArrowForward as arrowForward } from "react-icons/io";
+export { IoIosArrowBack as arrowBack, IoIosArrowForward as arrowForward } from "react-icons/io";
 export {
   MdLogout as logout,
   MdOutlineDashboard as dashboard,
   MdKeyboardArrowDown as arrowDown,
 } from "react-icons/md";
-export { LuUsers as users, LuHandHelping as hand } from "react-icons/lu";
+export {
+  LuUsers as users,
+  LuHandHelping as hand,
+  LuSearch as search,
+  LuFilter as filter,
+} from "react-icons/lu";
+
 export { VscRobot as robot } from "react-icons/vsc";
 export {
   FaRegBell as regBell,
   FaRegCalendarPlus as calendar,
   FaSortAmountUp as sort,
+  FaRegEdit as edit,
 } from "react-icons/fa";
 export { PiFarm as farms } from "react-icons/pi";
-export { HiOutlineUserGroup as people } from "react-icons/hi";
+export { HiOutlineUserGroup as people, HiDotsVertical as dot } from "react-icons/hi";
 export { BiShareAlt as share } from "react-icons/bi";
 
 export { IoSettingsOutline as setting, IoLanguageOutline as language } from "react-icons/io5";

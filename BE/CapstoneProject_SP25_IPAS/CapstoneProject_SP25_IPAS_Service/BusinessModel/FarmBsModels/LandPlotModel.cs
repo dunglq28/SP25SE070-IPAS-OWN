@@ -37,7 +37,7 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.FarmBsModels
 
         //public virtual ICollection<Crop> Crops { get; set; } = new List<Crop>();
 
-        //public virtual ICollection<LandPlotCoordination> LandPlotCoordinations { get; set; } = new List<LandPlotCoordination>();
+        public virtual ICollection<LandPlotCoordinationModel> LandPlotCoordinations { get; set; } = new List<LandPlotCoordinationModel>();
 
         //public virtual ICollection<LandRow> LandRows { get; set; } = new List<LandRow>();
 

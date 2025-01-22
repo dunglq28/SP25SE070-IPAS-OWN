@@ -50,6 +50,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             services.AddScoped<IProcessRepository, ProcessRepository>();
             services.AddScoped<ISubProcessRepository, SubProcessRepository>();
             services.AddScoped<IProcessDataRepository, ProcessDataRepository>();
+            services.AddScoped<ICriteriaRepository, CriteriaRepository>();
 
             // Register servicies
             services.AddScoped<IUserService, UserService>();
@@ -62,6 +63,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             services.AddScoped<IGrowthStageService, GrowthStageService>();
             services.AddScoped<IProcessService, ProcessService>();
             services.AddScoped<IProcessStyleService, ProcessStyleService>();
+            services.AddScoped<ICriteriaService, CriteriaService>();
 
             services.AddHttpClient();
 
