@@ -33,12 +33,7 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
 
         public static string GenerateRandomCode(string aliasEntity)
         {
-            return "IPAS-" + aliasEntity + "-" + DateTime.Now.Day.ToString("D2") +
-                   DateTime.Now.Month.ToString("D2") +
-                   DateTime.Now.Year +
-                   DateTime.Now.Hour.ToString("D2") +
-                   DateTime.Now.Minute.ToString("D2") +
-                   DateTime.Now.Second.ToString("D2");
+            return "IPAS-" + aliasEntity + "-" + DateTime.Now.Ticks;
         }
         public static string GenerateOtp(string email)
         {

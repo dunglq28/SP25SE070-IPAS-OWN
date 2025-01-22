@@ -18,7 +18,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private IDbContextTransaction _transaction;
 
 
-        //private PaymentRepository _paymentRepo;
+        // Repository
         private UserRepository _userRepo;
         private RoleRepository _roleRepo;
         private RefreshTokenRepository _refreshRepo;
@@ -29,10 +29,20 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private PlanRepository _planRepo;
         private NotificationRepository _notificationRepo;
         private UserFarmRepository _userFarmRepo;
+        private PlantLotRepository _plantLotRepo;
+        private PlantRepository _plantRepo;
+        private FarmCoordinationRepository _farmCoordinationRepo;
+        private CriteriaTypeRepository _criteriaTypeRepo;
+        private CriteriaRepository _criteriaRepo;
+        private PartnerRepository _partnerRepo;
+        private GrowthStageRepository _growthStageRepo;
+        private LandPlotRepository _landPlotRepo;
+        private LandPlotCoordinationRepository _landPlotCoordinationRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
             _userRepo = new UserRepository(context);
             _roleRepo = new RoleRepository(context);
             _refreshRepo = new RefreshTokenRepository(context);
@@ -43,36 +53,45 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _planRepo = new PlanRepository(context);
             _notificationRepo = new NotificationRepository(context);
             _userFarmRepo = new UserFarmRepository(context);
+            _plantLotRepo = new PlantLotRepository(context);
+            _plantRepo = new PlantRepository(context);
+            _criteriaTypeRepo = new CriteriaTypeRepository(context);
+            _criteriaRepo = new CriteriaRepository(context);
+            _partnerRepo = new PartnerRepository(context);
+            _growthStageRepo = new GrowthStageRepository(context);
             _configuration = configuration;
+            _farmCoordinationRepo = new FarmCoordinationRepository(context);
+            _landPlotRepo = new LandPlotRepository(context);
+            _landPlotCoordinationRepo = new LandPlotCoordinationRepository(context);
         }
 
-
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (!this.disposed)
-        //    {
-        //        if (disposing)
-        //        {
-        //            _context.Dispose();
-        //        }
-        //    }
-        //    this.disposed = true;
-        //}
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
         public void Dispose()
         {
-            //Dispose(true);
-            //GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Save()
         {
-            //_context.SaveChanges();
+            _context.SaveChanges();
         }
 
-        public Task<int> SaveAsync()
+        public async Task<int> SaveAsync()
         {
-            //return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
+            //throw new NotImplementedException();
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -104,17 +123,6 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _transaction = null!;
         }
 
-        //public PaymentRepository PaymentRepository
-        //{
-        //    get
-        //    {
-        //        if (_paymentRepo == null)
-        //        {
-        //            this._paymentRepo = new PaymentRepository(_context);
-        //        }
-        //        return _paymentRepo;
-        //    }
-        //}
         public UserRepository UserRepository
         {
             get
@@ -143,7 +151,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         {
             get
             {
-                if(_refreshRepo == null)
+                if (_refreshRepo == null)
                 {
                     this._refreshRepo = new RefreshTokenRepository(_context);
                 }
@@ -160,18 +168,6 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._chatRoomRepo = new ChatRoomRepository(_context);
                 }
                 return _chatRoomRepo;
-            }
-        }
-
-        public FarmRepository FarmRepository
-        {
-            get
-            {
-                if (_farmRepo == null)
-                {
-                    this._farmRepo = new FarmRepository(_context);
-                }
-                return _farmRepo;
             }
         }
 
@@ -203,7 +199,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         {
             get
             {
-                if(_planRepo == null)
+                if (_planRepo == null)
                 {
                     this._planRepo = new PlanRepository(_context);
                 }
@@ -232,6 +228,123 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._userFarmRepo = new UserFarmRepository(_context);
                 }
                 return _userFarmRepo;
+            }
+        }
+
+        public PlantLotRepository PlantLotRepository
+        {
+            get
+            {
+                if (_plantLotRepo == null)
+                {
+                    this._plantLotRepo = new PlantLotRepository(_context);
+                }
+                return _plantLotRepo;
+            }
+        }
+
+        public PlantRepository PlantRepository
+        {
+            get
+            {
+                if (_plantRepo == null)
+                {
+                    this._plantRepo = new PlantRepository(_context);
+                }
+                return _plantRepo;
+            }
+        }
+        public FarmRepository FarmRepository
+        {
+            get
+            {
+                if (_farmRepo == null)
+                {
+                    this._farmRepo = new FarmRepository(_context);
+                }
+                return _farmRepo;
+            }
+        }
+        public FarmCoordinationRepository FarmCoordinationRepository
+        {
+            get
+            {
+                if (_farmCoordinationRepo == null)
+                {
+                    this._farmCoordinationRepo = new FarmCoordinationRepository(_context);
+                }
+                return _farmCoordinationRepo;
+            }
+        }
+        public LandPlotRepository LandPlotRepository
+        {
+            get
+            {
+                if (_landPlotRepo == null)
+                {
+                    this._landPlotRepo = new LandPlotRepository(_context);
+                }
+                return _landPlotRepo;
+            }
+        }
+
+        public LandPlotCoordinationRepository LandPlotCoordinationRepository
+        {
+            get
+            {
+                if(_landPlotCoordinationRepo == null)
+                {
+                    this._landPlotCoordinationRepo = new LandPlotCoordinationRepository(_context);
+                }
+                return _landPlotCoordinationRepo;
+            }
+        }
+
+        public CriteriaTypeRepository CriteriaTypeRepository
+        {
+            get
+            {
+                if (_criteriaTypeRepo == null)
+                {
+                    this._criteriaTypeRepo = new CriteriaTypeRepository(_context);
+                }
+                return _criteriaTypeRepo;
+            }
+        }
+
+        public PartnerRepository PartnerRepository
+        {
+            get
+            {
+                if (_partnerRepo == null)
+                {
+                    this._partnerRepo = new PartnerRepository(_context);
+                }
+                return _partnerRepo;
+            }
+        }
+
+        public CriteriaRepository CriteriaRepository
+        {
+            get
+            {
+                if (_criteriaRepo == null)
+                {
+                    this._criteriaRepo = new CriteriaRepository(_context);
+                }
+                return _criteriaRepo;
+            }
+        }
+
+        public GrowthStageRepository GrowthStageRepository
+        {
+            get
+            {
+                if (_growthStageRepo == null)
+                {
+                    this._growthStageRepo = new GrowthStageRepository(_context);
+                }
+                return _growthStageRepo;
             }
         }
     }

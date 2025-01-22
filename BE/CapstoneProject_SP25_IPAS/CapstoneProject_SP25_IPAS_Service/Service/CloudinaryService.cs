@@ -117,10 +117,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     }
                     else
                     {
-                       uploadParams = new ImageUploadParams
-                       {
+                        uploadParams = new ImageUploadParams
+                        {
                             File = new FileDescription(file.FileName, stream),
-                       };
+                        };
                     }
 
                     uploadResult = await _cloudinary.UploadAsync(uploadParams);
@@ -146,13 +146,13 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 throw new Exception($"File size exceeds the limit of {maxSizeInBytes} MB");
             }
 
-            if(folder != null)
+            if (folder != null)
             {
-               uploadVideoParams = new VideoUploadParams
-               {
+                uploadVideoParams = new VideoUploadParams
+                {
                     File = new FileDescription(file.FileName, file.OpenReadStream()),
                     Folder = folder,
-               };
+                };
             }
             else
             {
@@ -163,7 +163,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
 
             var uploadResult = await _cloudinary.UploadAsync(uploadVideoParams);
-            if(uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+            if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return uploadResult.SecureUrl.ToString();
             }
@@ -171,7 +171,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                 throw new Exception($"Video upload failed: {uploadResult.Error?.Message}");
             }
-           
+
         }
 
         private string GetPublicIdFromUrl(string url)
@@ -206,5 +206,63 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
+        public async Task<bool> UpdateImageAsync(IFormFile file, string existingUrl)
+        {
+            try
+            {
+
+                var publicId = GetPublicIdFromUrl(existingUrl);
+
+                if (string.IsNullOrEmpty(publicId))
+                {
+                    throw new Exception("Invalid URL or publicId could not be extracted.");
+                }
+
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    PublicId = publicId, // Ghi đè lên ảnh cũ
+                    Overwrite = true // Chắc chắn rằng ảnh được ghi đè
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                return uploadResult.StatusCode == System.Net.HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateVideoAsync(IFormFile file, string existingUrl)
+        {
+            try
+            {
+
+                var publicId = GetPublicIdFromUrl(existingUrl);
+
+                if (string.IsNullOrEmpty(publicId))
+                {
+                    throw new Exception("Invalid URL or publicId could not be extracted.");
+                }
+
+                var uploadParams = new VideoUploadParams
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    PublicId = publicId,
+                    Overwrite = true,
+                    Type = "upload",
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                return uploadResult.StatusCode == System.Net.HttpStatusCode.OK;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

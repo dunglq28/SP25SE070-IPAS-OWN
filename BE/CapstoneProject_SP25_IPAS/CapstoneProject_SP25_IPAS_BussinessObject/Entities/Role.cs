@@ -14,4 +14,5 @@ public partial class Role
     public virtual ICollection<Partner> Partners { get; set; } = new List<Partner>();
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<UserFarm> UserFarms { get; set; } = new List<UserFarm>();
 }

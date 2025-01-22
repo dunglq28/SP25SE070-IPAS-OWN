@@ -14,3 +14,11 @@ export { default as ActionMenu } from "@/components/UI/ActionMenu/ActionMenu/Act
 export { default as ActionMenuPlant } from "@/components/UI/ActionMenu/ActionMenuPlant/ActionMenuPlant";
 export { default as NavigationDot } from "@/components/UI/Pagination/NavigationDot/NavigationDot";
 export { default as FilterFooter } from "@/components/UI/FilterFooter/FilterFooter";
+export { default as PricingCard } from "@/components/UI/PricingCard/PricingCard";
+export { default as ReviewCard } from "@/components/UI/ReviewCard/ReviewCard";
+export { default as FeatureCard } from "@/components/UI/FeatureCard/FeatureCard";
+export { default as PricingSection } from "@/components/Guest/PricingSection/PricingSection";
+export { default as ReviewSection } from "@/components/Guest/ReviewSection/ReviewSection";
+export { default as FeatureSection } from "@/components/Guest/FeatureSection/FeatureSection";
+export { default as SignIn } from "@/components/UI/Auth/SignIn/SignIn";
+export { default as SignUp } from "@/components/UI/Auth/SignUp/SignUp";

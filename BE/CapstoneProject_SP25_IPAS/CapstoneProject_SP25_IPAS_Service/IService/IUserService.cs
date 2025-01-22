@@ -37,5 +37,6 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
         public Task<BusinessResult> UpdateAvatarOfUser(IFormFile avatarOfUser, int id);
         public Task<BusinessResult> GetAllUsersByRole(string roleName);
         public Task<BusinessResult> GetAllUsers(PaginationParameter paginationParameter);
+        public Task<BusinessResult> LoginGoogleHandler(string GoogleToken);
     }
 }

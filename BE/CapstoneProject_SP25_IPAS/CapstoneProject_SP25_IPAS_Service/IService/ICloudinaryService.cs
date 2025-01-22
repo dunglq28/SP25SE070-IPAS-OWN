@@ -15,5 +15,8 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
 
         public Task<string> UploadVideoAsync(IFormFile file, string? folder);
         public Task<bool> DeleteVideoByUrlAsync(string url);
+        public Task<bool> UpdateImageAsync(IFormFile file, string existingUrl);
+        public Task<bool> UpdateVideoAsync(IFormFile file, string existingUrl);
+
     }
 }

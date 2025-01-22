@@ -2,9 +2,15 @@
 using CapstoneProject_SP25_IPAS_Service.Base;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
-using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using System.Security.Claims;
+using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
+using CapstoneProject_SP25_IPAS_API.Payload;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
@@ -13,13 +19,15 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IUserService userService)
+        public AuthenticationController(IUserService userService, IConfiguration config)
         {
             _userService = userService;
+            _configuration = config;
         }
 
-        [HttpPost("register/send-otp")]
+        [HttpPost(APIRoutes.Authentication.registerSendOtp, Name = "registerSendOtp")]
         public async Task<IActionResult> RegisterSendOTPAccount(EmailModel model)
         {
             try
@@ -42,7 +50,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("register/verify-otp")]
+        [HttpPost(APIRoutes.Authentication.registerVerifyOtp, Name = "registerVerifyOtp")]
         public IActionResult RegisterVerifyOTPAccount(VerifyOtpRequest model)
         {
             try
@@ -65,12 +73,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("register")]
+        [HttpPost(APIRoutes.Authentication.Register, Name = "Register")]
         public async Task<IActionResult> RegisterAccount(SignUpModel model)
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var result = await _userService.RegisterAsync(model);
                     return Ok(result);
@@ -88,15 +96,15 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> LoginWithEmail([FromBody] AccountRequestModel accountRequestModel)
+        [HttpPost(APIRoutes.Authentication.Login, Name = "Login")]
+        public async Task<IActionResult> LoginWithEmailAndPassword([FromBody] AccountRequestModel accountRequestModel)
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var result = await _userService.LoginByEmailAndPassword(accountRequestModel.Email, accountRequestModel.Password);
-                    return Ok(result);  
+                    return Ok(result);
                 }
                 else
                 {
@@ -113,8 +121,26 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 return BadRequest(response);
             }
         }
+        [HttpPost(APIRoutes.Authentication.loginWithGoogle, Name = "loginWithGoogle")]
+        public async Task<IActionResult> LoginGoogle([FromBody] string googleToken)
+        {
+            try
+            {
+                var Login = await _userService.LoginGoogleHandler(googleToken);
+                return Ok(Login);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
 
-        [HttpPost("logout")]
+        [HttpPost(APIRoutes.Authentication.Logout, Name = "Logout")]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenModel removeRefreshTokenModel)
         {
             try
@@ -134,12 +160,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("refresh-token")]
+        [HttpPost(APIRoutes.Authentication.refreshToken, Name = "refreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel removeRefreshTokenModel)
         {
             try
             {
-                var result = await _userService.RefreshToken(removeRefreshTokenModel.RefreshToken); 
+                var result = await _userService.RefreshToken(removeRefreshTokenModel.RefreshToken);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -153,8 +179,8 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("forget-password")]
-        public async Task<IActionResult> RequestResetPassword([FromBody] EmailModel emailModel) 
+        [HttpPost(APIRoutes.Authentication.forgetPassword, Name = "forgetPassword")]
+        public async Task<IActionResult> RequestResetPassword([FromBody] EmailModel emailModel)
         {
             try
             {
@@ -172,7 +198,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("forget-password/confirm")]
+        [HttpPost(APIRoutes.Authentication.forgetPasswordConfirm, Name = "forgetPasswordConfirm")]
         public async Task<IActionResult> ConfirmResetPassword([FromBody] ConfirmOtpModel confirmOtpModel)
         {
             try
@@ -191,7 +217,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost("forget-password/new-password")]
+        [HttpPost(APIRoutes.Authentication.forgetPasswordNewPassword, Name = "forgetPasswordNewPassword")]
         public async Task<IActionResult> NewPassword([FromBody] ResetPasswordModel resetPasswordModel)
         {
             try
@@ -212,3 +238,4 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
 
     }
 }
+

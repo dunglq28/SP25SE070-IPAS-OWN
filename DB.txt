@@ -1,0 +1,1036 @@
+Use [master]
+GO
+DROP DATABASE [IPAS]
+GO
+CREATE DATABASE [IPAS]
+GO
+USE [IPAS]
+GO
+
+-- ipas.dbo.CriteriaType definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.CriteriaType;
+
+CREATE TABLE ipas.dbo.CriteriaType (
+	CriteriaTypeID int IDENTITY(1,1) NOT NULL,
+	CriteriaTypeCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CriteriaTypeName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	GrowthStageID int NULL,
+	CONSTRAINT PK__Criteria__8248884095F95472 PRIMARY KEY (CriteriaTypeID)
+);
+
+
+-- ipas.dbo.Crop definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Crop;
+
+CREATE TABLE ipas.dbo.Crop (
+	CropID int IDENTITY(1,1) NOT NULL,
+	CropCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CropName nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	CropExpectedTime datetime NULL,
+	CropActualTime datetime NULL,
+	HarvestSeason nvarchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	EstimateYield float NULL,
+	ActualYield float NULL,
+	Status nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Notes nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	MarketPrice float NULL,
+	CONSTRAINT PK__Crop__923561351B1EF0E2 PRIMARY KEY (CropID)
+);
+
+
+-- ipas.dbo.Cultivar definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Cultivar;
+
+CREATE TABLE ipas.dbo.Cultivar (
+	CultivarID int IDENTITY(1,1) NOT NULL,
+	CultivarCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CultivarName nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Description nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	IsDelete bit NULL,
+	CONSTRAINT PK__Cultivar__1B3A54E1DC3E535B PRIMARY KEY (CultivarID)
+);
+
+
+-- ipas.dbo.Farm definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Farm;
+
+CREATE TABLE ipas.dbo.Farm (
+	FarmID int IDENTITY(1,1) NOT NULL,
+	FarmCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	FarmName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Address nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	LogoURL nvarchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Area float NULL,
+	SoilType nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ClimateZone nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	IsDelete bit NULL,
+	Status nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Length] float NULL,
+	Width float NULL,
+	Description nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	District nvarchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Ward nvarchar(300) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Province nvarchar(300) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__Farm__ED7BBA991346855A PRIMARY KEY (FarmID)
+);
+
+
+-- ipas.dbo.GrowthStage definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.GrowthStage;
+
+CREATE TABLE ipas.dbo.GrowthStage (
+	GrowthStageID int IDENTITY(1,1) NOT NULL,
+	GrowthStageCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	GrowthStageName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	MonthAgeStart datetime NULL,
+	MonthAgeEnd datetime NULL,
+	CONSTRAINT PK__GrowthSt__B81FB6A5CB51E95C PRIMARY KEY (GrowthStageID)
+);
+
+
+-- ipas.dbo.HarvestHistory definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.HarvestHistory;
+
+CREATE TABLE ipas.dbo.HarvestHistory (
+	HarvestHistoryID int IDENTITY(1,1) NOT NULL,
+	HarvestHistoryCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	DateHarvest datetime NULL,
+	HarvestHistoryNote nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	TotalPrice float NULL,
+	HarvestStatus nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CropID int NULL,
+	CONSTRAINT PK__HarvestH__F15734AD189BFCA2 PRIMARY KEY (HarvestHistoryID)
+);
+
+
+-- ipas.dbo.HarvestType definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.HarvestType;
+
+CREATE TABLE ipas.dbo.HarvestType (
+	HarvestTypeID int IDENTITY(1,1) NOT NULL,
+	HarvestTypeCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	HarvestTypeName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	HarvestTypeDescription nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__HarvestT__ECC6EB6D6F68A52F PRIMARY KEY (HarvestTypeID)
+);
+
+
+-- ipas.dbo.NotificationType definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.NotificationType;
+
+CREATE TABLE ipas.dbo.NotificationType (
+	NotificationTypeID int IDENTITY(1,1) NOT NULL,
+	NotificationTypeCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Icon nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	NotificationType nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__Notifica__299002A130362C38 PRIMARY KEY (NotificationTypeID)
+);
+
+
+-- ipas.dbo.Package definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Package;
+
+CREATE TABLE ipas.dbo.Package (
+	PackageID int IDENTITY(1,1) NOT NULL,
+	PackageCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PackageName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PackagePrice float NULL,
+	Duration float NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	Status nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__Package__322035EC04B44A12 PRIMARY KEY (PackageID)
+);
+
+
+-- ipas.dbo.Process definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Process;
+
+CREATE TABLE ipas.dbo.Process (
+	ProcessID int IDENTITY(1,1) NOT NULL,
+	ProcessCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ProcessName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	isDefault bit NULL,
+	isActive bit NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	isDeleted bit NULL,
+	FarmID int NULL,
+	ProcessStyleID int NULL,
+	GrowthStageID int NULL,
+	CONSTRAINT PK__Process__1B39A976EDEF5BD5 PRIMARY KEY (ProcessID)
+);
+
+
+-- ipas.dbo.ProcessStyle definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.ProcessStyle;
+
+CREATE TABLE ipas.dbo.ProcessStyle (
+	ProcessStyleID int IDENTITY(1,1) NOT NULL,
+	ProcessStyleCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ProcessStyleName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	Description nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__ProcessS__4B04C14166E8C5C5 PRIMARY KEY (ProcessStyleID)
+);
+
+
+-- ipas.dbo.[Role] definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.[Role];
+
+CREATE TABLE ipas.dbo.[Role] (
+	RoleID int IDENTITY(1,1) NOT NULL,
+	RoleName nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	isSystem bit NULL,
+	CONSTRAINT PK__Role__8AFACE3A5BC7203D PRIMARY KEY (RoleID)
+);
+
+
+-- ipas.dbo.TypeWork definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.TypeWork;
+
+CREATE TABLE ipas.dbo.TypeWork (
+	TypeWorkID int IDENTITY(1,1) NOT NULL,
+	TypeWorkCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	VolumeRequired bit NULL,
+	TextColor nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	TypeWorkName nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	BackgroundColor nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	UpdateDate datetime NULL,
+	CONSTRAINT PK__TypeWork__E9F5EE11DC940952 PRIMARY KEY (TypeWorkID)
+);
+
+
+-- ipas.dbo.Criteria definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Criteria;
+
+CREATE TABLE ipas.dbo.Criteria (
+	CriteriaID int IDENTITY(1,1) NOT NULL,
+	CriteriaCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CriteriaName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CriteriaDescription nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Priority int NULL,
+	isActive bit NULL,
+	CriteriaTypeID int NULL,
+	isChecked bit NULL,
+	CONSTRAINT PK__Criteria__FE6ADB2D5F0540FD PRIMARY KEY (CriteriaID),
+	CONSTRAINT FK__Criteria__Criter__3587F3E0 FOREIGN KEY (CriteriaTypeID) REFERENCES ipas.dbo.CriteriaType(CriteriaTypeID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.CriteriaHarvestType definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.CriteriaHarvestType;
+
+CREATE TABLE ipas.dbo.CriteriaHarvestType (
+	CriteriaID int NOT NULL,
+	HarvestTypeID int NOT NULL,
+	isChecked bit NULL,
+	CONSTRAINT PK__Criteria__30A6B59B7AC7D5D7 PRIMARY KEY (CriteriaID,HarvestTypeID),
+	CONSTRAINT FK_CriteriaHarvestType_Criteria FOREIGN KEY (CriteriaID) REFERENCES ipas.dbo.Criteria(CriteriaID) ON DELETE CASCADE,
+	CONSTRAINT FK_CriteriaHarvestType_HarvestType FOREIGN KEY (HarvestTypeID) REFERENCES ipas.dbo.HarvestType(HarvestTypeID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.FarmCoordination definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.FarmCoordination;
+
+CREATE TABLE ipas.dbo.FarmCoordination (
+	FarmCoordinationID int IDENTITY(1,1) NOT NULL,
+	FarmCoordinationCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Longitude float NULL,
+	Lagtitude float NULL,
+	FarmID int NULL,
+	CONSTRAINT PK__FarmCoor__6BD490F93070DFBF PRIMARY KEY (FarmCoordinationID),
+	CONSTRAINT FK__FarmCoord__FarmI__18B6AB08 FOREIGN KEY (FarmID) REFERENCES ipas.dbo.Farm(FarmID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.LandPlot definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.LandPlot;
+
+CREATE TABLE ipas.dbo.LandPlot (
+	LandPlotID int IDENTITY(1,1) NOT NULL,
+	LandPlotCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	LandPlotName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Area float NULL,
+	[Length] float NULL,
+	Width float NULL,
+	SoilType nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	Status nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Description nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	FarmID int NULL,
+	TargetMarket nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__LandPlot__ADDF712A976DFB93 PRIMARY KEY (LandPlotID),
+	CONSTRAINT FK__LandPlot__FarmID__2739D489 FOREIGN KEY (FarmID) REFERENCES ipas.dbo.Farm(FarmID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.LandPlotCoordination definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.LandPlotCoordination;
+
+CREATE TABLE ipas.dbo.LandPlotCoordination (
+	LandPlotCoordinationID int IDENTITY(1,1) NOT NULL,
+	LandPlotCoordinationCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Longitude float NULL,
+	Lagtitude float NULL,
+	LandPlotID int NULL,
+	CONSTRAINT PK__LandPlot__AA254567BAC71490 PRIMARY KEY (LandPlotCoordinationID),
+	CONSTRAINT FK__LandPlotC__LandP__31B762FC FOREIGN KEY (LandPlotID) REFERENCES ipas.dbo.LandPlot(LandPlotID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.LandPlotCrop definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.LandPlotCrop;
+
+CREATE TABLE ipas.dbo.LandPlotCrop (
+	LandPlotID int NOT NULL,
+	CropID int NOT NULL,
+	CONSTRAINT PK__LandPlot__E4FC273995B901F0 PRIMARY KEY (LandPlotID,CropID),
+	CONSTRAINT LandPlotCrop_Crop_FK FOREIGN KEY (CropID) REFERENCES ipas.dbo.Crop(CropID) ON DELETE CASCADE,
+	CONSTRAINT LandPlotCrop_LandPlot_FK FOREIGN KEY (LandPlotID) REFERENCES ipas.dbo.LandPlot(LandPlotID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.LandRow definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.LandRow;
+
+CREATE TABLE ipas.dbo.LandRow (
+	LandRowID int IDENTITY(1,1) NOT NULL,
+	LandRowCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	RowIndex int NULL,
+	TreeAmount int NULL,
+	Distance float NULL,
+	[Length] float NULL,
+	Width float NULL,
+	Direction nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	Status nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Description nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	LandPlotID int NULL,
+	CONSTRAINT PK__LandRow__0E72A6FAD7B08F4C PRIMARY KEY (LandRowID),
+	CONSTRAINT FK__LandRow__LandPlo__22751F6C FOREIGN KEY (LandPlotID) REFERENCES ipas.dbo.LandPlot(LandPlotID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.[Order] definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.[Order];
+
+CREATE TABLE ipas.dbo.[Order] (
+	OrderID int IDENTITY(1,1) NOT NULL,
+	OrderCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	OrderName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	TotalPrice float NULL,
+	Notes nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	OrderDate datetime NULL,
+	EnrolledDate datetime NULL,
+	ExpiredDate datetime NULL,
+	PackageID int NULL,
+	FarmID int NULL,
+	CONSTRAINT PK__Order__C3905BAF4F3F1E0A PRIMARY KEY (OrderID),
+	CONSTRAINT FK__Order__FarmID__251C81ED FOREIGN KEY (FarmID) REFERENCES ipas.dbo.Farm(FarmID) ON DELETE CASCADE,
+	CONSTRAINT FK__Order__PackageID__2610A626 FOREIGN KEY (PackageID) REFERENCES ipas.dbo.Package(PackageID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.PackageDetail definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.PackageDetail;
+
+CREATE TABLE ipas.dbo.PackageDetail (
+	PackageDetailID int IDENTITY(1,1) NOT NULL,
+	PackageDetailCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	FeatureName nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	FeatureDescription nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PackageID int NULL,
+	CONSTRAINT PK__PackageD__A7D8258A18A0833B PRIMARY KEY (PackageDetailID),
+	CONSTRAINT FK__PackageDe__Packa__2704CA5F FOREIGN KEY (PackageID) REFERENCES ipas.dbo.Package(PackageID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.Partner definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Partner;
+
+CREATE TABLE ipas.dbo.Partner (
+	PartnerID int IDENTITY(1,1) NOT NULL,
+	PartnerCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PartnerName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Address nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PhoneNumber nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Email nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	[National] nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	RoleID int NULL,
+	CONSTRAINT PK__Partner__39FD6332F826F432 PRIMARY KEY (PartnerID),
+	CONSTRAINT FK__Partner__RoleID__27F8EE98 FOREIGN KEY (RoleID) REFERENCES ipas.dbo.[Role](RoleID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.Payment definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Payment;
+
+CREATE TABLE ipas.dbo.Payment (
+	PaymentID int IDENTITY(1,1) NOT NULL,
+	PaymentCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	TransactionID nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	PaymentMethod nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Status nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	UpdateDate datetime NULL,
+	OrderID int NULL,
+	CONSTRAINT PK__Payment__9B556A58F4F846AB PRIMARY KEY (PaymentID),
+	CONSTRAINT FK__Payment__OrderID__28ED12D1 FOREIGN KEY (OrderID) REFERENCES ipas.dbo.[Order](OrderID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.Plant definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Plant;
+
+CREATE TABLE ipas.dbo.Plant (
+	PlantID int IDENTITY(1,1) NOT NULL,
+	PlantCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlantName nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlantIndex int NULL,
+	GrowthStage nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	HealthStatus nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	PlantingDate datetime NULL,
+	PlantReferenceID int NULL,
+	Description nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CultivarID int NULL,
+	ImageURL nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	LandRowID int NULL,
+	CONSTRAINT PK__Plant__98FE46BC7EA4DAD0 PRIMARY KEY (PlantID),
+	CONSTRAINT FK__Plant__CultivarI__1AD3FDA4 FOREIGN KEY (CultivarID) REFERENCES ipas.dbo.Cultivar(CultivarID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.PlantCriteria definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.PlantCriteria;
+
+CREATE TABLE ipas.dbo.PlantCriteria (
+	PlantID int NOT NULL,
+	CriteriaID int NOT NULL,
+	isChecked bit NULL,
+	Priority int NULL,
+	CONSTRAINT PK__PlantCri__5718EB0E819D7672 PRIMARY KEY (PlantID,CriteriaID),
+	CONSTRAINT FK__CriteriaT__Crite__37703C52 FOREIGN KEY (CriteriaID) REFERENCES ipas.dbo.Criteria(CriteriaID) ON DELETE CASCADE,
+	CONSTRAINT FK__CriteriaT__Plant__367C1819 FOREIGN KEY (PlantID) REFERENCES ipas.dbo.Plant(PlantID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.PlantGrowthHistory definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.PlantGrowthHistory;
+
+CREATE TABLE ipas.dbo.PlantGrowthHistory (
+	PlantGrowthHistoryID int IDENTITY(1,1) NOT NULL,
+	PlantGrowthHistoryCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Content nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	NoteTaker nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	PlantID int NULL,
+	IssueName nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__PlantGro__8F26DC48C9286D17 PRIMARY KEY (PlantGrowthHistoryID),
+	CONSTRAINT FK__PlantNote__Plant__32AB8735 FOREIGN KEY (PlantID) REFERENCES ipas.dbo.Plant(PlantID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.PlantLot definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.PlantLot;
+
+CREATE TABLE ipas.dbo.PlantLot (
+	PlantLotID int IDENTITY(1,1) NOT NULL,
+	PlantLotCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlantLotName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PreviousQuantity int NULL,
+	Unit nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Status nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	LastQuantity int NULL,
+	ImportedDate datetime NULL,
+	Note nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PartnerID int NULL,
+	CONSTRAINT PK__PlantLot__58D457ABDE17F2CF PRIMARY KEY (PlantLotID),
+	CONSTRAINT FK_PlantLot_Partner FOREIGN KEY (PartnerID) REFERENCES ipas.dbo.Partner(PartnerID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.PlantResource definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.PlantResource;
+
+CREATE TABLE ipas.dbo.PlantResource (
+	PlanResourceID int IDENTITY(1,1) NOT NULL,
+	PlanResourceCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ResourceType nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ResourceURL nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Description nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	PlantGrowthHistoryID int NULL,
+	CONSTRAINT PK__PlantRes__1974A137217179D1 PRIMARY KEY (PlanResourceID),
+	CONSTRAINT FK_PlantResource_PlantGrowthHistory FOREIGN KEY (PlantGrowthHistoryID) REFERENCES ipas.dbo.PlantGrowthHistory(PlantGrowthHistoryID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.ProcessData definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.ProcessData;
+
+CREATE TABLE ipas.dbo.ProcessData (
+	ProcessDataID int IDENTITY(1,1) NOT NULL,
+	ProcessDataCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Input] nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	ResourceURL nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ProcessID int NULL,
+	SubProcessID int NULL,
+	CONSTRAINT PK__ProcessD__D954CCEB8C7A2CD9 PRIMARY KEY (ProcessDataID),
+	CONSTRAINT FK__ProcessDa__Proce__3A179ED3 FOREIGN KEY (ProcessID) REFERENCES ipas.dbo.Process(ProcessID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.SubProcess definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.SubProcess;
+
+CREATE TABLE ipas.dbo.SubProcess (
+	SubProcessID int IDENTITY(1,1) NOT NULL,
+	SubProcessCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	SubProcessName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ParentSubProcessID int NULL,
+	isDefault bit NULL,
+	isActive bit NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	isDeleted bit NULL,
+	ProcessID int NULL,
+	ProcessStyleID int NULL,
+	CONSTRAINT PK__SubProce__F054A88CD66E5A59 PRIMARY KEY (SubProcessID),
+	CONSTRAINT FK__SubProces__Proce__3CF40B7E FOREIGN KEY (ProcessID) REFERENCES ipas.dbo.Process(ProcessID) ON DELETE CASCADE,
+	CONSTRAINT FK__SubProces__Proce__3DE82FB7 FOREIGN KEY (ProcessStyleID) REFERENCES ipas.dbo.ProcessStyle(ProcessStyleID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.[User] definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.[User];
+
+CREATE TABLE ipas.dbo.[User] (
+	UserID int IDENTITY(1,1) NOT NULL,
+	Email nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Password nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	FullName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PhoneNumber nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Gender nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	DOB datetime NULL,
+	UserCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	IsDelete bit NULL,
+	DeleteDate datetime NULL,
+	Status nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	IsDependency int NULL,
+	RoleID int NULL,
+	AvatarURL nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Otp nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ExpiredOtpTime datetime NULL,
+	Address nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CONSTRAINT PK__User__1788CCACFB4299F2 PRIMARY KEY (UserID),
+	CONSTRAINT FK__User__RoleID__40C49C62 FOREIGN KEY (RoleID) REFERENCES ipas.dbo.[Role](RoleID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.UserFarm definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.UserFarm;
+
+CREATE TABLE ipas.dbo.UserFarm (
+	UserID int NOT NULL,
+	FarmID int NOT NULL,
+	RoleId int NULL,
+	CONSTRAINT PK__UserFarm__995F77051197DAC5 PRIMARY KEY (UserID,FarmID),
+	CONSTRAINT FK__UserFarm__FarmID__41B8C09B FOREIGN KEY (FarmID) REFERENCES ipas.dbo.Farm(FarmID) ON DELETE CASCADE,
+	CONSTRAINT FK__UserFarm__UserID__42ACE4D4 FOREIGN KEY (UserID) REFERENCES ipas.dbo.[User](UserID) ON DELETE CASCADE,
+	CONSTRAINT UserFarm_Role_FK FOREIGN KEY (RoleId) REFERENCES ipas.dbo.[Role](RoleID)
+);
+
+
+-- ipas.dbo.ChatRoom definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.ChatRoom;
+
+CREATE TABLE ipas.dbo.ChatRoom (
+	RoomID int IDENTITY(1,1) NOT NULL,
+	RoomCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	RoomName nvarchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	AIResponseID int NULL,
+	CreateBy int NULL,
+	CONSTRAINT PK__ChatRoom__32863919A904C9FC PRIMARY KEY (RoomID),
+	CONSTRAINT FK__ChatRoom__Create__17C286CF FOREIGN KEY (CreateBy) REFERENCES ipas.dbo.[User](UserID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.HarvestTypeHistory definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.HarvestTypeHistory;
+
+CREATE TABLE ipas.dbo.HarvestTypeHistory (
+	HarvestTypeID int NOT NULL,
+	PlantID int NULL,
+	Unit int NULL,
+	Price float NULL,
+	Quantity int NULL,
+	HarvestHistoryID int NOT NULL,
+	CONSTRAINT PK__HarvestT__23D39827305ED593 PRIMARY KEY (HarvestTypeID,HarvestHistoryID),
+	CONSTRAINT FK_HarvestTypeHistory_Plant FOREIGN KEY (PlantID) REFERENCES ipas.dbo.Plant(PlantID) ON DELETE CASCADE,
+	CONSTRAINT FK__HarvestTy__Harve__3F115E1A FOREIGN KEY (HarvestTypeID) REFERENCES ipas.dbo.HarvestType(HarvestTypeID) ON DELETE CASCADE,
+	CONSTRAINT FK__HarvestTy__Harve__40058253 FOREIGN KEY (HarvestHistoryID) REFERENCES ipas.dbo.HarvestHistory(HarvestHistoryID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.Notification definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.Notification;
+
+CREATE TABLE ipas.dbo.Notification (
+	NotificationID int IDENTITY(1,1) NOT NULL,
+	NotificationCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Title nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Content nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Link nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	isRead bit NULL,
+	UserID int NULL,
+	NotificationTypeID int NULL,
+	CONSTRAINT PK__Notifica__20CF2E32F94B5C5B PRIMARY KEY (NotificationID),
+	CONSTRAINT FK_Notification_User FOREIGN KEY (UserID) REFERENCES ipas.dbo.[User](UserID) ON DELETE CASCADE,
+	CONSTRAINT FK__Notificat__Notif__5224328E FOREIGN KEY (NotificationTypeID) REFERENCES ipas.dbo.NotificationType(NotificationTypeID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.[Plan] definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.[Plan];
+
+CREATE TABLE ipas.dbo.[Plan] (
+	PlanID int IDENTITY(1,1) NOT NULL,
+	Status nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlanCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	StartDate datetime NULL,
+	EndDate datetime NULL,
+	UpdateDate datetime NULL,
+	isActive bit NULL,
+	Notes nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlanDetail nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ResponsibleBy nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Frequency nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlantID int NULL,
+	LandPlotID int NULL,
+	AssignorID int NULL,
+	TypeWorkID int NULL,
+	PesticideName nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	MaxVolume float NULL,
+	MinVolume float NULL,
+	ProcessID int NULL,
+	CropID int NULL,
+	GrowthStageID int NULL,
+	PlantLotID int NULL,
+	CONSTRAINT PK__Plan__755C22D7C27C8EF5 PRIMARY KEY (PlanID),
+	CONSTRAINT FK_Plan_Process FOREIGN KEY (ProcessID) REFERENCES ipas.dbo.Process(ProcessID) ON DELETE CASCADE,
+	CONSTRAINT FK__Plan__LandPlotID__1DB06A4F FOREIGN KEY (LandPlotID) REFERENCES ipas.dbo.LandPlot(LandPlotID) ON DELETE CASCADE,
+	CONSTRAINT FK__Plan__TypeWorkID__1F98B2C1 FOREIGN KEY (TypeWorkID) REFERENCES ipas.dbo.TypeWork(TypeWorkID) ON DELETE CASCADE,
+	CONSTRAINT Plan_PlantLot_FK FOREIGN KEY (PlantLotID) REFERENCES ipas.dbo.PlantLot(PlantLotID) ON DELETE SET NULL
+);
+
+
+-- ipas.dbo.RefreshToken definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.RefreshToken;
+
+CREATE TABLE ipas.dbo.RefreshToken (
+	RefreshTokenID int IDENTITY(1,1) NOT NULL,
+	RefreshTokenCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	RefreshTokenValue nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	ExpiredDate datetime NULL,
+	IsUsed bit NULL,
+	IsRevoked bit NULL,
+	UserID int NULL,
+	CONSTRAINT PK__RefreshT__F5845E59CBB4AB2D PRIMARY KEY (RefreshTokenID),
+	CONSTRAINT FK__RefreshTo__UserI__3BFFE745 FOREIGN KEY (UserID) REFERENCES ipas.dbo.[User](UserID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.CarePlanSchedule definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.CarePlanSchedule;
+
+CREATE TABLE ipas.dbo.CarePlanSchedule (
+	ScheduleID int IDENTITY(1,1) NOT NULL,
+	DayOfWeek nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	StarTime datetime NULL,
+	EndTime datetime NULL,
+	CarePlanID int NULL,
+	CONSTRAINT PK__CarePlan__9C8A5B694338D9F1 PRIMARY KEY (ScheduleID),
+	CONSTRAINT FK__CarePlanS__CareP__2180FB33 FOREIGN KEY (CarePlanID) REFERENCES ipas.dbo.[Plan](PlanID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.ChatMessage definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.ChatMessage;
+
+CREATE TABLE ipas.dbo.ChatMessage (
+	MessageID int IDENTITY(1,1) NOT NULL,
+	MessageCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	MessageContent nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	SenderID int NULL,
+	IsUser bit NULL,
+	MessageType nvarchar(1) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	RoomID int NULL,
+	CONSTRAINT PK__ChatMess__C87C037C2C4F831C PRIMARY KEY (MessageID),
+	CONSTRAINT FK__ChatMessa__RoomI__16CE6296 FOREIGN KEY (RoomID) REFERENCES ipas.dbo.ChatRoom(RoomID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.GraftedPlant definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.GraftedPlant;
+
+CREATE TABLE ipas.dbo.GraftedPlant (
+	GraftedPlantID int IDENTITY(1,1) NOT NULL,
+	GraftedPlantCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	GraftedPlantName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	GrowthStage nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	SeparatedDate datetime NULL,
+	Status nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	GraftedDate datetime NULL,
+	Note nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	PlantID int NULL,
+	PlanID int NULL,
+	PlantLotID int NULL,
+	CONSTRAINT PK__GraftedP__883CF82ACBB74009 PRIMARY KEY (GraftedPlantID),
+	CONSTRAINT FK__GraftedPl__PlanI__540C7B00 FOREIGN KEY (PlanID) REFERENCES ipas.dbo.[Plan](PlanID) ON DELETE CASCADE,
+	CONSTRAINT FK__GraftedPl__Plant__531856C7 FOREIGN KEY (PlantID) REFERENCES ipas.dbo.Plant(PlantID) ON DELETE CASCADE,
+	CONSTRAINT GraftedPlant_PlantLot_FK FOREIGN KEY (PlantLotID) REFERENCES ipas.dbo.PlantLot(PlantLotID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.GraftedPlantNote definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.GraftedPlantNote;
+
+CREATE TABLE ipas.dbo.GraftedPlantNote (
+	GraftedPlantNoteID int IDENTITY(1,1) NOT NULL,
+	GraftedPlantNoteName nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Content nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Image] nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	NoteTaker nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	GraftedPlantID int NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	CONSTRAINT PK__GraftedP__09DC047162079786 PRIMARY KEY (GraftedPlantNoteID),
+	CONSTRAINT FK_GraftedPlantNote_GraftedPlant FOREIGN KEY (GraftedPlantID) REFERENCES ipas.dbo.GraftedPlant(GraftedPlantID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.WorkLog definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.WorkLog;
+
+CREATE TABLE ipas.dbo.WorkLog (
+	WorkLogID int IDENTITY(1,1) NOT NULL,
+	WorkLogCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Status nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Notes nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Date] datetime NULL,
+	IsConfirm bit NULL,
+	ScheduleID int NULL,
+	HarvestHistoryID int NULL,
+	CropID int NULL,
+	CONSTRAINT PK__WorkLog__FE542DC2BB0A0EA4 PRIMARY KEY (WorkLogID),
+	CONSTRAINT FK_WorkLog_HarvestHistory FOREIGN KEY (HarvestHistoryID) REFERENCES ipas.dbo.HarvestHistory(HarvestHistoryID) ON DELETE CASCADE,
+	CONSTRAINT FK__WorkLog__CropID__245D67DE FOREIGN KEY (CropID) REFERENCES ipas.dbo.Crop(CropID) ON DELETE CASCADE,
+	CONSTRAINT FK__WorkLog__Schedul__236943A5 FOREIGN KEY (ScheduleID) REFERENCES ipas.dbo.CarePlanSchedule(ScheduleID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.WorkLogResource definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.WorkLogResource;
+
+CREATE TABLE ipas.dbo.WorkLogResource (
+	WorkLogResourceID int IDENTITY(1,1) NOT NULL,
+	WorkLogResourceCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ResourceType nvarchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	ResourceURL nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Description nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	UpdateDate datetime NULL,
+	WorkLogID int NULL,
+	CONSTRAINT PK__WorkLogR__2EE578CA467DABB5 PRIMARY KEY (WorkLogResourceID),
+	CONSTRAINT FK__WorkLogRe__WorkL__29221CFB FOREIGN KEY (WorkLogID) REFERENCES ipas.dbo.WorkLog(WorkLogID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.CriteriaGraftedPlant definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.CriteriaGraftedPlant;
+
+CREATE TABLE ipas.dbo.CriteriaGraftedPlant (
+	GraftedPlantID int NOT NULL,
+	CriteriaID int NOT NULL,
+	isChecked bit NULL,
+	CONSTRAINT PK__Criteria__47DA559824FE7603 PRIMARY KEY (GraftedPlantID,CriteriaID),
+	CONSTRAINT FK__CriteriaG__Crite__55F4C372 FOREIGN KEY (CriteriaID) REFERENCES ipas.dbo.Criteria(CriteriaID) ON DELETE CASCADE,
+	CONSTRAINT FK__CriteriaG__Graft__55009F39 FOREIGN KEY (GraftedPlantID) REFERENCES ipas.dbo.GraftedPlant(GraftedPlantID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.TaskFeedback definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.TaskFeedback;
+
+CREATE TABLE ipas.dbo.TaskFeedback (
+	TaskFeedbackID int IDENTITY(1,1) NOT NULL,
+	TaskFeedbackCode nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	Content nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	CreateDate datetime NULL,
+	WorkLogID int NULL,
+	ManagerID int NULL,
+	CONSTRAINT PK__TaskFeed__9CC94E1953C81F4C PRIMARY KEY (TaskFeedbackID),
+	CONSTRAINT FK__TaskFeedb__Manag__3EDC53F0 FOREIGN KEY (ManagerID) REFERENCES ipas.dbo.[User](UserID) ON DELETE CASCADE,
+	CONSTRAINT FK__TaskFeedb__WorkL__339FAB6E FOREIGN KEY (WorkLogID) REFERENCES ipas.dbo.WorkLog(WorkLogID) ON DELETE CASCADE
+);
+
+
+-- ipas.dbo.UserWorkLog definition
+
+-- Drop table
+
+-- DROP TABLE ipas.dbo.UserWorkLog;
+
+CREATE TABLE ipas.dbo.UserWorkLog (
+	WorkLogID int NOT NULL,
+	UserID int NOT NULL,
+	IsReporter bit NULL,
+	CONSTRAINT PK__UserWork__2F2CA1082A09A834 PRIMARY KEY (WorkLogID,UserID),
+	CONSTRAINT FK__UserWorkL__UserI__43A1090D FOREIGN KEY (UserID) REFERENCES ipas.dbo.[User](UserID) ON DELETE CASCADE,
+	CONSTRAINT FK__UserWorkL__WorkL__25518C17 FOREIGN KEY (WorkLogID) REFERENCES ipas.dbo.WorkLog(WorkLogID) ON DELETE CASCADE
+);
+GO
+INSERT INTO [dbo].[Farm] ([FarmCode], [FarmName], [Address], [LogoURL], [Ward], [Province], [District], [Area], [SoilType], [ClimateZone], [CreateDate], [UpdateDate], [IsDelete], [Status], [Length], [Width], [Description])
+VALUES
+('F001', 'Farm A', '123 Green Lane, District 1, Province X', 'https://example.com/logoA.png', 'Ward 1', 'Province X', 'District 1', 100.5, 'Clay', 'Tropical', GETDATE(), GETDATE(), 0, 'Active', 200, 150, 'Farm specializing in tropical fruits'),
+('F002', 'Farm B', '456 Blue Avenue, District 2, Province Y', 'https://example.com/logoB.png', 'Ward 2', 'Province Y', 'District 2', 200.0, 'Loam', 'Temperate', GETDATE(), GETDATE(), 0, 'Active', 300, 250, 'Farm focused on vegetables and grains'),
+('F003', 'Farm C', '789 Binh Duong, District 2, Province Y', 'https://example.com/logoB.png', 'Ward 2', 'Province Y', 'District 2', 200.0, 'Loam', 'Temperate', GETDATE(), GETDATE(), 0, 'Active', 300, 250, 'Farm focused on vegetables and grains'),
+('F004', 'Farm D', '910 Dong Nai, District 2, Province Y', 'https://example.com/logoB.png', 'Ward 2', 'Province Y', 'District 2', 200.0, 'Loam', 'Temperate', GETDATE(), GETDATE(), 0, 'Active', 300, 250, 'Farm focused on vegetables and grains'),
+('F005', 'Farm E', '911 Long An, District 2, Province Y', 'https://example.com/logoB.png', 'Ward 2', 'Province Y', 'District 2', 200.0, 'Loam', 'Temperate', GETDATE(), GETDATE(), 0, 'Active', 300, 250, 'Farm focused on vegetables and grains'),
+('F006', 'Farm F', '159 Can Gio, District 2, Province Y', 'https://example.com/logoB.png', 'Ward 2', 'Province Y', 'District 2', 200.0, 'Loam', 'Temperate', GETDATE(), GETDATE(), 0, 'Active', 300, 250, 'Farm focused on vegetables and grains'),
+('F007', 'Farm G', '567 Tien Giang, District 2, Province Y', 'https://example.com/logoB.png', 'Ward 2', 'Province Y', 'District 2', 200.0, 'Loam', 'Temperate', GETDATE(), GETDATE(), 0, 'Active', 300, 250, 'Farm focused on vegetables and grains'),
+('F008', 'Farm H', '789 Kien Giang, District 3, Province Z', 'https://example.com/logoC.png', 'Ward 3', 'Province Z', 'District 3', 150.0, 'Sandy', 'Arid', GETDATE(), GETDATE(), 0, 'Inactive', 400, 350, 'Farm for livestock breeding');
+GO
+INSERT INTO [dbo].[FarmCoordination] ([Longitude], [Lagtitude], [FarmID])
+VALUES
+(106.6297, 10.8231, 1),  -- Coordinates for Farm A
+(106.6297, 10.8231, 1),  -- Coordinates for Farm A
+(106.6297, 10.8231, 1),  -- Coordinates for Farm A
+(106.6297, 10.8231, 1),  -- Coordinates for Farm A
+(107.6297, 11.8231, 2),  -- Coordinates for Farm B
+(107.6297, 11.8231, 2),  -- Coordinates for Farm B
+(107.6297, 11.8231, 2),  -- Coordinates for Farm B
+(107.6297, 11.8231, 2),  -- Coordinates for Farm B
+(108.6297, 12.8231, 3),  -- Coordinates for Farm c
+(107.6297, 11.8231, 3),  -- Coordinates for Farm c
+(107.6297, 11.8231, 3),  -- Coordinates for Farm c
+(107.6297, 11.8231, 3),  -- Coordinates for Farm c
+(107.6297, 11.8231, 3);  -- Coordinates for Farm c
+GO
+INSERT INTO [dbo].[Role] ([RoleName], [isSystem])
+VALUES
+('Admin', 1),
+('User', 1),
+('Owner', 0),
+('Manager', 0),
+('Employee', 0);
+GO
+INSERT INTO [dbo].[User] ([Email], [Password], [FullName], [PhoneNumber], [Gender], [DOB], [UserCode], [CreateDate], [UpdateDate], [IsDelete], [Status], [IsDependency], [AvatarURL], [Otp], [ExpiredOtpTime], [RoleID])
+VALUES
+('thetamthd@gmail.com', '$2a$11$1V.AriJm/OGpjG0vWRH8tuD9/Fi2ezrgyDJItAZ5bzGH1DTukcH9e', 'John Doe', '0123456789', 'Male', '1990-05-10', 'U001', GETDATE(), GETDATE(), 0, 'Active', NULL, 'https://example.com/avatar1.png', NULL, NULL, 1),
+('tambtse171869@fpt.edu.vn', '$2a$11$1V.AriJm/OGpjG0vWRH8tuD9/Fi2ezrgyDJItAZ5bzGH1DTukcH9e', 'Jane Smith', '0987654321', 'Female', '1985-08-15', 'U002', GETDATE(), GETDATE(), 0, 'Active', NULL, 'https://example.com/avatar2.png', NULL, NULL, 2),
+('user3@example.com', '$2a$11$1V.AriJm/OGpjG0vWRH8tuD9/Fi2ezrgyDJItAZ5bzGH1DTukcH9e', 'Alice Johnson', '0912345678', 'Female', '1992-12-20', 'U003', GETDATE(), GETDATE(), 0, 'Inactive', NULL, 'https://example.com/avatar3.png', NULL, NULL, 2),
+('user4@example.com', '$2a$11$1V.AriJm/OGpjG0vWRH8tuD9/Fi2ezrgyDJItAZ5bzGH1DTukcH9e', 'The Tam', '0912345678', 'Female', '1992-12-20', 'U003', GETDATE(), GETDATE(), 0, 'Inactive', NULL, 'https://example.com/avatar3.png', NULL, NULL, 2),
+('user5@example.com', '$2a$11$1V.AriJm/OGpjG0vWRH8tuD9/Fi2ezrgyDJItAZ5bzGH1DTukcH9e', 'Phuoc Tan', '0912345678', 'Female', '1992-12-20', 'U003', GETDATE(), GETDATE(), 0, 'Inactive', NULL, 'https://example.com/avatar3.png', NULL, NULL, 2);
+;
+GO
+INSERT INTO [dbo].[UserFarm] ([FarmID], [UserID], [RoleId])
+VALUES 
+(1,1,3),
+(1,2,4),
+(1,3,5),
+(1,4,5);
+GO
+INSERT INTO [dbo].[GrowthStage] ([GrowthStageCode], [GrowthStageName], [MonthAgeStart], [MonthAgeEnd])  
+VALUES  
+    ('GERMINATION', N'Nảy mầm', 0, 2),  
+    ('SEEDLING', N'Cây con', 3, 12),  
+    ('VEGETATIVE', N'Sinh trưởng dinh dưỡng', 13, 36),  
+    ('FLOWERING', N'Ra hoa', 37, 48),  
+    ('FRUIT_SET', N'Đậu quả', 49, 60),  
+    ('FRUIT_DEVELOPMENT', N'Phát triển quả', 61, 96),  
+    ('HARVEST', N'Thu hoạch', 97, 120);
+GO
+INSERT INTO ipas.dbo.CriteriaType (CriteriaTypeCode, CriteriaTypeName, GrowthStageID)
+VALUES
+    ('CT001', N'Đánh giá chất lượng đất', 1),
+    ('CT002', N'Đánh giá nguồn nước', 2),
+    ('CT003', N'Tiêu chuẩn phân bón', 3),
+    ('CT004', N'Quy trình chăm sóc', 4),
+    ('CT005', N'Tiêu chuẩn thu hoạch', 7);
+GO
+INSERT INTO ipas.dbo.Criteria (CriteriaCode, CriteriaName, CriteriaDescription, Priority, isActive, CriteriaTypeID, isChecked)
+VALUES
+    ('CR001', N'Độ pH của đất', N'Độ pH của đất phải nằm trong khoảng từ 5.5 - 6.5 để đảm bảo cây phát triển tốt.', 1, 1, 1, 0),
+    ('CR002', N'Hàm lượng hữu cơ', N'Đất phải có hàm lượng hữu cơ tối thiểu là 2% để cung cấp dinh dưỡng cho cây.', 2, 1, 1, 1),
+    ('CR003', N'Chất lượng nước tưới', N'Nước tưới phải không chứa kim loại nặng và có độ pH trung tính (6-7).', 1, 1, 2, 1),
+    ('CR004', N'Loại phân bón', N'Chỉ sử dụng phân hữu cơ hoặc phân vi sinh, tránh phân hóa học gây ô nhiễm.', 1, 1, 3, 0),
+    ('CR005', N'Liều lượng phân bón', N'Bón phân theo đúng chu kỳ sinh trưởng của cây, tránh bón quá nhiều.', 2, 1, 3, 1),
+    ('CR006', N'Tưới nước', N'Tưới nước theo chu kỳ, tránh ngập úng hoặc thiếu nước kéo dài.', 3, 1, 4, 1),
+    ('CR007', N'Tiêu chuẩn thu hoạch', N'Chỉ thu hoạch khi quả đạt độ chín tối ưu (màu sắc, độ đường).', 1, 1, 5, 1);
+GO

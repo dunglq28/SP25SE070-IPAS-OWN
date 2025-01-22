@@ -35,7 +35,7 @@ namespace CapstoneProject_SP25_IPAS_API.Middleware
 
                 if (userIdClaim > 0)
                 {
-                    var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userIdClaim);
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userIdClaim && u.IsDelete != true);
                     if (user != null && user.Status.ToLower().Equals("banned"))
                     {
                         var response = new BaseResponse

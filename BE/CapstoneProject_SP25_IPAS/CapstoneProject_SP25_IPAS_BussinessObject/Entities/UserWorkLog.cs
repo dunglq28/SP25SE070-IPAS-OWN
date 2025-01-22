@@ -9,7 +9,7 @@ public partial class UserWorkLog
 
     public int UserId { get; set; }
 
-    public int? IsReporter { get; set; }
+    public bool? IsReporter { get; set; }
 
     public virtual User User { get; set; } = null!;
 

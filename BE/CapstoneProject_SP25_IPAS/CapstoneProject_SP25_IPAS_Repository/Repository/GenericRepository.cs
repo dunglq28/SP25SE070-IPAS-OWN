@@ -1,6 +1,7 @@
 ﻿using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +77,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             {
                 query = query.Where(filter);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
@@ -104,22 +105,13 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             {
                 query = orderBy(query);
             }
-            if (!includeProperties.IsNullOrEmpty())
+            if (!string.IsNullOrWhiteSpace(includeProperties))
             {
 
                 foreach (var includeProperty in includeProperties.Split
                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProperty);
-                }
-            }
-            if (!thenIncludeProperties.IsNullOrEmpty())
-            {
-
-                foreach (var thenIncludeProperty in thenIncludeProperties.Split
-                    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(thenIncludeProperty);
                 }
             }
             return await query.AsNoTracking().ToListAsync();
@@ -130,6 +122,11 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
         public virtual async Task Insert(TEntity entity)
         {
             await dbSet.AddAsync(entity);
+        }
+
+        public async Task InsertRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await dbSet.AddRangeAsync(entities);
         }
 
         public virtual void Delete(object id)
@@ -147,10 +144,27 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
             dbSet.Remove(entityToDelete);
         }
 
+        public void RemoveRange(IEnumerable<TEntity> entities)
+        {
+            dbSet.RemoveRange(entities);
+        }
+
         public virtual void Update(TEntity entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            if (entities == null || !entities.Any())
+                throw new ArgumentException("Entity list is null or empty.");
+
+            foreach (var entity in entities)
+            {
+                dbSet.Attach(entity);
+                context.Entry(entity).State = EntityState.Modified;
+            }
         }
 
         public virtual async Task<int> Count(Expression<Func<TEntity, bool>> filter = null!)
