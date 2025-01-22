@@ -1,8 +1,7 @@
-import { Dashboard, Login, PlantList, User } from "@/pages";
+import { Authentication, Dashboard, PlantList, User, ForgetPassword, Landing, OTP } from "@/pages";
 
 import { GuestLayout, HeaderOnly, ManagementLayout } from "@/layouts";
 import { PATHS } from "./Paths";
-import Landing from "@/pages/LandingPage/Landing";
 
 interface RouteItem {
   path: string;
@@ -11,8 +10,10 @@ interface RouteItem {
 }
 
 export const publicRoutes: RouteItem[] = [
-  { path: PATHS.AUTH.LOGIN, component: Landing, layout: GuestLayout },
-  { path: PATHS.AUTH.LOGIN, component: Login, layout: GuestLayout },
+  { path: PATHS.AUTH.LANDING, component: Landing, layout: GuestLayout },
+  { path: PATHS.AUTH.LOGIN, component: Authentication, layout: null },
+  { path: PATHS.AUTH.FORGOT_PASSWORD, component: ForgetPassword, layout: null },
+  { path: PATHS.AUTH.OTP, component: OTP, layout: null },
   { path: PATHS.DASHBOARD, component: Dashboard, layout: ManagementLayout },
   { path: PATHS.USER.USER_LIST, component: User, layout: ManagementLayout },
   { path: PATHS.FARM.FARM_PLANT_LIST, component: PlantList, layout: ManagementLayout },

@@ -1,6 +1,6 @@
 import React from "react";
 import reviews from "@/constants/review";
-import ReviewCard from "@/components/UI/ReviewCard/ReviewCard";
+import { ReviewCard } from "@/components";
 import style from "./ReviewSection.module.scss";
 const ReviewSection: React.FC = () => {
     return (

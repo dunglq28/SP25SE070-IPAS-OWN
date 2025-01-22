@@ -6,3 +6,11 @@ export { default as SidebarAdmin } from "@/components/Administration/Sidebar/Sid
 export { default as Table } from "@/components/UI/Table/Table";
 export { default as Tooltip } from "@/components/UI/Tooltip/Tooltip";
 export { default as ActionBar } from "@/components/UI/ActionBar/ActionBar";
+export { default as PricingCard } from "@/components/UI/PricingCard/PricingCard";
+export { default as ReviewCard } from "@/components/UI/ReviewCard/ReviewCard";
+export { default as FeatureCard } from "@/components/UI/FeatureCard/FeatureCard";
+export { default as PricingSection } from "@/components/Guest/PricingSection/PricingSection";
+export { default as ReviewSection } from "@/components/Guest/ReviewSection/ReviewSection";
+export { default as FeatureSection } from "@/components/Guest/FeatureSection/FeatureSection";
+export { default as SignIn } from "@/components/UI/Auth/SignIn/SignIn";
+export { default as SignUp } from "@/components/UI/Auth/SignUp/SignUp";
