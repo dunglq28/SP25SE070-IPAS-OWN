@@ -738,7 +738,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp))
                 return new BusinessResult(Const.WARNING_CHECK_MAIL_REGISTER_CODE, Const.WARNING_CHECK_MAIL_REGISER_MSG, false);
 
-            var expectedOtp = NumberHelper.GenerateOtp(email);
+            var expectedOtp = NumberHelper.GenerateOtp();
 
             if (otp == expectedOtp)
                 return new BusinessResult(Const.SUCCESS_OTP_VALID_CODE, Const.SUCCESS_OTP_VALID_MESSAGE, true);
@@ -751,7 +751,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         {
             try
             {
-                string otpCode = NumberHelper.GenerateOtp(email);
+                string otpCode = NumberHelper.GenerateOtp().ToString();
                 bool checkSendMail = await SendOtpRegisterAccountAsync(email, otpCode);
                 return checkSendMail;
 

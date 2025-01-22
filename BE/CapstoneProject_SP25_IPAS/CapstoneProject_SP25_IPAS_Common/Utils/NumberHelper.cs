@@ -35,15 +35,17 @@ namespace CapstoneProject_SP25_IPAS_Common.Utils
         {
             return "IPAS-" + aliasEntity + "-" + DateTime.Now.Ticks;
         }
-        public static string GenerateOtp(string email)
+        public static string GenerateOtp()
         {
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() / (60 * 60); // Làm mới mỗi 60 phút
-            var message = $"{email}:{timestamp}";
+            Random random = new Random();
+            string randomNumbers = "";
 
-            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes("IPAS"));
-            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
-            var otp = BitConverter.ToString(hash).Replace("-", "").Substring(0, 6); // Lấy 6 ký tự đầu
-            return otp.ToUpper();
+            for (int i = 0; i < 6; i++)
+            {
+                randomNumbers += random.Next(0, 10); // Số từ 0 đến 9
+            }
+
+            return randomNumbers;
         }
     }
 }
