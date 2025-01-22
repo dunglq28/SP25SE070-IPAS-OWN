@@ -1,7 +1,6 @@
 import { TableColumn } from "@/types";
-import { Checkbox, Flex, notification, Table } from "antd";
+import { Checkbox, Empty, Flex, notification, Skeleton, Table } from "antd";
 import style from "./Table.module.scss";
-import Loading from "@/components/Loading";
 import { useEffect, useState } from "react";
 import { Icons } from "@/assets";
 import { useStyle } from "@/hooks";
@@ -11,13 +10,14 @@ interface TableProps<T> {
   columns: TableColumn<T>[];
   rows: T[];
   rowKey: Extract<keyof T, string>;
+  title?: React.ReactNode;
   handleSortClick: (field: string) => void;
-  selectedColumn: string;
+  selectedColumn?: string;
   rotation: number;
-  //   isLoading: boolean;
-  //   isInitialLoad: boolean;
-  currentPage: number;
-  rowsPerPage: number;
+  currentPage?: number;
+  rowsPerPage?: number;
+  isLoading: boolean;
+  isInitialLoad: boolean;
   caption: string;
   notifyNoData: string;
   renderAction?: (item: T) => React.ReactNode;
@@ -27,13 +27,14 @@ const TableComponent = <T extends {}>({
   columns,
   rows,
   rowKey,
+  title,
   handleSortClick,
   selectedColumn,
   rotation,
-  //   isInitialLoad,
-  //   isLoading,
-  currentPage,
-  rowsPerPage,
+  currentPage = 1,
+  rowsPerPage = 5,
+  isInitialLoad,
+  isLoading,
   caption,
   notifyNoData,
   renderAction,
@@ -89,8 +90,10 @@ const TableComponent = <T extends {}>({
             className={styles.customCheckbox}
             checked={selection.includes(record[rowKey] as string)}
             onChange={() => toggleRowSelection(record[rowKey] as string)}
-          />
-          <span style={{ marginLeft: "12px" }}>{text}</span>
+          >
+            {/* <span className={style.checkboxNum}>{text}</span> */}
+            {text}
+          </Checkbox>
         </Flex>
       ),
       fixed: "left",
@@ -154,20 +157,19 @@ const TableComponent = <T extends {}>({
     <>
       <Table
         className={`${style.tbl} ${styles.customTable}`}
-        // dataSource={isInitialLoad && isLoading ? [] : dataSource}
-        dataSource={dataSource}
+        title={title ? () => title : undefined}
+        dataSource={isInitialLoad && isLoading ? [] : dataSource}
         columns={antColumns as any}
         footer={() => <div className={styles.customTable}>{caption}</div>}
         pagination={false}
-        // locale={{
-        //   emptyText: isInitialLoad && isLoading ? <Loading /> : notifyNoData,
-        // }}
+        loading={isLoading}
+        locale={{
+          emptyText:
+            isInitialLoad && isLoading ? <Skeleton active /> : <Empty description={notifyNoData} />,
+        }}
         rowClassName={(record) =>
           selection.includes(record[rowKey] as string) ? style.selectedRow : ""
         }
-        locale={{
-          emptyText: notifyNoData,
-        }}
         scroll={{ x: "max-content", y: 70 * 6 }}
       />
       <ActionBar selectedCount={selection.length} deleteSelectedItems={deleteSelectedItems} />

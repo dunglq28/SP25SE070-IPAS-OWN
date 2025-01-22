@@ -6,6 +6,7 @@ export interface MenuItem {
   to?: string;
   activePaths: string[];
   category: string;
+  isView?: boolean;
 }
 
 interface SubMenuItem {

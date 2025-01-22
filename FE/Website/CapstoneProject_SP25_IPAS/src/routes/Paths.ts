@@ -7,6 +7,8 @@ export const PATHS = {
   // Dashboard
   DASHBOARD: "/dashboard",
 
+  FARM_PICKER: "/farm-picker",
+
   // User Management
   USER: {
     USER_LIST: "/users",
@@ -18,6 +20,7 @@ export const PATHS = {
     FARM_LIST: "/farms",
     FARM_DETAIL: "/farms/:id",
     FARM_PLANT_LIST: "/farms/plants",
+    FARM_PLANT_DETAIL: "/farms/plants/:id",
     FARM_PLOT_LIST: "/farms/land-plots",
     FARM_PLOT_CREATE: "/farms/land-plot/create",
   },

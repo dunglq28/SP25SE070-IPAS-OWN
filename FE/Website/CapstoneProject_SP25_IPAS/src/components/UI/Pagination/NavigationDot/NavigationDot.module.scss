@@ -1,0 +1,84 @@
+@use "@/styles/variables.scss" as vars;
+
+.navigationContainer {
+  direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 6px;
+
+  .paginationWrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .paginationDotWrapper {
+    li {
+      background-color: transparent;
+      border-color: transparent;
+      &:hover {
+        border-color: transparent;
+        background-color: transparent !important;
+      }
+    }
+    .paginationArrow {
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 999px;
+      color: vars.$color_primary;
+      &:hover {
+        transition: 0.5s;
+        background-color: vars.$color_second;
+        color: vars.$color_primary;
+        border-color: transparent;
+      }
+    }
+    .paginationDot {
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      background: vars.$color_bg_navigation_dot;
+      color: vars.$color_primary;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 999px;
+      outline: transparent;
+
+      &:hover {
+        transition: 0.5s;
+        background-color: vars.$color_second;
+        color: vars.$color_primary;
+        border-color: transparent;
+      }
+    }
+
+    .active {
+      background-color: vars.$color_second;
+      color: vars.$color_primary;
+    }
+  }
+
+  .rowsPerPageWrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .navDotSelect {
+      width: 4rem;
+      text-align: center;
+      &:hover {
+        border-color: transparent;
+      }
+
+      .navDotSelectText {
+        color: vars.$color_primary;
+      }
+    }
+  }
+}

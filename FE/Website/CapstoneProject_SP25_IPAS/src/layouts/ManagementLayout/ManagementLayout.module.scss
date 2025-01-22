@@ -11,12 +11,15 @@
     .content {
       flex-direction: column;
       flex: 1;
-      margin: 30px 32px;
+      margin: 12px 32px;
       overflow: auto;
     }
   }
 
   .footer {
     text-align: center;
+  }
+  .active {
+    font-weight: bold; 
   }
 }
