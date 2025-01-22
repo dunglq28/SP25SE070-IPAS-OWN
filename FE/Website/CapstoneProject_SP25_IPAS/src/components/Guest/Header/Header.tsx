@@ -41,12 +41,12 @@ const Header: React.FC = () => {
       <div className={style.authButtons}>
         <ButtonAuth
           label="Sign In"
-          href="/sign-in"
+          href="/auth?mode=sign-in"
           className="button_auth_signin"
         />
         <ButtonAuth
           label="Sign Up"
-          href="/sign-up"
+          href="/auth?mode=sign-up"
           className="button_auth_signup"
         />
       </div>
