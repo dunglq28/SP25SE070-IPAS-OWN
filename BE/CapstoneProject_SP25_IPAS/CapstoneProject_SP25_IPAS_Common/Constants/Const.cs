@@ -18,6 +18,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_TO_SAVE_TO_DATABASE = "Save to database fail";
         #endregion
 
+        #region Success
         #region UserService
         public static int SUCCESS_LOGIN_CODE = 200;
         public static string SUCCESS_LOGIN_MSG = "Login Successfully";
@@ -116,10 +117,17 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_CRITERIA_TYPE_CODE = 200;
         public static string SUCCESS_GET_ALL_CRITERIA_TYPE_MESSAGE = "Get all criteria type success";
         #endregion
-
+        #region Criteria
+        public static int SUCCESS_UPDATE_CRITERIA_CODE = 200;
+        public static string SUCCESS_UPDATE_CRITERIA_MSG = "Update criteria success";
+        public static int SUCCESS_DELETE_CRITERIA_CODE = 200;
+        public static string SUCCESS_DELETE_CRITERIA_MSG = "Delete criteria success";
+        public static int SUCCESS_GET_CRITERIA_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_CRITERIA_BY_ID_MSG = "Get criteria by id success";
+        #endregion
         public static int SUCCESS_DELETE_FARM_PLANPLOT_CODE = 200;
         public static string SUCCESS_DELTE_FARM_LANDPLOT_MSG = "Update farm success";
-        // landplot
+        #region landplot
         public static int SUCCESS_GET_ALL_LANDPLOT_IN_FARM_CODE = 200;
         public static string SUCCESS_GET_ALL_LANDPLOT_IN_FARM_MSG = "Get all landplot of farm success";
         public static int SUCCESS_UPDATE_LANDPLOT_COORDINATION_CODE = 200;
@@ -128,6 +136,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_UPDATE_LANDPLOT_MSG = "Update landplot success";
         public static int SUCCESS_CREATE_LANDPLOT_CODE = 201;
         public static string SUCCESS_CREATE_LANDPLOT_MSG = "Create landplot success";
+        #endregion
         #region Partner code
         public static int SUCCESS_GET_PARTNER_BY_ID_CODE = 200;
         public static string SUCCESS_GET_PARTNER_BY_ID_MESSAGE = "Get partner by id success";
@@ -142,7 +151,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_PARTNER_CODE = 200;
         public static string SUCCESS_GET_ALL_PARTNER_MESSAGE = "Get all partner success";
         #endregion
-
         #region GrowthStage code
         public static int SUCCESS_GET_GROWTHSTAGE_BY_ID_CODE = 200;
         public static string SUCCESS_GET_GROWTHSTAGE_BY_ID_MESSAGE = "Get GrowthStage by id success";
@@ -155,8 +163,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_GROWTHSTAGE_CODE = 200;
         public static string SUCCESS_GET_ALL_GROWTHSTAGE_MESSAGE = "Get all GrowthStage success";
         #endregion
+        #endregion
 
-        #region User code
+
+        #region User fail code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
         public static string FAIL_LOGOUT_MSG = "Have an error when logout";
@@ -219,6 +229,15 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_GET_CRITERIA_TYPE_MESSAGE = "Get criteria type failed";
         #endregion
 
+        #region
+        public static int FAIL_CREATE_CRITERIA_CODE = 500;
+        public static string FAIL_CREATE_CRITERIA_MESSAGE = "Create criteria failed";
+        public static int FAIL_GET_CRITERIA__BY_ID_CODE = 500;
+        public static string FAIL_GET_CRITERIA_BY_ID_MSG = "Get criteria failed";
+        public static int FAIL_UPDATE_CRITERIA_CODE = 500;
+        public static string FAIL_UPDATE_CRITERIA_MSG = "Update criteria type failed";
+        #endregion
+
         #region Farm Fail code
         public static int FAIL_CREATE_FARM_CODE = 500;
         public static string FAIL_CREATE_FARM_MSG = "Create farm have server error";
@@ -265,7 +284,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wrong";
         public static int WARNING_INVALID_REFRESH_TOKEN_CODE = 400;
         public static string WARNING_INVALID_REFRESH_TOKEN_MSG = "Refresh Token is expired time. Please log out";
-        #endregion
 
         #region UserService
         public static int WARNING_ACCOUNT_BANNED_CODE = 400;
@@ -322,6 +340,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region GrowthStage
         public static int WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_MSG = "Does not have any GrowthStage";
+        #endregion
         #endregion
     }
 }

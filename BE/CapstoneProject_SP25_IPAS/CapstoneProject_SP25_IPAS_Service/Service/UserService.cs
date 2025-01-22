@@ -32,6 +32,7 @@ using CapstoneProject_SP25_IPAS_BussinessObject.GoogleUser;
 using System.Net.Http.Headers;
 using System.Linq.Expressions;
 using CapstoneProject_SP25_IPAS_Common.Upload;
+using CapstoneProject_SP25_IPAS_Common.Constants;
 
 namespace CapstoneProject_SP25_IPAS_Service.Service
 {
@@ -45,7 +46,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-             public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -59,7 +60,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             var existUser = await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
             if (existUser != null)
             {
-                if(!existUser.Status.ToLower().Equals("banned"))
+                if (!existUser.Status.ToLower().Equals("banned"))
                 {
                     existUser.Status = "Banned";
 
@@ -79,7 +80,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         return new BusinessResult(Const.SUCCESS_BANNED_USER_CODE, Const.SUCCESS_UNBANNED_USER_MSG);
                     }
                 }
-               
+
                 return new BusinessResult(Const.FAIL_BANNED_USER_CODE, Const.FAIL_BANNED_USER_MSG);
             }
             return new BusinessResult(Const.WARNING_BANNED_USER_CODE, Const.WARNING_BANNED_USER_MSG);
@@ -110,14 +111,14 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
 
         public async Task<BusinessResult> CreateUser(CreateAccountModel createAccountModel)
         {
-            using(var transaction = await _unitOfWork.BeginTransactionAsync())
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
                     User user = new User()
                     {
                         Email = createAccountModel.Email,
-                        UserCode = NumberHelper.GenerateRandomCode("USR"),
+                        UserCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.USER),
                         FullName = createAccountModel.FullName,
                         Status = "Active",
                         RoleId = (int)createAccountModel.Role,
@@ -129,11 +130,11 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     };
 
                     var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(createAccountModel.Email);
-                    if(existUser != null)
+                    if (existUser != null)
                     {
                         return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG, false);
                     }
-                    if(createAccountModel.Password != null)
+                    if (createAccountModel.Password != null)
                     {
                         user.Password = PasswordHelper.HashPassword(createAccountModel.Password);
                     }
@@ -216,7 +217,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message, false);
             }
             return new BusinessResult(Const.SUCCESS_DELETE_USER_CODE, Const.SUCCESS_DELETE_USER_MESSAGE, true);
-           
+
         }
 
         public async Task<BusinessResult> ExecuteResetPassword(ResetPasswordModel resetPasswordModel)
@@ -443,7 +444,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var newUser = new User()
                     {
                         Email = model.Email,
-                        UserCode = NumberHelper.GenerateRandomCode("USR"),
+                        UserCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.USER),
                         FullName = model.FullName,
                         CreateDate = DateTime.Now,
                         UpdateDate = DateTime.Now,
@@ -526,7 +527,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 var uploadImageLink = await _cloudinaryService.UploadImageAsync(avatarOfUser, CloudinaryPath.USER_AVARTAR);
                 if (uploadImageLink != null)
                 {
-                    if(checkExistUser.AvatarURL != null)
+                    if (checkExistUser.AvatarURL != null)
                     {
                         await _cloudinaryService.DeleteImageByUrlAsync(checkExistUser.AvatarURL);
                     }
@@ -578,7 +579,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     if (updateUserRequestModel.Role != null)
                     {
                         var checkRole = Enum.IsDefined(typeof(RoleEnum), updateUserRequestModel.Role);
-                        if(checkRole)
+                        if (checkRole)
                         {
                             existUser.RoleId = (int)updateUserRequestModel.Role;
                         }
@@ -587,7 +588,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                             return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG, false);
                         }
                     }
-                    if(existUser.IsDelete != null)
+                    if (existUser.IsDelete != null)
                     {
                         existUser.IsDelete = updateUserRequestModel.IsDeleted;
                     }
@@ -628,11 +629,12 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             if (role != null)
             {
                 authClaims.Add(new Claim("email", email));
-                authClaims.Add(new Claim("role", role.RoleName));
+                //authClaims.Add(new Claim("role", role.RoleName));
                 authClaims.Add(new Claim("roleId", role.RoleId.ToString()));
                 authClaims.Add(new Claim("UserId", user.UserId.ToString()));
                 authClaims.Add(new Claim("Status", user.Status.ToString()));
                 authClaims.Add(new Claim("FullName", user.FullName));
+                authClaims.Add(new Claim(ClaimTypes.Role, role.RoleName));
                 authClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
             }
@@ -907,7 +909,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
 
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
-           
+
         }
 
 
@@ -915,7 +917,6 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         {
             try
             {
-
                 // Validate Google Token and fetch user info
                 var googleResult = await ValidateGoogleTokenAsync(googleToken);
                 // neu token khong hop le
@@ -930,21 +931,48 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 }
                 else
                 {
+                    using (var transaction = await _unitOfWork.BeginTransactionAsync())
+                    {
                     // Kiểm tra người dùng tồn tại
                     var existUser = await _unitOfWork.UserRepository.GetByCondition(x => x.Email.Equals(userInfo.Email));
-                    // nếu người dùng không tồn tại -- co the cho dk nguoi dung tai day de tranh truong hop bat register thu cong
+                    // nếu người dùng không tồn tại --> cho tao moi nguoi dung
                     if (existUser == null)
                     {
-                        return new BusinessResult(Const.FAIL_LOGIN_WITH_GOOGLE_CODE, Const.FAIL_LOGIN_WITH_GOOGLE_MSG);
+                        //lay thong tin user tu token gg
+                        var userInfoGG = await FetchGoogleUserInfoAsync(googleToken);
+                        User newUser = new User()
+                        {
+                            Email = userInfo.Email,
+                            UserCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.USER),
+                            FullName = userInfoGG.FullName,
+                            Status = "Active",
+                            IsDelete = false,
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            AvatarURL = userInfoGG.Avatar ?? "",
+                            Gender = userInfoGG.Gender,
+                            PhoneNumber = userInfoGG.PhoneNumber,
+                            Dob = userInfoGG.Birthday
+                        };
+                        var role = await _unitOfWork.RoleRepository.GetRoleById((int)RoleEnum.USER);
+                        if (role != null)
+                        {
+                            newUser.RoleId = role.RoleId;
+                        }
+                        else
+                        {
+                            return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG);
+                        }
+                        await _unitOfWork.UserRepository.AddUserAsync(newUser);
+                        await transaction.CommitAsync();
+                        return new BusinessResult(Const.SUCCESS_REGISTER_CODE, Const.SUCCESS_REGISTER_MSG);
                     }
                     // nếu người dùng bị ban
-                    if (existUser.Status.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
+                    if (existUser.Status!.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
                     {
                         return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
                     }
                     // nếu tồn tại
-                    using (var transaction = await _unitOfWork.BeginTransactionAsync())
-                    {
                         _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
                         string accessToken = await GenerateAccessToken(userInfo.Email, existUser);
 
@@ -989,17 +1017,17 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             return new BusinessResult(Const.SUCCESS_VALIDATE_TOKEN_GOOGLE_CODE, Const.SUCCESS_TOKEN_GOOGLE_VALIDATE_MSG, usertoken!);
         }
 
-        private async Task<BusinessResult> FetchGoogleUserInfoAsync(string googleToken)
+        private async Task<GoogleUserInfo> FetchGoogleUserInfoAsync(string googleToken)
         {
             var peopleApiUrl = _configuration["Authentication:Google:userDetectEndpoint"];
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", googleToken);
 
             var response = await _httpClient.GetAsync(peopleApiUrl);
-            if (!response.IsSuccessStatusCode) return new BusinessResult(Const.FAIL_USER_INFO_FETCH_CODE, Const.FAIL_USER_INFO_FETCH_MSG, new { success = false }); ;
+            if (!response.IsSuccessStatusCode) return null;
 
             var content = await response.Content.ReadAsStringAsync();
             var userGoogleInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(content);
-            return new BusinessResult(Const.SUCCESS_FECTH_GOOGLE_USER_INFO_CODE, Const.SUCCESS_FECTH_GOOGLE_USER_INFO_MSG, userGoogleInfo!);
+            return userGoogleInfo;
         }
     }
 }

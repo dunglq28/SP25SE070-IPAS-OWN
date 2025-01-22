@@ -19,6 +19,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<Role, RoleModel>()
+                .ReverseMap();
             CreateMap<User, UserModel>()
                  .ForMember(dest => dest.Role, opt => opt.MapFrom(x => x.Role.RoleName))
                 .ReverseMap();
@@ -47,12 +49,12 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             CreateMap<UserFarm, UserFarmModel>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) 
                 .ForMember(dest => dest.Farm, opt => opt.MapFrom(src => src.Farm))
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
                 .ReverseMap();
 
             CreateMap<CriteriaType, CriteriaTypeModel>()
                 .ForMember(dest => dest.GrowthStageName, opt => opt.MapFrom(src => src.GrowthStage.GrowthStageName))
                 .ForMember(dest => dest.ListCriteria, opt => opt.MapFrom(src => src.Criteria))
-                .ReverseMap();
                 .ReverseMap();
 
             CreateMap<Partner, PartnerModel>()
@@ -61,6 +63,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             CreateMap<GrowthStage, GrowthStageModel>().ReverseMap();
 
             CreateMap<LandPlotCoordination, LandPlotCoordinationModel>().ReverseMap();
+
+            CreateMap<Criteria, CriteriaModel>()
+                //.ForMember(dest => dest.CriteriaType, opt => opt.MapFrom(src => src.CriteriaType))
+                .ReverseMap();
         }
     }
 }

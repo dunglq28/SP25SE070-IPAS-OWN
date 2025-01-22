@@ -50,7 +50,6 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                             CriteriaDescription = criteria.CriteriaDescription,
                             CriteriaName = criteria.CriteriaName,
                             IsActive = true,
-                            IsChecked = false,
                             Priority = criteria.Priority,
                         };
                         newCriteriaType.Criteria.Add(newCriteria);

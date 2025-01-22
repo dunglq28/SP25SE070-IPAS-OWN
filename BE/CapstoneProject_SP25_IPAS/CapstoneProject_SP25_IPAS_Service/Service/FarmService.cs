@@ -434,5 +434,19 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+        public async Task<UserFarmModel> GetUserFarmRole(int farmId, int userId)
+        {
+            try
+            {
+                Expression<Func<UserFarm, bool>> condition = x => x.FarmId == farmId && x.UserId == userId && x.Farm.IsDelete != true;
+                var userfarm = await _unitOfWork.UserFarmRepository.GetByCondition(condition);
+                var result = _mapper.Map<UserFarmModel>(userfarm);
+                return result;
+            } catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -78,6 +78,13 @@
             public const string updateCriteriaTypeInfo = Base + "/criteriaTypes/update-criteriaType-info";
             public const string getCriteriaTypeByName = Base + "/criteriaTypes/get-criteriaType-by-name/{name}";
         }
+        public static class Criteria
+        {
+            public const string prefix = Base + "/criterias";
+            public const string updateListCriteriaType = prefix + "/update-list-criteria";
+            public const string getCriteriaById = prefix + "/get-criteriaType-by-id/{id}";
+            public const string updateCriteriaInfo = prefix + "/update-criteria-info";
+        }
 
         public static class Authentication
         {
