@@ -119,7 +119,7 @@ namespace CapstoneProject_SP25_IPAS_API.Payload
             public const string updateGrowthStageInfo = Base + "/growthStages/update-growthStage-info";
         }
 
-         public static class ProcessStyle
+        public static class ProcessStyle
         {
             public const string createProcessStyle = Base + "/processStyles";
             public const string getProcessStyleById = Base + "/processStyles/get-processStyle-by-id/{id}";
@@ -139,5 +139,6 @@ namespace CapstoneProject_SP25_IPAS_API.Payload
             public const string getProcessByName = Base + "/processs/get-process-by-name/{name}";
             public const string getProcessDataOfProcess = Base + "/processs/{id}/processData";
         }
+
     }
 }

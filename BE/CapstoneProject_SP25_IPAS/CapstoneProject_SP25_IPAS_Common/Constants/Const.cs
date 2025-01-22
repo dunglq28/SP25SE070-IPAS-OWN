@@ -163,7 +163,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_GROWTHSTAGE_CODE = 200;
         public static string SUCCESS_GET_ALL_GROWTHSTAGE_MESSAGE = "Get all GrowthStage success";
         #endregion
-        #endregion
+       
 
         #region ProcessStyle code
         public static int SUCCESS_GET_PROCESS_STYLE_BY_ID_CODE = 200;
@@ -194,7 +194,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_PROCESS_CODE = 200;
         public static string SUCCESS_GET_ALL_PROCESS_MESSAGE = "Get all process success";
         #endregion
-
+        #endregion
 
         #region User fail code
         public static int FAIL_CREATE_CODE = -1;
@@ -281,6 +281,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_GET_PROCESS_MESSAGE = "Get process failed";
         public static int FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_CODE = 500;
         public static string FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_MESSAGE = "Can not update subprocess that iss not part of the process";
+        #endregion
         #region
         public static int FAIL_CREATE_CRITERIA_CODE = 500;
         public static string FAIL_CREATE_CRITERIA_MESSAGE = "Create criteria failed";
@@ -410,7 +411,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public const string WARNING_MISSING_DATE_FILTER_MSG = "Please enter both values for the date filter (Create Date From and Create Date To).";
         public static int WARNING_INVALID_DATE_FILTER_CODE = 400;
         public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
-
         #endregion
         #endregion
     }
