@@ -301,9 +301,13 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var verifyPassword = PasswordHelper.VerifyPassword(password, existUser.Password);
                     if (verifyPassword || existUser.Password == null)
                     {
-                        if (existUser.Status.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
+                        if (existUser.Status.ToLower().Equals("Banned".ToLower()))
                         {
                             return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
+                        }
+                        if(existUser.IsDelete == true)
+                        {
+                            return new BusinessResult(Const.WARNING_ACCOUNT_DELETED_CODE, Const.WARNING_ACCOUNT_DELETED_MSG);
                         }
                         _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
                         string accessToken = await GenerateAccessToken(email, existUser);
@@ -606,7 +610,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var result = await _unitOfWork.UserRepository.UpdateUserAsync(existUser);
                     if (result > 0)
                     {
-                        return new BusinessResult(Const.SUCCESS_UPDATE_USER_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, result);
+                        return new BusinessResult(Const.SUCCESS_UPDATE_USER_CODE, Const.SUCCESS_UPLOAD_IMAGE_MESSAGE, existUser);
                     }
                     else
                     {
