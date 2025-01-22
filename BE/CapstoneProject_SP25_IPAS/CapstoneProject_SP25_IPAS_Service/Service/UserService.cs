@@ -727,7 +727,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             var checkExistAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
             if (checkExistAccount != null)
             {
-                return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG, false);
+                return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG, false);
             }
             bool checkSendOtp = await CreateOtpRegisterAsync(email);
             return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
