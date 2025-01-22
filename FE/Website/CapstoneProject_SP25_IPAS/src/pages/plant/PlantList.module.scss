@@ -1,16 +1,35 @@
-@import "../../styles/share.scss";
+@use "@/styles/share.scss" as shared;
+@use "@/styles/variables.scss" as vars;
 
 .container {
-  @extend .container;
+  @include shared.container;
+}
 
-  .searchWrapper {
-    @extend .searchWrapper;
+.filterContent {
+  padding: 10px;
+
+  input,
+  label,
+  span {
+    font-size: 16px !important;
+  }
+  .title {
+    color: vars.$color_primary !important;
+    font-weight: bold;
+    margin-bottom: 4px;
   }
 
-  .plant {
-    @extend .table;
-    .tableText {
-      @extend .tableText;
+  .section {
+    max-width: 24vw;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .sectionStatus {
+    flex-direction: row;
+    margin-bottom: 10px;
+    .statusGroup {
+      flex-direction: column;
+      margin-left: 10px;
     }
   }
 }

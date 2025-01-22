@@ -7,7 +7,11 @@ import { getCurrentDate, getRoleName } from "@/utils";
 import { Icons, Images } from "@/assets";
 import { useNavigate } from "react-router-dom";
 
-function Header() {
+interface HeaderProps {
+  isDefault?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ isDefault = false }) => {
   const menuItems = [
     { label: "Hồ sơ cá nhân", path: "/profile" },
     { label: "Cài đặt tài khoản", path: "/settings" },
@@ -40,8 +44,8 @@ function Header() {
 
   const notifications = [
     { icon: <Icons.language />, content: notificationContent },
-    { icon: <Icons.regBell />, content: notificationContent },
-  ];
+    !isDefault ? { icon: <Icons.regBell />, content: notificationContent } : null,
+  ].filter((noti) => noti !== null);
 
   return (
     <Flex className={style.header}>
@@ -53,7 +57,7 @@ function Header() {
             <Text className={style.dateText}>{getCurrentDate()}</Text>
           </Flex>
         </Flex>
-        <Flex className={style.rightSection}>
+        <Flex className={`${style.rightSection} ${isDefault ? style.paddingRight : ""}`}>
           <Flex className={style.notificationWrapper}>
             {notifications.map((noti, index) => (
               <Popover key={index} content={noti.content} trigger="click" placement="bottomRight">
@@ -65,17 +69,17 @@ function Header() {
             <Flex className={style.profileContainer}>
               {/* <Avatar shape="square" size={50} icon={<UserOutlined />} /> */}
               <Avatar size={50} shape="square" src={<img src={Images.avatar} alt="avatar" />} />
-              <Flex className={style.profileInfo}>
+              <Flex className={`${style.profileInfo}`}>
                 <Text className={style.profileName}>Admin</Text>
-                <Text className={style.profileRole}>{getRoleName(Number(1))}</Text>
+                {!isDefault && <Text className={style.profileRole}>{getRoleName(Number(1))}</Text>}
               </Flex>
-              <Icons.arrowDropDownLine className={style.dropdownIcon} />
+              {!isDefault && <Icons.arrowDropDownLine className={style.dropdownIcon} />}
             </Flex>
           </Popover>
         </Flex>
       </Flex>
     </Flex>
   );
-}
+};
 
 export default Header;
