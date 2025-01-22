@@ -15,9 +15,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region Error Codes
 
         public static int ERROR_EXCEPTION = 400;
-
+        public static string FAIL_TO_SAVE_TO_DATABASE = "Save to database fail";
         #endregion
 
+        #region Success
         #region UserService
         public static int SUCCESS_LOGIN_CODE = 200;
         public static string SUCCESS_LOGIN_MSG = "Login Successfully";
@@ -63,8 +64,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_GET_ALL_USER_BY_ROLE_MESSAGE = "Get all user by role success";
         public static int SUCCESS_UPDATE_USER_CODE = 200;
         public static string SUCCESS_UPDATE_MESSAGE = "Update user success";
-        public static int SUCCESS_GET_FARM_ALL_PAGINATION_CODE = 200;
-        public static string SUCCESS_GET_FARM_ALL_PAGINATION_FARM_MSG = "Get all pagination farm success";
         #endregion
         #region PlantLotService code
         public static int SUCCESS_GET_PLANT_LOT_BY_ID_CODE = 200;
@@ -85,12 +84,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_FARM_GET_MSG = "Get farm by id success";
         public static int SUCCESS_GET_ALL_FARM_WITH_PAGIN_CODE = 200;
         public static string SUCCESS_GET_ALL_FARM_WITH_PAGIN_EMPTY_CODE = "Get all farm empty";
+        public static int SUCCESS_GET_FARM_ALL_PAGINATION_CODE = 200;
+        public static string SUCCESS_GET_FARM_ALL_PAGINATION_FARM_MSG = "Get all pagination farm success";
         public static int SUCCESS_CREATE_FARM_CODE = 201;
         public static string SUCCESS_CREATE_FARM_MSG = "Create farm success";
         public static int SUCCESS_UPDATE_FARM_CODE = 200;
         public static string SUCCESS_UPDATE_FARM_MSG = "Update farm success";
         public static int SUCCESS_UPDATE_FARM_COORDINATION_CODE = 200;
-        public static string SUCCESS_UPDATE_FARM_COORDINATION_MSG = "Update farm success";
+        public static string SUCCESS_UPDATE_FARM_COORDINATION_MSG = "Update farm coordination success";
         public static int SUCCESS_DELETE_PERMANENTLY_FARM_CODE = 200;
         public static string SUCCESS_DELETE_PERMANENTLY_FARM_MSG = "Delete farm softed success";
         public static int SUCCESS_DELETE_SOFTED_FARM_CODE = 200;
@@ -116,7 +117,26 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_CRITERIA_TYPE_CODE = 200;
         public static string SUCCESS_GET_ALL_CRITERIA_TYPE_MESSAGE = "Get all criteria type success";
         #endregion
-
+        #region Criteria
+        public static int SUCCESS_UPDATE_CRITERIA_CODE = 200;
+        public static string SUCCESS_UPDATE_CRITERIA_MSG = "Update criteria success";
+        public static int SUCCESS_DELETE_CRITERIA_CODE = 200;
+        public static string SUCCESS_DELETE_CRITERIA_MSG = "Delete criteria success";
+        public static int SUCCESS_GET_CRITERIA_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_CRITERIA_BY_ID_MSG = "Get criteria by id success";
+        #endregion
+        public static int SUCCESS_DELETE_FARM_PLANPLOT_CODE = 200;
+        public static string SUCCESS_DELTE_FARM_LANDPLOT_MSG = "Update farm success";
+        #region landplot
+        public static int SUCCESS_GET_ALL_LANDPLOT_IN_FARM_CODE = 200;
+        public static string SUCCESS_GET_ALL_LANDPLOT_IN_FARM_MSG = "Get all landplot of farm success";
+        public static int SUCCESS_UPDATE_LANDPLOT_COORDINATION_CODE = 200;
+        public static string SUCCESS_UPDATE_LANDPLOT_COORDINATION_MSG = "Update landplot coordination success";
+        public static int SUCCESS_UPDATE_LANDPLOT_CODE = 200;
+        public static string SUCCESS_UPDATE_LANDPLOT_MSG = "Update landplot success";
+        public static int SUCCESS_CREATE_LANDPLOT_CODE = 201;
+        public static string SUCCESS_CREATE_LANDPLOT_MSG = "Create landplot success";
+        #endregion
         #region Partner code
         public static int SUCCESS_GET_PARTNER_BY_ID_CODE = 200;
         public static string SUCCESS_GET_PARTNER_BY_ID_MESSAGE = "Get partner by id success";
@@ -131,7 +151,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_PARTNER_CODE = 200;
         public static string SUCCESS_GET_ALL_PARTNER_MESSAGE = "Get all partner success";
         #endregion
-
         #region GrowthStage code
         public static int SUCCESS_GET_GROWTHSTAGE_BY_ID_CODE = 200;
         public static string SUCCESS_GET_GROWTHSTAGE_BY_ID_MESSAGE = "Get GrowthStage by id success";
@@ -144,8 +163,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_GROWTHSTAGE_CODE = 200;
         public static string SUCCESS_GET_ALL_GROWTHSTAGE_MESSAGE = "Get all GrowthStage success";
         #endregion
+        #endregion
 
-        #region User code
+
+        #region User fail code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
         public static string FAIL_LOGOUT_MSG = "Have an error when logout";
@@ -208,6 +229,15 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_GET_CRITERIA_TYPE_MESSAGE = "Get criteria type failed";
         #endregion
 
+        #region
+        public static int FAIL_CREATE_CRITERIA_CODE = 500;
+        public static string FAIL_CREATE_CRITERIA_MESSAGE = "Create criteria failed";
+        public static int FAIL_GET_CRITERIA__BY_ID_CODE = 500;
+        public static string FAIL_GET_CRITERIA_BY_ID_MSG = "Get criteria failed";
+        public static int FAIL_UPDATE_CRITERIA_CODE = 500;
+        public static string FAIL_UPDATE_CRITERIA_MSG = "Update criteria type failed";
+        #endregion
+
         #region Farm Fail code
         public static int FAIL_CREATE_FARM_CODE = 500;
         public static string FAIL_CREATE_FARM_MSG = "Create farm have server error";
@@ -221,6 +251,8 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_DELETE_SOFTED_FARM_MSG = "Delete farm softed fail";
         public static int FAIL_UPDATE_FARM_LOGO_CODE = 201;
         public static string FAIL_UPDATE_FARM_LOGO_MSG = "Farm Update fail";
+        public static int FAIL_DELETE_FARM_LANDPLOT_CODE = 500;
+        public static string FAIL_DELETE_FARM_LANDPLOT_MSG = "Delete landplot of farm have server error";
         #endregion
 
         #region Partner Fail code
@@ -252,7 +284,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wrong";
         public static int WARNING_INVALID_REFRESH_TOKEN_CODE = 400;
         public static string WARNING_INVALID_REFRESH_TOKEN_MSG = "Refresh Token is expired time. Please log out";
-        #endregion
 
         #region UserService
         public static int WARNING_ACCOUNT_BANNED_CODE = 400;
@@ -295,6 +326,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string WARNING_GET_FARM_NOT_EXIST_MSG = "Farm Resource not found";
         public static int WARNING_GET_ALL_FARM_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_ALL_FARM_DOES_NOT_EXIST_MSG = "Does not have any farm";
+        public static int WARNING_GET_LANDPLOT_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_LANDPLOT_NOT_EXIST_MSG = "Land plot does not exist in this farm.";
+        public static string WARNING_GET_ALL_LANDPLOT_NOT_EXIST_MSG = "Land plot does not exist in this farm.";
+
         #endregion
 
         #region CriteriaType
@@ -305,6 +340,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region GrowthStage
         public static int WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_MSG = "Does not have any GrowthStage";
+        #endregion
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,6 +153,18 @@ namespace CapstoneProject_SP25_IPAS_Repository.Repository
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            if (entities == null || !entities.Any())
+                throw new ArgumentException("Entity list is null or empty.");
+
+            foreach (var entity in entities)
+            {
+                dbSet.Attach(entity);
+                context.Entry(entity).State = EntityState.Modified;
+            }
         }
 
         public virtual async Task<int> Count(Expression<Func<TEntity, bool>> filter = null!)

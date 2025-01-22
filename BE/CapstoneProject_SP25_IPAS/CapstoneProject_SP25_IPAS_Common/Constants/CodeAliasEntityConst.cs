@@ -10,6 +10,6 @@ namespace CapstoneProject_SP25_IPAS_Common.Constants
     {
         public static string USER = "USER";
         public static string FARM = "FARM";
-        public static string LANDPLOT = "LDPL";
+        public static string LANDPLOT = "LAPL";
     }
 }

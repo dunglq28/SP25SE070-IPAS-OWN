@@ -11,6 +11,6 @@ namespace CapstoneProject_SP25_IPAS_BussinessObject.RequestModel.FarmRequest
     {
         [Required(ErrorMessage = "Farm Id is required")]
         public int FarmId { get; set; }
-        public List<FarmCoordinationCreateModel> FarmUpdateModel { get; set; }
+        public List<CoordinationCreateRequest> FarmUpdateModel { get; set; }
     }
 }
