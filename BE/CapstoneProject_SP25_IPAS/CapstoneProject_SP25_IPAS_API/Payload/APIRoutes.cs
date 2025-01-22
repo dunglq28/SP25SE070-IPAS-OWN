@@ -99,5 +99,26 @@
             public const string updateGrowthStageInfo = Base + "/growthStages/update-growthStage-info";
         }
 
+        public static class ProcessStyle
+        {
+            public const string createProcessStyle = Base + "/processStyles";
+            public const string getProcessStyleById = Base + "/processStyles/get-processStyle-by-id/{id}";
+            public const string getProcessStyleWithPagination = Base + "/processStyles";
+            public const string permanenlyDelete = Base + "/processStyles/delete-permanenly/{id}";
+            public const string updateProcessStyleInfo = Base + "/processStyles/update-processStyle-info";
+        }
+
+        public static class Process
+        {
+            public const string createProcess = Base + "/processs";
+            public const string createManyProcess = Base + "/processs/create-many";
+            public const string getProcessById = Base + "/processs/get-process-by-id/{id}";
+            public const string getProcessWithPagination = Base + "/processs";
+            public const string permanenlyDelete = Base + "/processs/delete-permanenly/{id}";
+            public const string updateProcessInfo = Base + "/processs/update-process-info";
+            public const string getProcessByName = Base + "/processs/get-process-by-name/{name}";
+            public const string getProcessDataOfProcess = Base + "/processs/{id}/processData";
+        }
+
     }
 }

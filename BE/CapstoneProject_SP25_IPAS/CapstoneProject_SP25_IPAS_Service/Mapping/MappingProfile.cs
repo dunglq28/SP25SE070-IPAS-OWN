@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.CriteriaTypeModels;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.PartnerModel;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.GrowthStageModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessStyleModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessModel;
+using Process = CapstoneProject_SP25_IPAS_BussinessObject.Entities.Process;
 
 namespace CapstoneProject_SP25_IPAS_Service.Mapping
 {
@@ -53,6 +56,16 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName)).ReverseMap();
 
             CreateMap<GrowthStage, GrowthStageModel>().ReverseMap();
+            CreateMap<ProcessStyle, ProcessStyleModel>().ReverseMap();
+            CreateMap<SubProcessInProcessModel, SubProcess>().ReverseMap();
+            CreateMap<ProcessDataInProcessModel, ProcessData>().ReverseMap();
+            CreateMap<Process, ProcessModel>()
+                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
+                 .ForMember(dest => dest.ProcessStyleName, opt => opt.MapFrom(src => src.ProcessStyle.ProcessStyleName))
+                 .ForMember(dest => dest.GrowthStageName, opt => opt.MapFrom(src => src.GrowthStage.GrowthStageName))
+                 .ForMember(dest => dest.ListProcessData, opt => opt.MapFrom(src => src.ProcessData.Where(x => x.ProcessId == src.ProcessId)))
+                 .ForMember(dest => dest.SubProcesses, opt => opt.MapFrom(src => src.SubProcesses.Where(x => x.ProcessId == src.ProcessId)))
+                .ReverseMap();
 
         }
     }

@@ -1,6 +1,6 @@
 ﻿using CapstoneProject_SP25_IPAS_API.Payload;
 using CapstoneProject_SP25_IPAS_Common.Utils;
-using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
 using Microsoft.AspNetCore.Http;
@@ -10,22 +10,21 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ProcessController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IProcessService _processService;
 
-        public UserController(IUserService userService)
+        public ProcessController(IProcessService processService)
         {
-            _userService = userService;
+            _processService = processService;
         }
 
-
-        [HttpGet(APIRoutes.User.getUserWithPagination, Name = "getAllUserPaginationAsync")]
-        public async Task<IActionResult> GetAllUser(PaginationParameter paginationParameter)
+        [HttpGet(APIRoutes.Process.getProcessWithPagination, Name = "getAllProcessPaginationAsync")]
+        public async Task<IActionResult> GetAllProcess(PaginationParameter paginationParameter, ProcessFilters processFilters)
         {
             try
             {
-                var result = await _userService.GetAllUsers(paginationParameter);
+                var result = await _processService.GetAllProcessPagination(paginationParameter, processFilters);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -40,126 +39,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet(APIRoutes.User.getUserById, Name = "getUserById")]
-        public async Task<IActionResult> GetUserById([FromRoute] int userId)
+        [HttpGet(APIRoutes.Process.getProcessByName, Name = "getProcessByNameAsync")]
+        public async Task<IActionResult> GetProcessByName([FromRoute] string name)
         {
             try
             {
-
-                var result = await _userService.GetUserById(userId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpGet(APIRoutes.User.getUserByEmail, Name = "getUserByEmail")]
-        public async Task<IActionResult> GetUserByEmail([FromRoute] string email)
-        {
-            try
-            {
-                var result = await _userService.GetUserByEmail(email);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-        [HttpPost(APIRoutes.User.createUser, Name = "createUser")]
-        public async Task<IActionResult> CreateUserInternal([FromBody] CreateAccountModel createAccountRequestModel)
-        {
-            try
-            {
-                var result = await _userService.CreateUser(createAccountRequestModel);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpPut(APIRoutes.User.updateUserInfo, Name = "updateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel updateUserRequestModel)
-        {
-            try
-            {
-                var result = await _userService.UpdateUser(updateUserRequestModel);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-        [HttpPut(APIRoutes.User.bannedUser, Name = "bannedUser")]
-        public async Task<IActionResult> BannedUser([FromRoute] int userId)
-        {
-            try
-            {
-                var result = await _userService.BannedUser(userId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpDelete(APIRoutes.User.softedDeleteUser, Name = "softedDeleteUser")]
-        public async Task<IActionResult> SoftDeleteUser([FromRoute] int userId)
-        {
-            try
-            {
-                var result = await _userService.SoftDeleteUser(userId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpDelete(APIRoutes.User.permanenlyDelete, Name = "deletedUser")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int userId)
-        {
-            try
-            {
-                var result = await _userService.DeleteUser(userId);
+                var result = await _processService.GetProcessByName(name);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -174,12 +59,52 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut(APIRoutes.User.updateUserAvatar, Name = "updateAvatarUser")]
-        public async Task<IActionResult> UpdateAvatarOfUser(IFormFile avatarOfUser, [FromRoute] int userId)
+        [HttpGet(APIRoutes.Process.getProcessDataOfProcess, Name = "getProcessDataOfProcessAsync")]
+        public async Task<IActionResult> GetProcessDataOfProcess([FromRoute] int id)
         {
             try
             {
-                var result = await _userService.UpdateAvatarOfUser(avatarOfUser, userId);
+                var result = await _processService.GetProcessDataByID(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpGet(APIRoutes.Process.getProcessById, Name = "getProcessByIdAsync")]
+        public async Task<IActionResult> GetProcessByIdAsync([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _processService.GetProcessByID(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost(APIRoutes.Process.createProcess, Name = "createProcessAsync")]
+        public async Task<IActionResult> CreateProcess([FromForm] CreateProcessModel createProcessModel)
+        {
+            try
+            {
+                var result = await _processService.CreateProcess(createProcessModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -190,16 +115,53 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                     Message = ex.Message
                 };
                 return BadRequest(response);
-
             }
         }
 
-        [HttpGet(APIRoutes.User.getAllUserByRole, Name = "getAllUserByRole")]
-        public async Task<IActionResult> GetAllUserByRoleName([FromRoute] string roleName)
+        [HttpPost(APIRoutes.Process.createManyProcess, Name = "createManyProcessAsync")]
+        public async Task<IActionResult> CreateManyProcess([FromForm] List<CreateProcessModel> listCreateProcessModel)
         {
             try
             {
-                var result = await _userService.GetAllUsersByRole(roleName);
+                var result = await _processService.InsertManyProcess(listCreateProcessModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut(APIRoutes.Process.updateProcessInfo, Name = "updateProcessInfoAsync")]
+        public async Task<IActionResult> UpdateProcessAsync([FromForm] UpdateProcessModel updateProcessModel)
+        {
+            try
+            {
+                var result = await _processService.UpdateProcessInfo(updateProcessModel);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpDelete(APIRoutes.Process.permanenlyDelete, Name = "deleteProcessAsync")]
+        public async Task<IActionResult> DeleteProcessAsync([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _processService.PermanentlyDeleteProcess(id);
                 return Ok(result);
             }
             catch (Exception ex)
