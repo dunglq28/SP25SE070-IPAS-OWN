@@ -1,4 +1,5 @@
 ﻿using CapstoneProject_SP25_IPAS_API.Payload;
+using CapstoneProject_SP25_IPAS_API.ProgramConfig.AuthorizeConfig;
 using CapstoneProject_SP25_IPAS_BussinessObject.RequestModel.FarmRequest;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels;
@@ -20,7 +21,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         {
             _farmService = farmService;
         }
-
+        [HybridAuthorize("Admin", "Manager")]
         [HttpGet(APIRoutes.Farm.getFarmWithPagination, Name = "getAllFarmPaginationAsync")]
         public async Task<IActionResult> GetAllFarmWithPaginationAsync(PaginationParameter paginationParameter)
         {
@@ -82,7 +83,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost(APIRoutes.Farm.createFarm, Name = "createFarmAsync")]
-        public async Task<IActionResult> CreateFarmAsync([FromBody] FarmCreateModel farmCreateModel)
+        public async Task<IActionResult> CreateFarmAsync([FromBody] FarmCreateRequest farmCreateModel)
         {
             try
             {
@@ -106,7 +107,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPut(APIRoutes.Farm.updateFarmInfo, Name = "updateFarmInfoAsync")]
-        public async Task<IActionResult> UpdateFarmInfoAsync([FromBody]FarmUpdateModel farmUpdateModel)
+        public async Task<IActionResult> UpdateFarmInfoAsync([FromBody]FarmUpdateRequest farmUpdateModel)
         {
             try
             {

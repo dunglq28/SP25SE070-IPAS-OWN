@@ -16,7 +16,6 @@ public partial class Criteria
     public int? Priority { get; set; }
 
     public bool? IsActive { get; set; }
-    public bool? IsChecked { get; set; }
 
     public int? CriteriaTypeId { get; set; }
 

@@ -35,6 +35,9 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private CriteriaTypeRepository _criteriaTypeRepo;
         private CriteriaRepository _criteriaRepo;
         private PartnerRepository _partnerRepo;
+        private GrowthStageRepository _growthStageRepo;
+        private LandPlotRepository _landPlotRepo;
+        private LandPlotCoordinationRepository _landPlotCoordinationRepo;
 
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
@@ -55,8 +58,11 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _criteriaTypeRepo = new CriteriaTypeRepository(context);
             _criteriaRepo = new CriteriaRepository(context);
             _partnerRepo = new PartnerRepository(context);
+            _growthStageRepo = new GrowthStageRepository(context);
             _configuration = configuration;
             _farmCoordinationRepo = new FarmCoordinationRepository(context);
+            _landPlotRepo = new LandPlotRepository(context);
+            _landPlotCoordinationRepo = new LandPlotCoordinationRepository(context);
         }
 
         private bool disposed = false;
@@ -145,7 +151,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         {
             get
             {
-                if(_refreshRepo == null)
+                if (_refreshRepo == null)
                 {
                     this._refreshRepo = new RefreshTokenRepository(_context);
                 }
@@ -193,7 +199,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         {
             get
             {
-                if(_planRepo == null)
+                if (_planRepo == null)
                 {
                     this._planRepo = new PlanRepository(_context);
                 }
@@ -270,6 +276,29 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                 return _farmCoordinationRepo;
             }
         }
+        public LandPlotRepository LandPlotRepository
+        {
+            get
+            {
+                if (_landPlotRepo == null)
+                {
+                    this._landPlotRepo = new LandPlotRepository(_context);
+                }
+                return _landPlotRepo;
+            }
+        }
+
+        public LandPlotCoordinationRepository LandPlotCoordinationRepository
+        {
+            get
+            {
+                if(_landPlotCoordinationRepo == null)
+                {
+                    this._landPlotCoordinationRepo = new LandPlotCoordinationRepository(_context);
+                }
+                return _landPlotCoordinationRepo;
+            }
+        }
 
         public CriteriaTypeRepository CriteriaTypeRepository
         {
@@ -304,6 +333,18 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._criteriaRepo = new CriteriaRepository(_context);
                 }
                 return _criteriaRepo;
+            }
+        }
+
+        public GrowthStageRepository GrowthStageRepository
+        {
+            get
+            {
+                if (_growthStageRepo == null)
+                {
+                    this._growthStageRepo = new GrowthStageRepository(_context);
+                }
+                return _growthStageRepo;
             }
         }
     }

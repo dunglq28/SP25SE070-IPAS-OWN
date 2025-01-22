@@ -45,6 +45,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             services.AddScoped<IPlantRepository, PlantRepository>();
             services.AddScoped<ICriteriaTypeRepository, CriteriaTypeRepository>();
             services.AddScoped<IPartnerRepository, PartnerRepository>();
+            services.AddScoped<ICriteriaRepository, CriteriaRepository>();
 
             // Register servicies
             services.AddScoped<IUserService, UserService>();
@@ -54,6 +55,8 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             services.AddScoped<IFarmService, FarmService>();
             services.AddScoped<ICriteriaTypeService, CriteriaTypeService>();
             services.AddScoped<IPartnerService, PartnerService>();
+            services.AddScoped<IGrowthStageService, GrowthStageService>();
+            services.AddScoped<ICriteriaService, CriteriaService>();
 
             services.AddHttpClient();
 

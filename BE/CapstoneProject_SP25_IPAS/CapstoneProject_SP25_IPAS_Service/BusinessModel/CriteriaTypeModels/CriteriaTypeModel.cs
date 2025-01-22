@@ -1,4 +1,5 @@
 ﻿using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.FarmBsModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,6 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.CriteriaTypeModels
 
         public int? GrowthStageId { get; set; }
         public string? GrowthStageName { get; set; }
-        public List<Criteria>? ListCriteria { get; set; }
+        public List<CriteriaModel>? ListCriteria { get; set; }
     }
 }
