@@ -17,6 +17,9 @@ body {
   line-height: 1.5;
 }
 
+:focus-visible {
+  outline: transparent !important;
+}
 ::selection {
   background-color: var(--color-selection);
 }

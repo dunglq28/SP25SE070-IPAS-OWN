@@ -3,6 +3,7 @@
 @mixin container {
   width: 100%;
   flex-direction: column;
+  overflow: hidden;
 
   .headerWrapper {
     justify-content: space-between;

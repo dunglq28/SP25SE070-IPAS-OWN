@@ -7,6 +7,7 @@ import "@/App.css";
 import { PATHS } from "@/routes";
 import { useSidebarStore } from "@/stores";
 import { ActiveMenu, MenuItem } from "@/types";
+import { useStyle } from "@/hooks";
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -79,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
       key: "Season Management",
       label: "Season Management",
       icon: <Icons.seedling />,
-      activePaths: [""],
+      activePaths: [],
       category: "Main",
       isView: !isDefault,
     },
@@ -154,14 +155,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
           key: "Manage Employees",
           label: "Manage Employees",
           icon: Images.radius,
-          to: PATHS.FARM.FARM_LIST,
+          to: "",
           activePaths: [],
         },
         {
           key: "Work Schedules",
           label: "Work Schedules",
           icon: Images.radius,
-          to: PATHS.FARM.FARM_LIST,
+          to: "",
           activePaths: [],
         },
       ],
@@ -178,7 +179,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
           key: "Manage Suppliers",
           label: "Manage Suppliers",
           icon: Images.radius,
-          to: PATHS.FARM.FARM_LIST,
+          to: "",
           activePaths: [],
         },
       ],
