@@ -4,6 +4,7 @@ import GoogleButton from "react-google-button";
 import style from "./SignUp.module.scss";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "@/firebase/config";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     toggleForm: () => void;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
+    const navigate = useNavigate();
     console.log("SignUp", isSignUp);
 
     const signUpWithGoogle = async () => {
@@ -18,6 +20,25 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
             console.log(data);
         })
     }
+
+    const handleSignUp = async (values: any) => {
+    
+        try {
+          // send otp request
+          
+          if (true) {
+            console.log("OTP sent successfully!");
+            
+            navigate("/sign-up/otp", { state: { type: "sign-up" } });
+          } else {
+            console.log("OTP failed to send!");
+            
+          }
+        } catch (error: any) {
+          console.error(error);
+        }
+      };
+      
 
     return (
         <div className={`${style["form-container"]} ${style["sign-up"]} ${!isSignUp ? style.hidden : ""}`} style={{ padding: "50px 100px", textAlign: "center" }}>
@@ -28,6 +49,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                 initialValues={{ remember: true }}
                 layout="vertical"
                 style={{ maxWidth: "500px", margin: "0 auto" }}
+                onFinish={handleSignUp} 
             >
                 <Form.Item
                     name="fullName"
@@ -40,7 +62,13 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                     <Col span={12}>
                         <Form.Item
                             name="email"
-                            rules={[{ required: true, message: "Please input your email!" }, { type: "email", message: "Please enter a valid email!" }]}
+                            rules={[
+                                { required: true, message: "Please input your email!" },
+                                {
+                                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|int|mil|coop|aero|museum)$/,
+                                  message: "Please enter a valid email!"
+                                }
+                              ]}
                         >
                             <Input placeholder="Email" />
                         </Form.Item>

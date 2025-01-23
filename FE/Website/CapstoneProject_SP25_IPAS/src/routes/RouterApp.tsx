@@ -6,6 +6,7 @@ interface RouteItem {
   path: string;
   component: () => JSX.Element;
   layout?: React.ComponentType<any> | null;
+  props?: Record<string, any>;
 }
 
 export const publicRoutes: RouteItem[] = [
@@ -13,7 +14,8 @@ export const publicRoutes: RouteItem[] = [
   { path: PATHS.FARM_PICKER, component: FarmPicker, layout: FarmPickerLayout },
   { path: PATHS.AUTH.LOGIN, component: Authentication, layout: null },
   { path: PATHS.AUTH.FORGOT_PASSWORD, component: ForgetPassword, layout: null },
-  { path: PATHS.AUTH.OTP, component: OTP, layout: null },
+  { path: PATHS.AUTH.FORGOT_PASSWORD_OTP, component: OTP, layout: null, props: { type: "reset" } },
+  { path: PATHS.AUTH.SIGN_UP_OTP, component: OTP, layout: null, props: { type: "sign-up" } },
   { path: PATHS.DASHBOARD, component: Dashboard, layout: ManagementLayout },
   { path: PATHS.USER.USER_LIST, component: User, layout: ManagementLayout },
   { path: PATHS.FARM.FARM_PLANT_LIST, component: PlantList, layout: ManagementLayout },

@@ -39,8 +39,11 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                         name="email"
                         rules={[
                             { required: true, message: "Please input your email!" },
-                            { type: "email", message: "Please enter a valid email!" }
-                        ]}
+                            {
+                              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|int|mil|coop|aero|museum)$/,
+                              message: "Please enter a valid email!"
+                            }
+                          ]}
                     >
                         <Input placeholder="Email" />
                     </Form.Item>
