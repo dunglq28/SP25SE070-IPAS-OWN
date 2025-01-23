@@ -76,6 +76,14 @@ export const buildParams = (
   );
 };
 
+export const isValidBreadcrumb = (path: string) => {
+  const hasNumberAndSpecialChar = /\d/.test(path) && /[^a-zA-Z0-9]/.test(path);
+  const hasNumberAndLetter = /[a-zA-Z]/.test(path) && /\d/.test(path);
+  const isNumberOnly = /^\d+$/.test(path);
+
+  return isNumberOnly || hasNumberAndSpecialChar || hasNumberAndLetter;
+};
+
 export const generateRandomKey = (): string => {
   return `${Math.random().toString(36).substr(2, 9)}-${Date.now()}`;
 };

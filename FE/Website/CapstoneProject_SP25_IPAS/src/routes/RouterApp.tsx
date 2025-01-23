@@ -1,4 +1,14 @@
-import { Authentication, Dashboard, PlantList, User, FarmPicker,ForgetPassword, Landing, OTP } from "@/pages";
+import {
+  Authentication,
+  Dashboard,
+  PlantList,
+  User,
+  FarmPicker,
+  ForgetPassword,
+  Landing,
+  OTP,
+  PlantDetails,
+} from "@/pages";
 import { FarmPickerLayout, GuestLayout, HeaderOnly, ManagementLayout } from "@/layouts";
 import { PATHS } from "./Paths";
 
@@ -17,7 +27,7 @@ export const publicRoutes: RouteItem[] = [
   { path: PATHS.DASHBOARD, component: Dashboard, layout: ManagementLayout },
   { path: PATHS.USER.USER_LIST, component: User, layout: ManagementLayout },
   { path: PATHS.FARM.FARM_PLANT_LIST, component: PlantList, layout: ManagementLayout },
-  { path: PATHS.FARM.FARM_PLANT_DETAIL, component: Dashboard, layout: ManagementLayout },
+  { path: PATHS.FARM.FARM_PLANT_DETAIL, component: PlantDetails, layout: ManagementLayout },
 ];
 
 export const privateRoutes: RouteItem[] = [];

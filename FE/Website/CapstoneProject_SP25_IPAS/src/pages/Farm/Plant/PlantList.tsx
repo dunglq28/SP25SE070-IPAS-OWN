@@ -6,9 +6,10 @@ import { useFetchData } from "@/hooks";
 import { useEffect, useState } from "react";
 import { getOptions } from "@/utils";
 import { userService } from "@/services";
+import PlantFilter from "./PlantFilter";
 import { plantColumns } from "./PlantColumns";
 import { TableTitle } from "./TableTitle";
-import PlantFilter from "./PlantFilter";
+
 
 function PlantList() {
   const [filters, setFilters] = useState({

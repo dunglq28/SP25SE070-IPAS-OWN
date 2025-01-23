@@ -69,6 +69,16 @@ const useStyle = createStyles(({ css }) => {
         border-color: ${primaryColor} !important;
       }
     `,
+    customTab: css`
+      .ant-tabs-tab:hover,
+      .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: ${primaryColor};
+        outline: none;
+      }
+      .ant-tabs-ink-bar {
+        background-color: ${primaryColor};
+      }
+    `,
   };
 });
 
