@@ -3,16 +3,29 @@ import style from "./Authentication.module.scss";
 import { Input, Button, Space } from 'antd';
 import { FaBeer } from "react-icons/fa";
 import { SignIn, SignUp } from "@/components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { logo } from "@/assets/images/images";
 
-function Authentication () {
-  const [isSignUp, setIsSignUp] = useState(false);
+function Authentication() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const isSignUp = params.get("mode") === "sign-up";
+  console.log("Authentication", isSignUp);
+
 
   const toggleForm = () => {
-    setIsSignUp(!isSignUp);
+    navigate(`/auth?mode=${isSignUp ? "sign-in" : "sign-up"}`);
   };
 
   return (
     <div className={`${style.container} ${isSignUp ? style.active : ''}`} id="container">
+      <a href="/">
+        <img
+          className={style.img}
+          style={{ width: "50px", cursor: "pointer", position: "absolute", zIndex: 5, margin: "15px" }}
+          src={logo} alt="IPAS Logo" />
+      </a>
       <SignUp toggleForm={toggleForm} isSignUp={isSignUp} />
       <SignIn toggleForm={toggleForm} isSignUp={isSignUp} />
 

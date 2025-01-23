@@ -1,31 +1,32 @@
 ﻿using CapstoneProject_SP25_IPAS_API.Payload;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.GrowthStageModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessStyleModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
+using CapstoneProject_SP25_IPAS_Service.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GrowthStageController : ControllerBase
+    public class ProcessStyleController : ControllerBase
     {
-        private readonly IGrowthStageService _growthStageService;
+        private readonly IProcessStyleService _processStyleService;
 
-        public GrowthStageController(IGrowthStageService growthStageService)
+        public ProcessStyleController(IProcessStyleService processStyleService)
         {
-            _growthStageService = growthStageService;
+            _processStyleService = processStyleService;
         }
 
-        [HttpGet(APIRoutes.GrowthStage.getGrowthStageWithPagination, Name = "getAllGrowthStagePaginationAsync")]
-        public async Task<IActionResult> GetAllGrowthStage(PaginationParameter paginationParameter)
+        [HttpGet(APIRoutes.ProcessStyle.getProcessStyleWithPagination, Name = "getAllProcessStylePaginationAsync")]
+        public async Task<IActionResult> GetAllProcessStyle(PaginationParameter paginationParameter)
         {
             try
             {
-                var result = await _growthStageService.GetAllGrowthStagePagination(paginationParameter);
+                var result = await _processStyleService.GetAllProcessStylePagination(paginationParameter);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,12 +40,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet(APIRoutes.GrowthStage.getGrowthStageById, Name = "getGrowthStageByIdAsync")]
-        public async Task<IActionResult> GetGrowthStageById([FromRoute] int id)
+        [HttpGet(APIRoutes.ProcessStyle.getProcessStyleById, Name = "getProcessStyleByIdAsync")]
+        public async Task<IActionResult> GetProcessStyleById([FromRoute] int id)
         {
             try
             {
-                var result = await _growthStageService.GetGrowthStageByID(id);
+                var result = await _processStyleService.GetProcessStyleByID(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -58,12 +59,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost(APIRoutes.GrowthStage.createGrowthStage, Name = "createGrowthStageAsync")]
-        public async Task<IActionResult> CreateGrowthStage([FromBody] CreateGrowthStageModel createGrowthStageModel)
+        [HttpPost(APIRoutes.ProcessStyle.createProcessStyle, Name = "createProcessStyleAsync")]
+        public async Task<IActionResult> CreateProcessStyle([FromBody] CreateProcessStyleModel createProcessStyleModel)
         {
             try
             {
-                var result = await _growthStageService.CreateGrowthStage(createGrowthStageModel);
+                var result = await _processStyleService.CreateProcessStyle(createProcessStyleModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -77,12 +78,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut(APIRoutes.GrowthStage.updateGrowthStageInfo, Name = "updateGrowthStageAsync")]
-        public async Task<IActionResult> UpdateGrowthStage([FromBody] UpdateGrowthStageModel updateGrowthStageModel)
+        [HttpPut(APIRoutes.ProcessStyle.updateProcessStyleInfo, Name = "updateProcessStyleAsync")]
+        public async Task<IActionResult> UpdateProcessStyle([FromBody] UpdateProcessStyleModel updateProcessStyleModel)
         {
             try
             {
-                var result = await _growthStageService.UpdateGrowthStageInfo(updateGrowthStageModel);
+                var result = await _processStyleService.UpdateProcessStyleInfo(updateProcessStyleModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -96,12 +97,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete(APIRoutes.GrowthStage.permanenlyDelete, Name = "permenlyDeleteGrowthStage")]
-        public async Task<IActionResult> DeleteGrowthStage([FromRoute] int id)
+        [HttpDelete(APIRoutes.ProcessStyle.permanenlyDelete, Name = "permenlyDeleteProcessStyle")]
+        public async Task<IActionResult> DeletProcessStyle([FromRoute] int id)
         {
             try
             {
-                var result = await _growthStageService.PermanentlyDeleteGrowthStage(id);
+                var result = await _processStyleService.PermanentlyDeleteProcessStyle(id);
                 return Ok(result);
             }
             catch (Exception ex)

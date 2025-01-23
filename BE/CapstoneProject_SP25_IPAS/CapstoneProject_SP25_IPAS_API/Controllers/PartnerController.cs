@@ -59,7 +59,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost(APIRoutes.Partner.createPartner, Name = "createPartner")]
-        public async Task<IActionResult> CreateaPartner(CreatePartnerModel createPartnerModel)
+        public async Task<IActionResult> CreateaPartner([FromBody] CreatePartnerModel createPartnerModel)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPut(APIRoutes.Partner.updatePartnerInfo, Name = "updatePartnerInfo")]
-        public async Task<IActionResult> UpdatePartner(UpdatePartnerModel updatePartnerModel)
+        public async Task<IActionResult> UpdatePartner([FromBody] UpdatePartnerModel updatePartnerModel)
         {
             try
             {

@@ -16,7 +16,7 @@ function ForgetPassword() {
     console.log(email);
     
     setTimeout(() => {
-        navigate("otp");
+      navigate("/forgot-password/otp", { state: { type: "reset" } });
     }, 2000);
   };
 
@@ -36,7 +36,7 @@ function ForgetPassword() {
                 rules={[
                     { required: true, message: "Please input your email!" },
                     {
-                      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|int|mil|coop|aero|museum)$/,
                       message: "Please enter a valid email!"
                     }
                   ]}
@@ -57,7 +57,7 @@ function ForgetPassword() {
               </Form.Item>
             </Form>
 
-            <a className={style.back} href="/sign-in">Back to sign in</a>
+            <a className={style.back} href="/auth?mode=sign-in">Back to sign in</a>
 
             {error && <Text type="danger">{error}</Text>}
             {success && <Text type="success">{success}</Text>}

@@ -1,12 +1,12 @@
-import OTP from "antd/es/input/OTP";
 
 export const PATHS = {
   // Authentication
   AUTH: {
     LANDING: "/",
-    LOGIN: "/sign-in",
+    LOGIN: "/auth",
     FORGOT_PASSWORD: "/forgot-password",
-    OTP: "/forgot-password/otp",
+    FORGOT_PASSWORD_OTP: "/forgot-password/otp",
+    SIGN_UP_OTP: "/sign-up/otp",
   },
 
   // Dashboard
