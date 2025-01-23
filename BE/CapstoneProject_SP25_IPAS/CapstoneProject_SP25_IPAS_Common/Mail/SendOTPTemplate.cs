@@ -111,7 +111,7 @@ namespace CapstoneProject_SP25_IPAS_Common.Mail
                         />
                         <div class=""info"">
                           <p>Điện thoại: +84 988 889 898</p>
-                          <p>Email: ipas839@gmail.com</p>
+                          <p>Email: sportidy839@gmail.com</p>
                           <p>Địa chỉ: Đại học FPT thành phố Hồ Chí Minh</p>
                         </div>
                       </div>
