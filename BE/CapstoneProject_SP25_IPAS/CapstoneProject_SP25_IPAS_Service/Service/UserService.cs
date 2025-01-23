@@ -33,6 +33,8 @@ using System.Net.Http.Headers;
 using System.Linq.Expressions;
 using CapstoneProject_SP25_IPAS_Common.Upload;
 using CapstoneProject_SP25_IPAS_Common.Constants;
+using System.Security.Cryptography;
+using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
 
 namespace CapstoneProject_SP25_IPAS_Service.Service
 {
@@ -727,10 +729,13 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             var checkExistAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
             if (checkExistAccount != null)
             {
-                return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG, false);
+                return new BusinessResult(Const.WARNING_ACCOUNT_IS_EXISTED_CODE, Const.WARNING_ACCOUNT_IS_EXISTED_MSG, false);
             }
-            bool checkSendOtp = await CreateOtpRegisterAsync(email);
-            return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, true);
+            string sendOtp = await CreateOtpRegisterAsync(email);
+            return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, new RegisterSendOtpResponse()
+            {
+                OtpHashSHA256 = sendOtp
+            });
         }
 
         public BusinessResult VerifyOtpRegisterAsync(string email, string otp)
@@ -747,13 +752,17 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         }
 
 
-        private async Task<bool> CreateOtpRegisterAsync(string email)
+        private async Task<string> CreateOtpRegisterAsync(string email)
         {
             try
             {
                 string otpCode = NumberHelper.GenerateOtp().ToString();
                 bool checkSendMail = await SendOtpRegisterAccountAsync(email, otpCode);
-                return checkSendMail;
+                using (var sha256 = SHA256.Create())
+                {
+                    var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(otpCode));
+                    return Convert.ToBase64String(hashedBytes);
+                }
 
             }
             catch (Exception ex)
