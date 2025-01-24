@@ -3,7 +3,6 @@ import { Input, Button, DatePicker, Select, Form, Row, Col, Divider } from "antd
 import GoogleButton from "react-google-button";
 import style from "./SignUp.module.scss";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "@/firebase/config";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -16,9 +15,9 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
     console.log("SignUp", isSignUp);
 
     const signUpWithGoogle = async () => {
-        signInWithPopup(auth, provider).then((data) => {
-            console.log(data);
-        })
+        // signInWithPopup(auth, provider).then((data) => {
+        //     console.log(data);
+        // })
     }
 
     const handleSignUp = async (values: any) => {
