@@ -34,6 +34,6 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.UserBsModels
 
         public int? IsDependency { get; set; }
 
-        public string? Role { get; set; }
+        public string? RoleName { get; set; }
     }
 }

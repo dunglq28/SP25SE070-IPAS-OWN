@@ -26,13 +26,13 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             CreateMap<Role, RoleModel>()
                 .ReverseMap();
             CreateMap<User, UserModel>()
-                 .ForMember(dest => dest.Role, opt => opt.MapFrom(x => x.Role.RoleName))
+                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(x => x.Role.RoleName))
                 .ReverseMap();
 
             CreateMap<PlantLot, PlantLotModel>()
                 .ForMember(dest => dest.PartnerName, opt => opt.MapFrom(x => x.Partner.PartnerName))
                .ReverseMap();
-            CreateMap<User, UserModel>().ReverseMap();
+           
 
             CreateMap<Farm, FarmModel>()
             .ForMember(dest => dest.FarmCoordinations, opt => opt.MapFrom(src => src.FarmCoordinations))
