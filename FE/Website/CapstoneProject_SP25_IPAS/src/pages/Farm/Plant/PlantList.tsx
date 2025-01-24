@@ -70,6 +70,59 @@ function PlantList() {
     />
   );
 
+  const fakeData: GetPlant[] = [
+    {
+      userCode: "USR001",
+      userId: 1,
+      fullname: "Nguyễn Văn A",
+      userName: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      phone: "0123456789",
+      roleId: 2,
+      isActive: true,
+      status: 1,
+    },
+    {
+      userCode: "USR002",
+      userId: 2,
+      fullname: "Trần Thị B",
+      userName: "tranthib",
+      phone: "0987654321",
+      roleId: 3,
+      isActive: false,
+      status: 0,
+    },
+    {
+      userCode: "USR003",
+      userId: 3,
+      fullname: "Lê Văn C",
+      userName: "levanc",
+      phone: "0912345678",
+      roleId: 1,
+      isActive: true,
+      status: 1,
+    },
+    {
+      userCode: "USR004",
+      userId: 4,
+      fullname: "Phạm Thị D",
+      userName: "phamthid",
+      phone: "0932123456",
+      roleId: 4,
+      isActive: false,
+      status: 2,
+    },
+    {
+      userCode: "USR005",
+      userId: 5,
+      fullname: "Hoàng Văn E",
+      userName: "hoangvane",
+      phone: "0909123456",
+      roleId: 2,
+      isActive: true,
+      status: 1,
+    },
+  ];
+
   return (
     <Flex className={style.container}>
       <SectionTitle title="Plant Management" totalRecords={totalRecords} />
