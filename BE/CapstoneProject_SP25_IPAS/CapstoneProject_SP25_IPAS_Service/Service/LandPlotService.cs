@@ -103,7 +103,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     if (result > 0)
                     {
                         await transaction.CommitAsync();
-                        return new BusinessResult(Const.SUCCESS_DELETE_FARM_PLANPLOT_CODE, Const.FAIL_DELETE_FARM_LANDPLOT_MSG, new { success = true });
+                        return new BusinessResult(Const.SUCCESS_DELETE_PLANT_LOT_CODE, Const.SUCCESS_DELETE_PLANT_LOT_MESSAGE, new { success = true });
                     }
                     else return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_TO_SAVE_TO_DATABASE);
                 }

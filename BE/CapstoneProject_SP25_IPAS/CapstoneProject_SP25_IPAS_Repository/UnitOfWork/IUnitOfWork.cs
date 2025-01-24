@@ -40,6 +40,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         public ProcessDataRepository ProcessDataRepository { get; }
         public LandPlotRepository LandPlotRepository { get; }
         public LandPlotCoordinationRepository LandPlotCoordinationRepository { get; }
+        public PlantCriteriaRepository PlantCriteriaRepository { get; }
 
     }
 }
