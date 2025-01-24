@@ -1,3 +1,4 @@
+import { convertKeysToCamelCase, convertKeysToKebabCase, convertQueryParamsToKebabCase } from "@/utils";
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { toast } from "react-toastify";
 
@@ -21,8 +22,16 @@ const createAxiosInstance = (contentType: string): AxiosInstance => {
       config.headers = config.headers || {};
 
       const accessToken = localStorage.getItem("AccessToken");
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      // if (accessToken) {
+      //   config.headers.Authorization = `Bearer ${accessToken}`;
+      // }
+
+      if (config.data) {
+        config.data = convertKeysToKebabCase(config.data);
+      }
+
+      if (config.params) {
+        config.params = convertQueryParamsToKebabCase(config.params);
       }
 
       return config;
@@ -31,7 +40,13 @@ const createAxiosInstance = (contentType: string): AxiosInstance => {
   );
 
   instance.interceptors.response.use(
-    (response: AxiosResponse) => response,
+    (response: AxiosResponse) => {
+      if (response.data) {
+        response.data = convertKeysToCamelCase(response.data);
+      }
+      return response;
+    },
+
     async (error) => {
       if (error.message === "Network Error" && !error.response) {
         toast.error("Lỗi mạng, vui lòng kiểm tra kết nối!");

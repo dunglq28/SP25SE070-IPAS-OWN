@@ -1,5 +1,88 @@
 import moment from "moment";
 import { UserRole } from "@/constants/Enum";
+import { camelCase, kebabCase } from "change-case";
+
+export const convertQueryParamsToKebabCase = (params: Record<string, any>): Record<string, any> => {
+  const newParams: Record<string, any> = {};
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      newParams[kebabCase(key)] = params[key];
+    }
+  }
+  return newParams;
+};
+
+export const convertKeysToKebabCase = (obj: any): any => {
+  if (typeof obj !== "object" || obj === null) return obj;
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => convertKeysToKebabCase(item));
+  }
+
+  return Object.keys(obj).reduce((acc, key) => {
+    const kebabKey = kebabCase(key);
+    acc[kebabKey] = convertKeysToKebabCase(obj[key]);
+    return acc;
+  }, {} as any);
+};
+
+export const convertKeysToCamelCase = (obj: any): any => {
+  if (typeof obj !== "object" || obj === null) return obj;
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => convertKeysToCamelCase(item));
+  }
+
+  return Object.keys(obj).reduce((acc, key) => {
+    const camelKey = camelCase(key);
+    acc[camelKey] = convertKeysToCamelCase(obj[key]);
+    return acc;
+  }, {} as any);
+};
+
+export const buildParams = (
+  currentPage?: number,
+  rowsPerPage?: number,
+  sortField?: string,
+  sortDirection?: string,
+  searchValue?: string,
+  brandId?: string | null,
+  additionalParams?: Record<string, any>,
+): Record<string, any> => {
+  const params: Record<string, any> = {
+    pageNumber: currentPage,
+    pageSize: rowsPerPage,
+    sortField,
+    sortDirection,
+    searchKey: searchValue,
+    brandid: brandId,
+    ...additionalParams,
+  };
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      params[key] = value.filter((item) => item !== undefined && item !== null).join(",");
+    }
+  });
+
+  return Object.fromEntries(
+    Object.entries(params).filter(
+      ([_, value]) =>
+        value !== undefined &&
+        value !== "" &&
+        (!Array.isArray(value) || value.length > 0) &&
+        (typeof value !== "object" || Object.keys(value).length > 0),
+    ),
+  );
+};
+
+export const isValidBreadcrumb = (path: string) => {
+  const hasNumberAndSpecialChar = /\d/.test(path) && /[^a-zA-Z0-9]/.test(path);
+  const hasNumberAndLetter = /[a-zA-Z]/.test(path) && /\d/.test(path);
+  const isNumberOnly = /^\d+$/.test(path);
+
+  return isNumberOnly || hasNumberAndSpecialChar || hasNumberAndLetter;
+};
 
 export const generateRandomKey = (): string => {
   return `${Math.random().toString(36).substr(2, 9)}-${Date.now()}`;

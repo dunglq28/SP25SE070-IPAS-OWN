@@ -1,0 +1,76 @@
+@use "@/styles/variables.scss" as vars;
+
+.settingItem {
+  .settingsIconBtn {
+    width: 0px;
+    background-color: transparent;
+    border-color: transparent;
+
+    &:hover {
+      border-color: transparent !important;
+      background-color: transparent !important;
+    }
+    &:focus {
+      outline: none;
+    }
+
+    .settingsIcon {
+      color: #000;
+      transition: 0.3s;
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+
+// Popover styles
+.popoverContent {
+  width: 100% !important;
+
+  .popoverHeader {
+    padding: 2px;
+    font-weight: bold;
+    margin-left: 2px;
+
+    .popoverHeaderTitle {
+      color: vars.$color_primary;
+    }
+  }
+
+  .popoverBody {
+    padding: 0px 6px;
+    .popupIcon {
+      margin-left: 8px;
+    }
+
+    .popupButton {
+      width: 100%;
+      height: 32px;
+      color: vars.$color_primary;
+      justify-content: flex-start;
+      align-items: center;
+      margin-right: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 8px;
+
+      &:hover {
+        background-color: vars.$color_second;
+        color: vars.$color_primary;
+        font-weight: 600;
+      }
+      &:active {
+        background-color: vars.$color_second;
+        font-weight: 600;
+      }
+
+      .popupButtonText {
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .divider {
+    margin: 4px 0;
+  }
+}

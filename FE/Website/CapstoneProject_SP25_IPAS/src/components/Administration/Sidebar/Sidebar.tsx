@@ -1,19 +1,25 @@
 import { Avatar, Divider, Flex, Layout, Menu, Tooltip, Typography } from "antd";
 import style from "./Sidebar.module.scss";
 import { Icons, Images } from "@/assets";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import "@/App.css";
 import { PATHS } from "@/routes";
 import { useSidebarStore } from "@/stores";
 import { ActiveMenu, MenuItem } from "@/types";
+import { useStyle } from "@/hooks";
 
 const { Sider } = Layout;
 const { Text } = Typography;
 
-function Sidebar() {
+interface SidebarProps {
+  isDefault?: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const normalizedPathname = location.pathname.toLowerCase();
   const SIDEBAR_WIDTH_EXPANDED = 280;
   const SIDEBAR_WIDTH_COLLAPSED = 65;
   const [activeMenu, setActiveMenu] = useState<ActiveMenu>({
@@ -44,12 +50,22 @@ function Sidebar() {
 
   let menuItems: MenuItem[] = [
     {
+      key: "My Farms",
+      label: "My Farms",
+      icon: <Icons.farms />,
+      to: PATHS.FARM_PICKER,
+      activePaths: [PATHS.FARM_PICKER],
+      category: "Main",
+      isView: isDefault,
+    },
+    {
       key: "Dashboard",
       label: "Dashboard",
       icon: <Icons.dashboard />,
       to: PATHS.DASHBOARD,
       activePaths: [PATHS.DASHBOARD],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "User Management",
@@ -58,13 +74,15 @@ function Sidebar() {
       to: PATHS.USER.USER_LIST,
       activePaths: [PATHS.USER.USER_LIST, PATHS.USER.USER_DETAIL],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "Season Management",
       label: "Season Management",
       icon: <Icons.seedling />,
-      activePaths: [""],
+      activePaths: [],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "Farm Management",
@@ -77,38 +95,39 @@ function Sidebar() {
           label: "Farm Information",
           icon: Images.radius,
           to: PATHS.FARM.FARM_LIST,
-          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+          activePaths: [],
         },
         {
           key: "Manage Plots and Rows",
           label: "Manage Plots and Rows",
           icon: Images.radius,
           to: PATHS.FARM.FARM_LIST,
-          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+          activePaths: [],
         },
         {
           key: "Manage Plants",
           label: "Manage Plants",
           icon: Images.radius,
           to: PATHS.FARM.FARM_PLANT_LIST,
-          activePaths: [PATHS.FARM.FARM_PLANT_LIST],
+          activePaths: [PATHS.FARM.FARM_PLANT_LIST, PATHS.FARM.FARM_PLANT_DETAIL],
         },
         {
           key: "Manage Plant Lot",
           label: "Manage Plant Lot",
           icon: Images.radius,
           to: PATHS.FARM.FARM_PLOT_LIST,
-          activePaths: [PATHS.FARM.FARM_PLOT_LIST, PATHS.FARM.FARM_PLOT_CREATE],
+          activePaths: [],
         },
         {
           key: "Manage Criteria",
           label: "Manage Criteria",
           icon: Images.radius,
           to: PATHS.FARM.FARM_PLOT_LIST,
-          activePaths: [PATHS.FARM.FARM_PLOT_LIST, PATHS.FARM.FARM_PLOT_CREATE],
+          activePaths: [],
         },
       ],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "Care Plan Management",
@@ -116,6 +135,7 @@ function Sidebar() {
       icon: <Icons.hand />,
       activePaths: [""],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "AI Chatbox",
@@ -123,6 +143,7 @@ function Sidebar() {
       icon: <Icons.robot />,
       activePaths: [""],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "HR Management",
@@ -134,18 +155,19 @@ function Sidebar() {
           key: "Manage Employees",
           label: "Manage Employees",
           icon: Images.radius,
-          to: PATHS.FARM.FARM_LIST,
-          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+          to: "",
+          activePaths: [],
         },
         {
           key: "Work Schedules",
           label: "Work Schedules",
           icon: Images.radius,
-          to: PATHS.FARM.FARM_LIST,
-          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+          to: "",
+          activePaths: [],
         },
       ],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "Third-Party Management",
@@ -157,11 +179,12 @@ function Sidebar() {
           key: "Manage Suppliers",
           label: "Manage Suppliers",
           icon: Images.radius,
-          to: PATHS.FARM.FARM_LIST,
-          activePaths: [PATHS.FARM.FARM_LIST, PATHS.FARM.FARM_DETAIL],
+          to: "",
+          activePaths: [],
         },
       ],
       category: "Main",
+      isView: !isDefault,
     },
     {
       key: "Setting",
@@ -169,6 +192,7 @@ function Sidebar() {
       icon: <Icons.setting />,
       activePaths: [""],
       category: "Settings",
+      isView: !isDefault,
     },
     {
       key: "Help",
@@ -176,37 +200,45 @@ function Sidebar() {
       icon: <Icons.help />,
       activePaths: [""],
       category: "Settings",
+      isView: !isDefault,
     },
   ];
 
   menuItems = mergeActivePaths(menuItems);
 
-  useEffect(() => {
-    const findMatchingPath = (paths: string[], pathname: string) => {
-      return paths.some((path) => {
-        if (path.includes(":id")) {
-          return matchPath(path, pathname);
-        }
-        return pathname === path;
-      });
-    };
+  const findMatchingPath = (paths: string[], pathname: string) => {
+    return paths.some((path) => {
+      if (path.includes(":id")) {
+        return matchPath(path, pathname);
+      }
+      return pathname === path;
+    });
+  };
 
-    const currentItem = menuItems.find(
+  const findCurrentItem = (menuItems: MenuItem[], pathname: string) => {
+    return menuItems.find(
       (menuItem) =>
-        (menuItem.activePaths && findMatchingPath(menuItem.activePaths, location.pathname)) ||
-        location.pathname === menuItem.to,
+        (menuItem.activePaths && findMatchingPath(menuItem.activePaths, pathname)) ||
+        pathname === menuItem.to,
     );
+  };
 
+  const currentItem = useMemo(
+    () => findCurrentItem(menuItems, normalizedPathname),
+    [menuItems, normalizedPathname],
+  );
+
+  useEffect(() => {
     if (currentItem) {
       let matchingSubMenu = null;
 
       // Tìm submenu item phù hợp
       matchingSubMenu =
         currentItem.subMenuItems?.find((subItem) =>
-          subItem.activePaths.some((path) => location.pathname === path),
+          subItem.activePaths.some((path) => normalizedPathname === path),
         ) ||
         currentItem.subMenuItems?.find((subItem) =>
-          findMatchingPath(subItem.activePaths, location.pathname),
+          findMatchingPath(subItem.activePaths, normalizedPathname),
         );
 
       setActiveMenu({
@@ -214,27 +246,24 @@ function Sidebar() {
         subItemKey: matchingSubMenu ? matchingSubMenu.key : null,
       });
     }
-  }, [location.pathname]);
+  }, [normalizedPathname]);
 
-  const defaultOpenKeys = menuItems
-    .filter((item) => {
-      // Kiểm tra nếu item có activePaths và xem location.pathname có chứa bất kỳ giá trị nào trong mảng activePaths
-      return item.activePaths && item.activePaths.some((path) => location.pathname.includes(path));
-    })
-    .map((item) => item.key)
-    .filter((key): key is string => key !== undefined);
+  const defaultOpenKeys = useMemo(
+    () => (currentItem?.key ? [currentItem.key] : undefined),
+    [currentItem],
+  );
 
   const defaultKey = menuItems
     .map((item) => {
-      // Kiểm tra nếu mục chính không có submenu và location.pathname có trong activePaths của item
-      if (item.activePaths && !item.subMenuItems && item.activePaths.includes(location.pathname)) {
+      // Kiểm tra nếu mục chính không có submenu và normalizedPathname có trong activePaths của item
+      if (item.activePaths && !item.subMenuItems && item.activePaths.includes(normalizedPathname)) {
         return item.key; // Trả về key của mục chính
       }
 
-      // Kiểm tra nếu mục chính có submenu và location.pathname có trong activePaths của subMenuItems
+      // Kiểm tra nếu mục chính có submenu và normalizedPathname có trong activePaths của subMenuItems
       if (item.subMenuItems) {
         const matchingSubItem = item.subMenuItems.find((subItem) =>
-          subItem.activePaths.includes(location.pathname),
+          subItem.activePaths.includes(normalizedPathname),
         );
         if (matchingSubItem) {
           return matchingSubItem.key; // Trả về key của subItem
@@ -309,6 +338,7 @@ function Sidebar() {
 
   const renderMenuSection = (category: string) => {
     const sidebarRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
       if (sidebarRef.current && defaultKey) {
         const activeItem = sidebarRef.current.querySelector(`[data-menu-key='${defaultKey}']`);
@@ -333,7 +363,7 @@ function Sidebar() {
         <Flex className={category === "Settings" ? style.menuOverflowHidden : ""}>
           <Menu mode="inline" defaultOpenKeys={defaultOpenKeys} className={style.menuItems}>
             {menuItems
-              .filter((item) => item.category === category)
+              .filter((item) => item.category === category && item.isView)
               .map((item) => renderMenuItem(item))}
           </Menu>
         </Flex>
@@ -358,8 +388,12 @@ function Sidebar() {
               justifyContent: !isExpanded ? "center" : undefined,
             }}
           >
-            <Avatar src={Images.react} className={style.avatar} />
-            {isExpanded && <Text className={style.logoText}>Tan Trieu Pomelo</Text>}
+            <Avatar src={isDefault ? Images.logo : Images.react} className={style.avatar} />
+            {isExpanded && (
+              <Text className={style.logoText}>
+                {isDefault ? "Intelligent Pomelo AgriSolutions" : "Tan Trieu Pomelo"}
+              </Text>
+            )}
           </Flex>
           <Icons.arrowForward
             className={style.arrowSidebar}
@@ -374,12 +408,14 @@ function Sidebar() {
         {/* Main Menu */}
         {renderMenuSection("Main")}
 
-        <Flex className={style.wrapperDivider}>
-          <Divider className={style.divider} />
-        </Flex>
-
-        {/* Settings Menu */}
-        {renderMenuSection("Settings")}
+        {!isDefault && (
+          <>
+            <Flex className={style.wrapperDivider}>
+              <Divider className={style.divider} />
+            </Flex>
+            {renderMenuSection("Settings")}
+          </>
+        )}
 
         <Flex
           className={style.profile}
@@ -395,6 +431,6 @@ function Sidebar() {
       </Flex>
     </Sider>
   );
-}
+};
 
 export default Sidebar;

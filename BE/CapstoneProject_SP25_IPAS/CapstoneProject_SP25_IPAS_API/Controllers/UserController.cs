@@ -99,7 +99,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPut(APIRoutes.User.updateUserInfo, Name = "updateUser")]
-        public async Task<IActionResult> UpdateUser(UpdateUserModel updateUserRequestModel)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel updateUserRequestModel)
         {
             try
             {

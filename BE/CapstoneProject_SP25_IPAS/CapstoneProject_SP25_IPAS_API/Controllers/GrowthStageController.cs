@@ -59,7 +59,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost(APIRoutes.GrowthStage.createGrowthStage, Name = "createGrowthStageAsync")]
-        public async Task<IActionResult> CreateGrowthStage(CreateGrowthStageModel createGrowthStageModel)
+        public async Task<IActionResult> CreateGrowthStage([FromBody] CreateGrowthStageModel createGrowthStageModel)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPut(APIRoutes.GrowthStage.updateGrowthStageInfo, Name = "updateGrowthStageAsync")]
-        public async Task<IActionResult> UpdateGrowthStage(UpdateGrowthStageModel updateGrowthStageModel)
+        public async Task<IActionResult> UpdateGrowthStage([FromBody] UpdateGrowthStageModel updateGrowthStageModel)
         {
             try
             {

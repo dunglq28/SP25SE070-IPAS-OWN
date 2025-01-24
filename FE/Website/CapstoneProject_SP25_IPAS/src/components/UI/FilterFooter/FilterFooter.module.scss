@@ -1,0 +1,19 @@
+@use "@/styles/variables.scss" as vars;
+
+.contentFooter {
+  justify-content: flex-end;
+  gap: 10px;
+
+  button {
+    font-size: 16px;
+    background-color: vars.$color_second !important;
+    color: vars.$color_primary !important;
+    border-color: transparent !important;
+    outline: transparent !important;
+    &:hover {
+      background-color: vars.$color_yellow_main;
+      color: vars.$color_primary;
+      opacity: 0.8;
+    }
+  }
+}

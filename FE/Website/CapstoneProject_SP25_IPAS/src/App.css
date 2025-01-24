@@ -17,6 +17,9 @@ body {
   line-height: 1.5;
 }
 
+:focus-visible {
+  outline: transparent !important;
+}
 ::selection {
   background-color: var(--color-selection);
 }
@@ -45,7 +48,7 @@ body {
 
 .subMenuItems.active .ant-menu-submenu-title,
 .subMenuItems .ant-menu-submenu-title:hover {
-  color: #326e2f !important;
+  color: #20461e !important;
   background-color: #bcd379 !important;
   font-weight: bold;
 }

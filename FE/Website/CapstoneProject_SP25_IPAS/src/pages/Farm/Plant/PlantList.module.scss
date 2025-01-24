@@ -1,0 +1,35 @@
+@use "@/styles/share.scss" as shared;
+@use "@/styles/variables.scss" as vars;
+
+.container {
+  @include shared.container;
+}
+
+.filterContent {
+  padding: 10px;
+
+  input,
+  label,
+  span {
+    font-size: 16px !important;
+  }
+  .title {
+    color: vars.$color_primary !important;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .section {
+    max-width: 24vw;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .sectionStatus {
+    flex-direction: row;
+    margin-bottom: 10px;
+    .statusGroup {
+      flex-direction: column;
+      margin-left: 10px;
+    }
+  }
+}

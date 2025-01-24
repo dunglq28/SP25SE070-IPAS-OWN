@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using CapstoneProject_SP25_IPAS_Common;
+using CapstoneProject_SP25_IPAS_Common.Constants;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
 using CapstoneProject_SP25_IPAS_Service.Base;
@@ -36,7 +37,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 {
                     var partner = new Partner()
                     {
-                       PartnerCode = NumberHelper.GenerateRandomCode("PTR"),
+                       PartnerCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.PARTNER),
                        Address = createPartnerModel.Address,
                        CreateDate = DateTime.Now,
                        UpdateDate = DateTime.Now,
@@ -277,7 +278,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var result = await _unitOfWork.SaveAsync();
                     if (result > 0)
                     {
-                        return new BusinessResult(Const.SUCCESS_UPDATE_PARTNER_CODE , Const.SUCCESS_UPDATE_PARTNER_MESSAGE, result > 0);
+                        return new BusinessResult(Const.SUCCESS_UPDATE_PARTNER_CODE , Const.SUCCESS_UPDATE_PARTNER_MESSAGE, checkExistPartner);
                     }
                     else
                     {

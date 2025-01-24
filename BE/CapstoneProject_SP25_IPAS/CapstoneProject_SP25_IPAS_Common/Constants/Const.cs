@@ -164,8 +164,38 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_ALL_GROWTHSTAGE_CODE = 200;
         public static string SUCCESS_GET_ALL_GROWTHSTAGE_MESSAGE = "Get all GrowthStage success";
         #endregion
+       
+
+        #region ProcessStyle code
+        public static int SUCCESS_GET_PROCESS_STYLE_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_PROCESS_STYLE_BY_ID_MESSAGE = "Get process style by id success";
+        public static int SUCCESS_CREATE_PROCESS_STYLE_CODE = 200;
+        public static string SUCCESS_CREATE_PROCESS_STYLE_MESSAGE = "Create process style success";
+        public static int SUCCESS_UPDATE_PROCESS_STYLE_CODE = 200;
+        public static string SUCCESS_UPDATE_PROCESS_STYLE_MESSAGE = "Update process style success";
+        public static int SUCCESS_DELETE_PROCESS_STYLE_CODE = 200;
+        public static string SUCCESS_DELETE_PROCESS_STYLE_MESSAGE = "Delete process style success";
+        public static int SUCCESS_GET_ALL_PROCESS_STYLE_CODE = 200;
+        public static string SUCCESS_GET_ALL_PROCESS_STYLE_MESSAGE = "Get all process style success";
         #endregion
 
+        #region Process code
+        public static int SUCCESS_GET_PROCESS_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_PROCESS_BY_ID_MESSAGE = "Get process by id success";
+        public static int SUCCESS_GET_PROCESS_DATA_OF_PROCESS_CODE = 200;
+        public static string SUCCESS_GET_PROCESS_DATA_OF_PROCESS_MESSAGE = "Get process data of process success";
+        public static int SUCCESS_GET_PROCESS_BY_NAME_CODE = 200;
+        public static string SUCCESS_GET_PROCESS_BY_NAME_MESSAGE = "Get process by name success";
+        public static int SUCCESS_CREATE_PROCESS_CODE = 200;
+        public static string SUCCESS_CREATE_PROCESS_MESSAGE = "Create process success";
+        public static int SUCCESS_UPDATE_PROCESS_CODE = 200;
+        public static string SUCCESS_UPDATE_PROCESS_MESSAGE = "Update process success";
+        public static int SUCCESS_DELETE_PROCESS_CODE = 200;
+        public static string SUCCESS_DELETE_PROCESS_MESSAGE = "Delete process success";
+        public static int SUCCESS_GET_ALL_PROCESS_CODE = 200;
+        public static string SUCCESS_GET_ALL_PROCESS_MESSAGE = "Get all process success";
+        #endregion
+        #endregion
 
         #region FAIL
         #region User fail code
@@ -230,7 +260,31 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_GET_CRITERIA_TYPE_CODE = 500;
         public static string FAIL_GET_CRITERIA_TYPE_MESSAGE = "Get criteria type failed";
         #endregion
-        #region Criteria
+
+        #region ProcessStyle Fail code
+        public static int FAIL_CREATE_PROCESS_STYLE_CODE = 500;
+        public static string FAIL_CREATE_PROCESS_STYLE_MESSAGE = "Create process type failed";
+        public static int FAIL_UPDATE_PROCESS_STYLE_CODE = 500;
+        public static string FAIL_UPDATE_PROCESS_STYLE_MESSAGE = "Update process type failed";
+        public static int FAIL_DELETE_PROCESS_STYLE_CODE = 500;
+        public static string FAIL_DELETE_PROCESS_STYLE_MESSAGE = "Delete process type failed";
+        public static int FAIL_GET_PROCESS_STYLE_CODE = 500;
+        public static string FAIL_GET_PROCESS_STYLE_MESSAGE = "Get process type failed";
+        #endregion
+
+        #region Process Fail code
+        public static int FAIL_CREATE_PROCESS_CODE = 500;
+        public static string FAIL_CREATE_PROCESS_MESSAGE = "Create process failed";
+        public static int FAIL_UPDATE_PROCESS_CODE = 500;
+        public static string FAIL_UPDATE_PROCESS_MESSAGE = "Update process failed";
+        public static int FAIL_DELETE_PROCESS_CODE = 500;
+        public static string FAIL_DELETE_PROCESS_MESSAGE = "Delete process failed";
+        public static int FAIL_GET_PROCESS_CODE = 500;
+        public static string FAIL_GET_PROCESS_MESSAGE = "Get process failed";
+        public static int FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_CODE = 500;
+        public static string FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_MESSAGE = "Can not update subprocess that iss not part of the process";
+        #endregion
+        #region
         public static int FAIL_CREATE_CRITERIA_CODE = 500;
         public static string FAIL_CREATE_CRITERIA_MESSAGE = "Create criteria failed";
         public static int FAIL_GET_CRITERIA__BY_ID_CODE = 500;
@@ -294,6 +348,8 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region UserService
         public static int WARNING_ACCOUNT_BANNED_CODE = 400;
         public static string WARNING_ACCOUNT_BANNED_MSG = "Your account is banned";
+        public static int WARNING_ACCOUNT_DELETED_CODE = 400;
+        public static string WARNING_ACCOUNT_DELETED_MSG = "Your account is deleted";
         public static int WARNING_PASSWORD_INCORRECT_CODE = 401;
         public static string WARNING__PASSWORD_INCORRECT_MSG = "Password is not correct";
         public static int WARNING_SIGN_IN_CODE = 404;
@@ -346,6 +402,22 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region GrowthStage
         public static int WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_CODE = 404;
         public static string WARNING_GET_GROWTHSTAGE_DOES_NOT_EXIST_MSG = "Does not have any GrowthStage";
+        #endregion
+
+        #region ProcessStyle
+        public static int WARNING_GET_PROCESS_TYPE_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PROCESS_TYPE_DOES_NOT_EXIST_MSG = "Does not have any prcoess type";
+        #endregion
+
+        #region Process
+        public static int WARNING_GET_PROCESS_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PROCESS_DOES_NOT_EXIST_MSG = "Does not have any process";
+        public static int WARNING_GET_PROCESS_DATA_OF_PROCESS_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PROCESS_DATA_OF_PROCESS_NOT_EXIST_MSG = "Does not have any data of this process";
+        public static int WARNING_MISSING_DATE_FILTER_CODE = 400;
+        public const string WARNING_MISSING_DATE_FILTER_MSG = "Please enter both values for the date filter (Create Date From and Create Date To).";
+        public static int WARNING_INVALID_DATE_FILTER_CODE = 400;
+        public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
         #endregion
         #endregion
     }

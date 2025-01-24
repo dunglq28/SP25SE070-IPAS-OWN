@@ -80,7 +80,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPost(APIRoutes.CriteriaType.createCriteriaType, Name = "createCriteriaType")]
-        public async Task<IActionResult> CreateCriteriaType(CreateCriteriaTypeModel createCriteriaTypeModel)
+        public async Task<IActionResult> CreateCriteriaType([FromBody] CreateCriteriaTypeModel createCriteriaTypeModel)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         }
 
         [HttpPut(APIRoutes.CriteriaType.updateCriteriaTypeInfo, Name = "updateCriteriaType")]
-        public async Task<IActionResult> UpdateCriteriaType(UpdateCriteriaTypeModel updateCriteriaTypeModel)
+        public async Task<IActionResult> UpdateCriteriaType([FromBody] UpdateCriteriaTypeModel updateCriteriaTypeModel)
         {
             try
             {

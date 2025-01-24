@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using CapstoneProject_SP25_IPAS_Common;
+using CapstoneProject_SP25_IPAS_Common.Constants;
 using CapstoneProject_SP25_IPAS_Common.Utils;
 using CapstoneProject_SP25_IPAS_Repository.UnitOfWork;
 using CapstoneProject_SP25_IPAS_Service.Base;
@@ -94,7 +95,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     {
                         var plantLot = new PlantLot()
                         {
-                            PlantLotCode = NumberHelper.GenerateRandomCode("PLT"),
+                            PlantLotCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.PLANT_LOT),
                             ImportedDate = DateTime.Now,
                             PreviousQuantity = createPlantLotModel.ImportedQuantity,
                             LastQuantity = createPlantLotModel.ImportedQuantity,
@@ -317,7 +318,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     var result = await _unitOfWork.SaveAsync();
                     if(result > 0)
                     {
-                        return new BusinessResult(Const.SUCCESS_UPDATE_PLANT_LOT_CODE, Const.SUCCESS_UPDATE_PLANT_LOT_MESSAGE, result > 0);
+                        return new BusinessResult(Const.SUCCESS_UPDATE_PLANT_LOT_CODE, Const.SUCCESS_UPDATE_PLANT_LOT_MESSAGE, checkExistPlantLot);
                     }
                     else
                     {

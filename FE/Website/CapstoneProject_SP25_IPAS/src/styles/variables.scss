@@ -1,8 +1,9 @@
 // Variables
-$color_primary: #326e2f;
+$color_primary: #20461e;
 $color_second: #bcd379;
 $color_yellow_main: #fee69c;
 $color_bg_main: #d8f0e7;
+$color_bg_search: #f4f7fe;
 
 $color_sidebar_text_inactive: #333333;
 $color_selected: #555;
@@ -20,12 +21,17 @@ $color_role_name: #888888;
 $color_bg_notification: rgb(244, 247, 254);
 // $color_notification: #ffa411;
 $color_selected_row: #f0fff0;
+$color_bg_navigation_dot: #f0f0f0;
+$color_bg_tag_active: #ecfdf3;
+$color_tag_active: #027a48;
+$color_create_at: #71717a;
+$color_bg_tag_owner: #388e3c;
+$color_tag_owner: #fff;
+$color_bg_tag_employee: #f6f9b5;
+$color_tag_employee: #333;
 
-$color-background: #fff;
+$color_bg_detail: #fff;
+$color_divider: #e2e8f0;
+
 $color-text: #2c2c2e;
-$color-border: #a0c4c3;
-$color-primary-hover: #429b89;
-$color-disabled: #e0e0e0;
-$color-hover-bg: #a0c4c3;
-$color-light-text: #f1f8e8;
-$color-disabled-text: #000;
+$color_text_detail: #757575;

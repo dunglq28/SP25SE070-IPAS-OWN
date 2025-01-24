@@ -36,6 +36,10 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private CriteriaRepository _criteriaRepo;
         private PartnerRepository _partnerRepo;
         private GrowthStageRepository _growthStageRepo;
+        private ProcessStyleRepository _processStyleRepo;
+        private ProcessRepository _processRepo;
+        private SubProcessRepository _subProcessRepo;
+        private ProcessDataRepository _processDataRepo;
         private LandPlotRepository _landPlotRepo;
         private LandPlotCoordinationRepository _landPlotCoordinationRepo;
         private PlantCriteriaRepository _plantCriteriaRepo;
@@ -59,6 +63,10 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _criteriaRepo = new CriteriaRepository(context);
             _partnerRepo = new PartnerRepository(context);
             _growthStageRepo = new GrowthStageRepository(context);
+            _processStyleRepo = new ProcessStyleRepository(context);
+            _processRepo = new ProcessRepository(context);
+            _subProcessRepo = new SubProcessRepository(context);
+            _processDataRepo = new ProcessDataRepository(context);
             _configuration = configuration;
             _farmCoordinationRepo = new FarmCoordinationRepository(context);
             _landPlotRepo = new LandPlotRepository(context);
@@ -358,6 +366,54 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._plantCriteriaRepo = new PlantCriteriaRepository(_context);
                 }
                 return _plantCriteriaRepo;
+            }
+        }
+
+        public ProcessRepository ProcessRepository
+        {
+            get
+            {
+                if (_processRepo == null)
+                {
+                    this._processRepo = new ProcessRepository(_context);
+                }
+                return _processRepo;
+            }
+        }
+
+        public ProcessStyleRepository ProcessStyleRepository
+        {
+            get
+            {
+                if (_processStyleRepo == null)
+                {
+                    this._processStyleRepo = new ProcessStyleRepository(_context);
+                }
+                return _processStyleRepo;
+            }
+        }
+
+        public SubProcessRepository SubProcessRepository
+        {
+            get
+            {
+                if (_subProcessRepo == null)
+                {
+                    this._subProcessRepo = new SubProcessRepository(_context);
+                }
+                return _subProcessRepo;
+            }
+        }
+
+        public ProcessDataRepository ProcessDataRepository
+        {
+            get
+            {
+                if (_processDataRepo == null)
+                {
+                    this._processDataRepo = new ProcessDataRepository(_context);
+                }
+                return _processDataRepo;
             }
         }
     }

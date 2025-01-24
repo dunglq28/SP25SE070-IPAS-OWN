@@ -24,20 +24,8 @@ const useStyle = createStyles(({ css }) => {
           }
         }
 
-        .ant-table-cell-fix-left,
-        .ant-table-cell-fix-right {
-          &.selectedRowFixed {
-            background-color: ${hoverBackground} !important;
-            transition: background-color 0.3s ease;
-          }
-
-          .ant-table-row:hover & {
-            background-color: ${hoverBackground} !important;
-          }
-        }
-
         .ant-table-cell-row-hover {
-          background-color: transparent !important;
+          background-color: ${hoverBackground} !important;
         }
 
         .ant-table-footer {
@@ -50,12 +38,12 @@ const useStyle = createStyles(({ css }) => {
 
     customCheckbox: css`
       .ant-checkbox-inner {
-        border: 2px solid #000;
+        border: 2px solid #3333 !important;
       }
 
       .ant-checkbox-checked .ant-checkbox-inner {
         background-color: ${primaryColor} !important;
-        border-color: ${primaryColor};
+        border-color: ${primaryColor} !important;
       }
 
       .ant-checkbox-checked:hover {
@@ -69,6 +57,26 @@ const useStyle = createStyles(({ css }) => {
       .ant-checkbox-inner:after {
         background-color: ${primaryColor};
         border-color: white;
+      }
+    `,
+
+    customSelect: css`
+      .ant-pagination-item-link-icon {
+        color: ${primaryColor} !important;
+      }
+
+      .ant-select-selector:hover {
+        border-color: ${primaryColor} !important;
+      }
+    `,
+    customTab: css`
+      .ant-tabs-tab:hover,
+      .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: ${primaryColor};
+        outline: none;
+      }
+      .ant-tabs-ink-bar {
+        background-color: ${primaryColor};
       }
     `,
   };

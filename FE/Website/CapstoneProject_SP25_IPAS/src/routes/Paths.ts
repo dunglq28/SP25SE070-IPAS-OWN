@@ -1,11 +1,18 @@
+
 export const PATHS = {
   // Authentication
   AUTH: {
-    LOGIN: "/",
+    LANDING: "/",
+    LOGIN: "/auth",
+    FORGOT_PASSWORD: "/forgot-password",
+    FORGOT_PASSWORD_OTP: "/forgot-password/otp",
+    SIGN_UP_OTP: "/sign-up/otp",
   },
 
   // Dashboard
   DASHBOARD: "/dashboard",
+
+  FARM_PICKER: "/farm-picker",
 
   // User Management
   USER: {
@@ -18,6 +25,7 @@ export const PATHS = {
     FARM_LIST: "/farms",
     FARM_DETAIL: "/farms/:id",
     FARM_PLANT_LIST: "/farms/plants",
+    FARM_PLANT_DETAIL: "/farms/plants/:id/detail",
     FARM_PLOT_LIST: "/farms/land-plots",
     FARM_PLOT_CREATE: "/farms/land-plot/create",
   },
