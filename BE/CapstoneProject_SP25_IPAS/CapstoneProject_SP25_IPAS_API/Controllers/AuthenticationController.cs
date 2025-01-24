@@ -11,6 +11,7 @@ using CapstoneProject_SP25_IPAS_BussinessObject.Entities;
 using System.Security.Claims;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Request;
 using CapstoneProject_SP25_IPAS_API.Payload;
+using CapstoneProject_SP25_IPAS_BussinessObject.GoogleUser;
 
 namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
@@ -122,11 +123,11 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
         [HttpPost(APIRoutes.Authentication.loginWithGoogle, Name = "loginWithGoogle")]
-        public async Task<IActionResult> LoginGoogle([FromBody] string googleToken)
+        public async Task<IActionResult> LoginGoogle([FromBody] GoogleLoginRequest googleLoginRequest)
         {
             try
             {
-                var Login = await _userService.LoginGoogleHandler(googleToken);
+                var Login = await _userService.LoginGoogleHandler(googleLoginRequest.GoogleToken);
                 return Ok(Login);
             }
             catch (Exception ex)

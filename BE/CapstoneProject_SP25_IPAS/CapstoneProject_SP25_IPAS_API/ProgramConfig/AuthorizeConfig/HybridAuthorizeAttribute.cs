@@ -3,6 +3,7 @@ using CapstoneProject_SP25_IPAS_Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace CapstoneProject_SP25_IPAS_API.ProgramConfig.AuthorizeConfig
@@ -38,11 +39,15 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig.AuthorizeConfig
                 return; // Được phép nếu có role hệ thống
             }
             // kiem tra neu khong co role tu he thong - ko co role trong trang trai thi ko active ham nay vi chi su dung cho admin
-            if (!string.IsNullOrEmpty(systemRoleClaim) && _allowedFarmRoles?.Any() == true &&_allowedSystemRoles.Contains("User") && systemRoleClaim.ToLower().Equals("user".ToLower()))
+            if (!string.IsNullOrEmpty(systemRoleClaim) && _allowedSystemRoles.Contains("User") && systemRoleClaim.ToLower().Equals("user".ToLower()))
             {
 
                 // Nếu không có quyền hệ thống, kiểm tra quyền trong Farm
                 var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                if (_allowedFarmRoles?.Any() == false)
+                {
+                    return; // neu khong co yeu cau kiem tra role tu farm thi chi can biet he thong la duoc
+                }
                 if (string.IsNullOrEmpty(userIdClaim))
                 {
                     context.Result = new UnauthorizedResult();
@@ -51,7 +56,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig.AuthorizeConfig
                 int userId = int.Parse(userIdClaim);
 
                 // Lấy farmId từ request
-                int? farmId = GetFarmIdFromRequest(context);
+                int? farmId = GetFarmIdFromRequest(context.HttpContext);
                 if (farmId == null)
                 {
                     context.Result = new BadRequestObjectResult("FarmId is required.");
@@ -66,25 +71,35 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig.AuthorizeConfig
                 {
                     context.Result = new ForbidResult();
                 }
+                return;
             }
             context.Result = new ForbidResult();
         }
 
-        private int? GetFarmIdFromRequest(AuthorizationFilterContext context)
+        private int? GetFarmIdFromRequest(HttpContext context)
         {
-            int? farmId = null;
-
-            if (context.RouteData.Values.ContainsKey(FARM_KEY))
+            if (context.GetRouteValue(FARM_KEY) is string farmIdStr && int.TryParse(farmIdStr, out int farmId))
             {
-                farmId = int.TryParse(context.RouteData.Values[FARM_KEY]?.ToString(), out int routeFarmId) ? routeFarmId : (int?)null;
+                return farmId;
             }
 
-            if (farmId == null && context.HttpContext.Request.Query.ContainsKey(FARM_KEY))
+            if (context.Request.Query.TryGetValue(FARM_KEY, out var queryFarmId) && int.TryParse(queryFarmId, out farmId))
             {
-                farmId = int.TryParse(context.HttpContext.Request.Query[FARM_KEY], out int queryFarmId) ? queryFarmId : (int?)null;
+                return farmId;
             }
 
-            return farmId;
+            context.Request.EnableBuffering();
+            using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
+            var body = reader.ReadToEndAsync().Result;
+            context.Request.Body.Position = 0;
+
+            var jsonBody = JsonConvert.DeserializeObject<Dictionary<string, object>>(body);
+            if (jsonBody != null && jsonBody.TryGetValue(FARM_KEY, out var farmIdObj) && int.TryParse(farmIdObj?.ToString(), out farmId))
+            {
+                return farmId;
+            }
+
+            return null;
         }
 
     }
