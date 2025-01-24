@@ -18,7 +18,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_TO_SAVE_TO_DATABASE = "Save to database fail";
         #endregion
 
-        #region Success
+        #region SUCCESS
         #region UserService
         public static int SUCCESS_LOGIN_CODE = 200;
         public static string SUCCESS_LOGIN_MSG = "Login Successfully";
@@ -102,7 +102,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_UPDATE_FARM_LOGO_CODE = 200;
         public static string SUCCESS_UPDATE_FARM_LOGO_MSG = "Update farm success";
         #endregion
-
         #region CriteriaType code
         public static int SUCCESS_GET_CRITERIA_TYPE_BY_ID_CODE = 200;
         public static string SUCCESS_GET_CRITERIA_TYPE_BY_ID_MESSAGE = "Get criteria type by id success";
@@ -125,8 +124,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_CRITERIA_BY_ID_CODE = 200;
         public static string SUCCESS_GET_CRITERIA_BY_ID_MSG = "Get criteria by id success";
         #endregion
-        public static int SUCCESS_DELETE_FARM_PLANPLOT_CODE = 200;
-        public static string SUCCESS_DELTE_FARM_LANDPLOT_MSG = "Update farm success";
+        #region Plant-Criteria
+        public static int SUCCESS_APPLY_LIST_CRITERIA_PLANTS_CODE = 200;
+        public static string SUCCESS_APPLY_LIST_CRITERIA_PLANTS_MSG = "Apply criteias for selected plants success";
+        #endregion
         #region landplot
         public static int SUCCESS_GET_ALL_LANDPLOT_IN_FARM_CODE = 200;
         public static string SUCCESS_GET_ALL_LANDPLOT_IN_FARM_MSG = "Get all landplot of farm success";
@@ -166,6 +167,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         #endregion
 
 
+        #region FAIL
         #region User fail code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
@@ -228,8 +230,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_GET_CRITERIA_TYPE_CODE = 500;
         public static string FAIL_GET_CRITERIA_TYPE_MESSAGE = "Get criteria type failed";
         #endregion
-
-        #region
+        #region Criteria
         public static int FAIL_CREATE_CRITERIA_CODE = 500;
         public static string FAIL_CREATE_CRITERIA_MESSAGE = "Create criteria failed";
         public static int FAIL_GET_CRITERIA__BY_ID_CODE = 500;
@@ -237,7 +238,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_UPDATE_CRITERIA_CODE = 500;
         public static string FAIL_UPDATE_CRITERIA_MSG = "Update criteria type failed";
         #endregion
-
+        #region Plant-Criteria Fail code
+        public static int FAIL_PLANTS_REQUEST_EMPTY_CODE = 500;
+        public static string FAIL_PLANT_REQUEST_EMPTY_MSG = "You not select any plant";
+        public static int FAIL_CRITERIA_REQUEST_EMPTY_CODE = 500;
+        public static string FAIL_CRITERIA_REQUEST_EMPTY_MSG = "You not select any Criteria";
+        public static int FAIL_APPLY_LIST_CRITERIA_PLANTS_CODE = 500;
+        public static string FAIL_APPLY_LIST_CRITERIA_PLANTS_MSG = "Apply criteias for selected plants success";
+        #endregion
         #region Farm Fail code
         public static int FAIL_CREATE_FARM_CODE = 500;
         public static string FAIL_CREATE_FARM_MSG = "Create farm have server error";
@@ -254,7 +262,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_DELETE_FARM_LANDPLOT_CODE = 500;
         public static string FAIL_DELETE_FARM_LANDPLOT_MSG = "Delete landplot of farm have server error";
         #endregion
-
         #region Partner Fail code
         public static int FAIL_CREATE_PARTNER_CODE = 500;
         public static string FAIL_CREATE_PARTNER_MESSAGE = "Create partner failed";
@@ -265,7 +272,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_GET_PARTNER_CODE = 500;
         public static string FAIL_GET_PARTNER_MESSAGE = "Get partner failed";
         #endregion
-
         #region GrowthStage Fail code
         public static int FAIL_CREATE_GROWTHSTAGE_CODE = 500;
         public static string FAIL_CREATE_GROWTHSTAGE_MESSAGE = "Create GrowthStage failed";
@@ -276,9 +282,9 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_GET_GROWTHSTAGE_CODE = 500;
         public static string FAIL_GET_GROWTHSTAGE_MESSAGE = "Get GrowthStage failed";
         #endregion
+        #endregion
 
-
-        #region Warning Code
+        #region WARNING
 
         public static int WARNING_INVALID_LOGIN_CODE = 400;
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wrong";

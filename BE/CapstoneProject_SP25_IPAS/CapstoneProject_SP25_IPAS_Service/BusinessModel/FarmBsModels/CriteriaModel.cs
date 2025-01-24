@@ -30,7 +30,7 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.FarmBsModels
 
         //public virtual ICollection<CriteriaHarvestType> CriteriaHarvestTypes { get; set; } = new List<CriteriaHarvestType>();
 
-        //public virtual CriteriaTypeModel? CriteriaType { get; set; }
+        public virtual CriteriaTypeModel? CriteriaType { get; set; }
 
         //public virtual ICollection<PlantCriteria> PlantCriteria { get; set; } = new List<PlantCriteria>();
     }

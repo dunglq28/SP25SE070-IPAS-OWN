@@ -33,6 +33,7 @@ using System.Net.Http.Headers;
 using System.Linq.Expressions;
 using CapstoneProject_SP25_IPAS_Common.Upload;
 using CapstoneProject_SP25_IPAS_Common.Constants;
+using Google.Apis.Auth;
 
 namespace CapstoneProject_SP25_IPAS_Service.Service
 {
@@ -46,13 +47,14 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, IMailService mailService, ICloudinaryService cloudinaryService, IMapper mapper, HttpClient httpClient)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _mailService = mailService;
             _cloudinaryService = cloudinaryService;
             _mapper = mapper;
+            _httpClient = httpClient;
         }
 
         public async Task<BusinessResult> BannedUser(int userId)
@@ -918,14 +920,15 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             try
             {
                 // Validate Google Token and fetch user info
-                var googleResult = await ValidateGoogleTokenAsync(googleToken);
+                var userInfo = await ValidateGoogleTokenAsync(googleToken);
                 // neu token khong hop le
-                if (googleResult.StatusCode == 500)
+                if (userInfo == null)
                     return new BusinessResult(Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE, Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG);
 
-                var userInfo = (GoogleTokenInfo)googleResult.Data!;
+                //var userInfo = (GoogleTokenInfo)googleResult.Data!;
                 // kiem tra neu email duoc lay thanh cong thi tiep tuc 
-                if (string.IsNullOrEmpty(userInfo.Email))
+
+                if (string.IsNullOrEmpty(userInfo!.Email))
                 {
                     return new BusinessResult(Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE, Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG);
                 }
@@ -933,46 +936,46 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 {
                     using (var transaction = await _unitOfWork.BeginTransactionAsync())
                     {
-                    // Kiểm tra người dùng tồn tại
-                    var existUser = await _unitOfWork.UserRepository.GetByCondition(x => x.Email.Equals(userInfo.Email));
-                    // nếu người dùng không tồn tại --> cho tao moi nguoi dung
-                    if (existUser == null)
-                    {
-                        //lay thong tin user tu token gg
-                        var userInfoGG = await FetchGoogleUserInfoAsync(googleToken);
-                        User newUser = new User()
+                        // Kiểm tra người dùng tồn tại
+                        var existUser = await _unitOfWork.UserRepository.GetByCondition(x => x.Email.Equals(userInfo.Email));
+                        // nếu người dùng không tồn tại --> cho tao moi nguoi dung
+                        if (existUser == null)
                         {
-                            Email = userInfo.Email,
-                            UserCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.USER),
-                            FullName = userInfoGG.FullName,
-                            Status = "Active",
-                            IsDelete = false,
-                            CreateDate = DateTime.Now,
-                            UpdateDate = DateTime.Now,
-                            AvatarURL = userInfoGG.Avatar ?? "",
-                            Gender = userInfoGG.Gender,
-                            PhoneNumber = userInfoGG.PhoneNumber,
-                            Dob = userInfoGG.Birthday
-                        };
-                        var role = await _unitOfWork.RoleRepository.GetRoleById((int)RoleEnum.USER);
-                        if (role != null)
-                        {
-                            newUser.RoleId = role.RoleId;
+                            //lay thong tin user tu token gg
+                            var userInfoGG = await FetchGoogleUserInfoAsync(googleToken);
+                            User newUser = new User()
+                            {
+                                Email = userInfo.Email,
+                                UserCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.USER),
+                                FullName = userInfoGG.FullName,
+                                Status = "Active",
+                                IsDelete = false,
+                                CreateDate = DateTime.Now,
+                                UpdateDate = DateTime.Now,
+                                AvatarURL = userInfoGG.Avatar ?? "",
+                                Gender = userInfoGG.Gender,
+                                PhoneNumber = userInfoGG.PhoneNumber,
+                                Dob = userInfoGG.Birthday
+                            };
+                            var role = await _unitOfWork.RoleRepository.GetRoleById((int)RoleEnum.USER);
+                            if (role != null)
+                            {
+                                newUser.RoleId = role.RoleId;
+                            }
+                            else
+                            {
+                                return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG);
+                            }
+                            await _unitOfWork.UserRepository.AddUserAsync(newUser);
+                            await transaction.CommitAsync();
+                            return new BusinessResult(Const.SUCCESS_REGISTER_CODE, Const.SUCCESS_REGISTER_MSG);
                         }
-                        else
+                        // nếu người dùng bị ban
+                        if (existUser.Status!.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
                         {
-                            return new BusinessResult(Const.WARNING_ROLE_IS_NOT_EXISTED_CODE, Const.WARNING_ROLE_IS_NOT_EXISTED_MSG);
+                            return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
                         }
-                        await _unitOfWork.UserRepository.AddUserAsync(newUser);
-                        await transaction.CommitAsync();
-                        return new BusinessResult(Const.SUCCESS_REGISTER_CODE, Const.SUCCESS_REGISTER_MSG);
-                    }
-                    // nếu người dùng bị ban
-                    if (existUser.Status!.ToLower().Equals("Banned".ToLower()) || existUser.IsDelete == true)
-                    {
-                        return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
-                    }
-                    // nếu tồn tại
+                        // nếu tồn tại
                         _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
                         string accessToken = await GenerateAccessToken(userInfo.Email, existUser);
 
@@ -1005,29 +1008,89 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         }
 
 
-        private async Task<BusinessResult> ValidateGoogleTokenAsync(string googleToken)
+        //private async Task<GoogleTokenInfo> ValidateGoogleTokenAsync(string googleToken)
+        //{
+        //    var validationUrl = $"{_configuration["Authentication:Google:validateGoogleTokenEndpoint"]}id_token={googleToken}";
+        //    var response = await _httpClient.GetAsync(validationUrl);
+
+        //    if (!response.IsSuccessStatusCode) return null;
+
+        //    var content = await response.Content.ReadAsStringAsync();
+        //    Console.WriteLine($"Google API Response: {content}");
+        //    var usertoken = JsonConvert.DeserializeObject<GoogleTokenInfo>(content);
+        //    return usertoken!;
+        //}
+
+
+        private async Task<GoogleTokenInfo?> ValidateGoogleTokenAsync(string googleToken)
         {
-            var validationUrl = $"{_configuration["Authentication:Google:validateGoogleTokenEndpoint"]}id_token={googleToken}";
-            var response = await _httpClient.GetAsync(validationUrl);
+            try
+            {
 
-            if (!response.IsSuccessStatusCode) return new BusinessResult(Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_CODE, Const.FAIL_VALIDATE_GOOGLE_TOKEN_INVALID_MSG, new { success = false });
+                string cliendid = $"{_configuration["Authentication:Google:ClientId"]} ";
+                var settings = new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new List<string> { $"{_configuration["Authentication:Google:ClientId"]}" },
+                };
+                var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken, new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new List<string> { $"{_configuration["Authentication:Google:ClientId"]}" }
+                });
+                // Xử lý payload, ví dụ:
+                Console.WriteLine($"User ID: {payload.Subject}");
+                Console.WriteLine($"Email: {payload.Email}");
+                Console.WriteLine(JsonConvert.SerializeObject(payload, Formatting.Indented)); // Debug kiểm tra payload
 
-            var content = await response.Content.ReadAsStringAsync();
-            var usertoken = JsonConvert.DeserializeObject<GoogleTokenInfo>(content);
-            return new BusinessResult(Const.SUCCESS_VALIDATE_TOKEN_GOOGLE_CODE, Const.SUCCESS_TOKEN_GOOGLE_VALIDATE_MSG, usertoken!);
+                if (payload == null)
+                {
+                    Console.WriteLine("Invalid Google Token!");
+                    return null;
+                }
+
+                var tokenInfo = new GoogleTokenInfo
+                {
+                    Issuer = payload.Issuer,
+                    Audience = (string)payload.Audience,
+                    Subject = payload.Subject,
+                    Email = payload.Email,
+                    EmailVerified = payload.EmailVerified,
+                    Name = payload.Name,
+                    Picture = payload.Picture,
+                    GivenName = payload.GivenName,
+                    FamilyName = payload.FamilyName,
+                    IssuedAt = payload.IssuedAtTimeSeconds!.Value,
+                    Expiration = payload.ExpirationTimeSeconds!.Value,
+                };
+
+                return tokenInfo;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error validating Google token: {ex.Message}");
+                return null;
+            }
         }
+
 
         private async Task<GoogleUserInfo> FetchGoogleUserInfoAsync(string googleToken)
         {
-            var peopleApiUrl = _configuration["Authentication:Google:userDetectEndpoint"];
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", googleToken);
+            try
+            {
 
-            var response = await _httpClient.GetAsync(peopleApiUrl);
-            if (!response.IsSuccessStatusCode) return null;
+                var peopleApiUrl = _configuration["Authentication:Google:userDetectEndpoint"];
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", googleToken);
 
-            var content = await response.Content.ReadAsStringAsync();
-            var userGoogleInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(content);
-            return userGoogleInfo;
+                var response = await _httpClient.GetAsync(peopleApiUrl);
+                if (!response.IsSuccessStatusCode) return null;
+
+                var content = await response.Content.ReadAsStringAsync();
+                var userGoogleInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(content);
+                return userGoogleInfo;
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Error validating Google token: {ex.Message}");
+                return null;
+            }
         }
     }
 }

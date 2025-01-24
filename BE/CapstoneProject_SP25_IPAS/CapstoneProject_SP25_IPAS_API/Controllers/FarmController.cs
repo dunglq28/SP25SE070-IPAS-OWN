@@ -21,7 +21,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
         {
             _farmService = farmService;
         }
-        [HybridAuthorize("Admin", "Manager")]
+        [HybridAuthorize("Admin,User", "Manager")]
         [HttpGet(APIRoutes.Farm.getFarmWithPagination, Name = "getAllFarmPaginationAsync")]
         public async Task<IActionResult> GetAllFarmWithPaginationAsync(PaginationParameter paginationParameter)
         {
@@ -42,6 +42,7 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
+        [HybridAuthorize("Admin,User", "Manager")]
         [HttpGet(APIRoutes.Farm.getFarmById , Name = "getFarmByIdAsync")]
         public async Task<IActionResult> GetFarmByIdAsync([FromQuery(Name = "farmId")] int farmId)
        {
