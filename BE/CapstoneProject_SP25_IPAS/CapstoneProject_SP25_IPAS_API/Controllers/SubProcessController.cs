@@ -1,8 +1,9 @@
 ﻿using CapstoneProject_SP25_IPAS_API.Payload;
 using CapstoneProject_SP25_IPAS_Common.Utils;
-using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessModel;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.SubProcessModel;
 using CapstoneProject_SP25_IPAS_Service.IService;
 using CapstoneProject_SP25_IPAS_Service.Payloads.Response;
+using CapstoneProject_SP25_IPAS_Service.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,21 +11,21 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProcessController : ControllerBase
+    public class SubProcessController : ControllerBase
     {
-        private readonly IProcessService _processService;
+        private readonly ISubProcessService _subProcessService;
 
-        public ProcessController(IProcessService processService)
+        public SubProcessController(ISubProcessService subProcessService)
         {
-            _processService = processService;
+            _subProcessService = subProcessService;
         }
 
-        [HttpGet(APIRoutes.Process.getProcessWithPagination, Name = "getAllProcessPaginationAsync")]
-        public async Task<IActionResult> GetAllProcess(PaginationParameter paginationParameter, ProcessFilters processFilters)
+        [HttpGet(APIRoutes.SubProcess.getSubProcessWithPagination, Name = "getAllSubProcessPaginationAsync")]
+        public async Task<IActionResult> GetAllSubProcess(PaginationParameter paginationParameter, SubProcessFilters subProcessFilters)
         {
             try
             {
-                var result = await _processService.GetAllProcessPagination(paginationParameter, processFilters);
+                var result = await _subProcessService.GetAllSubProcessPagination(paginationParameter, subProcessFilters);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,17 +40,34 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpGet(APIRoutes.Process.getProcessByName, Name = "getProcessByNameAsync")]
-        public async Task<IActionResult> GetProcessByName([FromRoute] string name)
+        [HttpGet(APIRoutes.SubProcess.getSubProcessById, Name = "getSubProcessByIdAsync")]
+        public async Task<IActionResult> GetSubProcessById([FromRoute] int id)
         {
             try
             {
-                var result = await _processService.GetProcessByName(name);
+                var result = await _subProcessService.GetSubProcessByID(id);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        } 
+        [HttpGet(APIRoutes.SubProcess.getSubProcessByName, Name = "getSubProcessByNameAsync")]
+        public async Task<IActionResult> GetSubProcessByName([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _subProcessService.GetSubProcessByName(name);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
                 var response = new BaseResponse()
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
@@ -58,18 +76,16 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 return BadRequest(response);
             }
         }
-
-        [HttpGet(APIRoutes.Process.getProcessDataOfProcess, Name = "getProcessDataOfProcessAsync")]
-        public async Task<IActionResult> GetProcessDataOfProcess([FromRoute] int id)
+        [HttpGet(APIRoutes.SubProcess.getProcessDataOfSubProcess, Name = "getProcessDataOfSubProcessAsync")]
+        public async Task<IActionResult> GetProcessDataOfSubProcess([FromRoute] int id)
         {
             try
             {
-                var result = await _processService.GetProcessDataByID(id);
+                var result = await _subProcessService.GetSubProcessDataByID(id);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
                 var response = new BaseResponse()
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
@@ -78,33 +94,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
                 return BadRequest(response);
             }
         }
-
-        [HttpGet(APIRoutes.Process.getProcessById, Name = "getProcessByIdAsync")]
-        public async Task<IActionResult> GetProcessByIdAsync([FromRoute] int id)
+        [HttpPost(APIRoutes.SubProcess.createSubProcess, Name = "createSubProcessAsync")]
+        public async Task<IActionResult> CreateSubProcess([FromForm] CreateSubProcessModel createSubProcessModel)
         {
             try
             {
-                var result = await _processService.GetProcessByID(id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpPost(APIRoutes.Process.createProcess, Name = "createProcessAsync")]
-        public async Task<IActionResult> CreateProcess([FromForm] CreateProcessModel createProcessModel)
-        {
-            try
-            {
-                var result = await _processService.CreateProcess(createProcessModel);
+                var result = await _subProcessService.CreateSubProcess(createSubProcessModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -118,12 +113,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPost(APIRoutes.Process.createManyProcess, Name = "createManyProcessAsync")]
-        public async Task<IActionResult> CreateManyProcess([FromForm] List<CreateProcessModel> listCreateProcessModel)
+        [HttpPut(APIRoutes.SubProcess.updateSubProcessInfo, Name = "updateSubProcessAsync")]
+        public async Task<IActionResult> UpdateSubProcess([FromForm] UpdateSubProcessModel updateSubProcessModel)
         {
             try
             {
-                var result = await _processService.InsertManyProcess(listCreateProcessModel);
+                var result = await _subProcessService.UpdateSubProcessInfo(updateSubProcessModel);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -137,12 +132,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpPut(APIRoutes.Process.updateProcessInfo, Name = "updateProcessInfoAsync")]
-        public async Task<IActionResult> UpdateProcessAsync([FromForm] UpdateProcessModel updateProcessModel)
+        [HttpDelete(APIRoutes.SubProcess.permanenlyDelete, Name = "deleteSubProcessAsync")]
+        public async Task<IActionResult> DeleteSubProcess([FromRoute] int id)
         {
             try
             {
-                var result = await _processService.UpdateProcessInfo(updateProcessModel);
+                var result = await _subProcessService.PermanentlyDeleteSubProcess(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -156,31 +151,12 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
-        [HttpDelete(APIRoutes.Process.permanenlyDelete, Name = "deleteProcessAsync")]
-        public async Task<IActionResult> DeleteProcessAsync([FromRoute] int id)
+        [HttpDelete(APIRoutes.SubProcess.softDeleteSubProcess, Name = "softDeleteSubProcessAsync")]
+        public async Task<IActionResult> SoftDeleteSubProcessAsync([FromRoute] int id)
         {
             try
             {
-                var result = await _processService.PermanentlyDeleteProcess(id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var response = new BaseResponse()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = ex.Message
-                };
-                return BadRequest(response);
-            }
-        }
-
-        [HttpDelete(APIRoutes.Process.softDeleteProcess, Name = "softDeleteProcessAsync")]
-        public async Task<IActionResult> SoftDeleteProcessAsync([FromRoute] int id)
-        {
-            try
-            {
-                var result = await _processService.SoftDeleteProcess(id);
+                var result = await _subProcessService.SoftDeleteSubProcess(id);
                 return Ok(result);
             }
             catch (Exception ex)

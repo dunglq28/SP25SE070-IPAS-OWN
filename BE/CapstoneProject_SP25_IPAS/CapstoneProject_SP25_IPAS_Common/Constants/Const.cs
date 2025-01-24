@@ -193,6 +193,27 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_DELETE_PROCESS_MESSAGE = "Delete process success";
         public static int SUCCESS_GET_ALL_PROCESS_CODE = 200;
         public static string SUCCESS_GET_ALL_PROCESS_MESSAGE = "Get all process success";
+        public static int SUCCESS_SOFT_DELETE_PROCESS_CODE = 200;
+        public static string SUCCESS_SOFT_DELETE_PROCESS_MESSAGE = "Soft delete process success";
+        #endregion
+
+        #region SubProcess code
+        public static int SUCCESS_GET_SUB_PROCESS_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_SUB_PROCESS_BY_ID_MESSAGE = "Get sub process by id success";
+        public static int SUCCESS_GET_PROCESS_DATA_OF_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_GET_PROCESS_DATA_OF_SUB_PROCESS_MESSAGE = "Get sub process data of sub process success";
+        public static int SUCCESS_GET_SUB_PROCESS_BY_NAME_CODE = 200;
+        public static string SUCCESS_GET_SUB_PROCESS_BY_NAME_MESSAGE = "Get sub process by name success";
+        public static int SUCCESS_CREATE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_CREATE_SUB_PROCESS_MESSAGE = "Create sub process success";
+        public static int SUCCESS_UPDATE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_UPDATE_SUB_PROCESS_MESSAGE = "Update sub process success";
+        public static int SUCCESS_DELETE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_DELETE_SUB_PROCESS_MESSAGE = "Delete sub process success";
+        public static int SUCCESS_GET_ALL_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_GET_ALL_SUB_PROCESS_MESSAGE = "Get all sub process success";
+        public static int SUCCESS_SOFT_DELETE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_SOFT_DELETE_SUB_PROCESS_MESSAGE = "Soft delete sub process success";
         #endregion
         #endregion
 
@@ -277,10 +298,25 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_UPDATE_PROCESS_MESSAGE = "Update process failed";
         public static int FAIL_DELETE_PROCESS_CODE = 500;
         public static string FAIL_DELETE_PROCESS_MESSAGE = "Delete process failed";
+        public static int FAIL_SOFT_DELETE_PROCESS_CODE = 500;
+        public static string FAIL_SOFT_DELETE_PROCESS_MESSAGE = "Soft delete process failed";
         public static int FAIL_GET_PROCESS_CODE = 500;
         public static string FAIL_GET_PROCESS_MESSAGE = "Get process failed";
         public static int FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_CODE = 500;
         public static string FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_MESSAGE = "Can not update subprocess that iss not part of the process";
+        #endregion
+
+        #region SubProcess Fail code
+        public static int FAIL_CREATE_SUB_PROCESS_CODE = 500;
+        public static string FAIL_CREATE_SUB_PROCESS_MESSAGE = "Create sub process failed";
+        public static int FAIL_UPDATE_SUB_PROCESS_CODE = 500;          
+        public static string FAIL_UPDATE_SUB_PROCESS_MESSAGE = "Update sub process failed";
+        public static int FAIL_DELETE_SUB_PROCESS_CODE = 500;          
+        public static string FAIL_DELETE_SUB_PROCESS_MESSAGE = "Delete sub process failed";
+        public static int FAIL_SOFT_DELETE_SUB_PROCESS_CODE = 500;
+        public static string FAIL_SOFT_DELETE_SUB_PROCESS_MESSAGE = "Soft delete sub process failed";
+        public static int FAIL_GET_SUB_PROCESS_CODE = 500;
+        public static string FAIL_GET_SUB_PROCESS_MESSAGE = "Get sub process failed";
         #endregion
         #region
         public static int FAIL_CREATE_CRITERIA_CODE = 500;
@@ -411,6 +447,13 @@ namespace CapstoneProject_SP25_IPAS_Common
         public const string WARNING_MISSING_DATE_FILTER_MSG = "Please enter both values for the date filter (Create Date From and Create Date To).";
         public static int WARNING_INVALID_DATE_FILTER_CODE = 400;
         public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
+        #endregion
+
+        #region SubProcess
+        public static int WARNING_GET_SUB_PROCESS_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_SUB_PROCESS_DOES_NOT_EXIST_MSG = "Does not have any sub process";
+        public static int WARNING_GET_PROCESS_DATA_OF_SUB_PROCESS_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PROCESS_DATA_OF_SUB_PROCESS_NOT_EXIST_MSG = "Does not have any data of this sub process";
         #endregion
         #endregion
     }
