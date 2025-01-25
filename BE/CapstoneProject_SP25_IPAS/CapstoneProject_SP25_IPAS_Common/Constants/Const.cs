@@ -18,7 +18,7 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_TO_SAVE_TO_DATABASE = "Save to database fail";
         #endregion
 
-        #region Success
+        #region SUCCESS
         #region UserService
         public static int SUCCESS_LOGIN_CODE = 200;
         public static string SUCCESS_LOGIN_MSG = "Login Successfully";
@@ -102,7 +102,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_UPDATE_FARM_LOGO_CODE = 200;
         public static string SUCCESS_UPDATE_FARM_LOGO_MSG = "Update farm success";
         #endregion
-
         #region CriteriaType code
         public static int SUCCESS_GET_CRITERIA_TYPE_BY_ID_CODE = 200;
         public static string SUCCESS_GET_CRITERIA_TYPE_BY_ID_MESSAGE = "Get criteria type by id success";
@@ -125,8 +124,10 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int SUCCESS_GET_CRITERIA_BY_ID_CODE = 200;
         public static string SUCCESS_GET_CRITERIA_BY_ID_MSG = "Get criteria by id success";
         #endregion
-        public static int SUCCESS_DELETE_FARM_PLANPLOT_CODE = 200;
-        public static string SUCCESS_DELTE_FARM_LANDPLOT_MSG = "Update farm success";
+        #region Plant-Criteria
+        public static int SUCCESS_APPLY_LIST_CRITERIA_PLANTS_CODE = 200;
+        public static string SUCCESS_APPLY_LIST_CRITERIA_PLANTS_MSG = "Apply criteias for selected plants success";
+        #endregion
         #region landplot
         public static int SUCCESS_GET_ALL_LANDPLOT_IN_FARM_CODE = 200;
         public static string SUCCESS_GET_ALL_LANDPLOT_IN_FARM_MSG = "Get all landplot of farm success";
@@ -193,9 +194,31 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string SUCCESS_DELETE_PROCESS_MESSAGE = "Delete process success";
         public static int SUCCESS_GET_ALL_PROCESS_CODE = 200;
         public static string SUCCESS_GET_ALL_PROCESS_MESSAGE = "Get all process success";
+        public static int SUCCESS_SOFT_DELETE_PROCESS_CODE = 200;
+        public static string SUCCESS_SOFT_DELETE_PROCESS_MESSAGE = "Soft delete process success";
+        #endregion
+
+        #region SubProcess code
+        public static int SUCCESS_GET_SUB_PROCESS_BY_ID_CODE = 200;
+        public static string SUCCESS_GET_SUB_PROCESS_BY_ID_MESSAGE = "Get sub process by id success";
+        public static int SUCCESS_GET_PROCESS_DATA_OF_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_GET_PROCESS_DATA_OF_SUB_PROCESS_MESSAGE = "Get sub process data of sub process success";
+        public static int SUCCESS_GET_SUB_PROCESS_BY_NAME_CODE = 200;
+        public static string SUCCESS_GET_SUB_PROCESS_BY_NAME_MESSAGE = "Get sub process by name success";
+        public static int SUCCESS_CREATE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_CREATE_SUB_PROCESS_MESSAGE = "Create sub process success";
+        public static int SUCCESS_UPDATE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_UPDATE_SUB_PROCESS_MESSAGE = "Update sub process success";
+        public static int SUCCESS_DELETE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_DELETE_SUB_PROCESS_MESSAGE = "Delete sub process success";
+        public static int SUCCESS_GET_ALL_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_GET_ALL_SUB_PROCESS_MESSAGE = "Get all sub process success";
+        public static int SUCCESS_SOFT_DELETE_SUB_PROCESS_CODE = 200;
+        public static string SUCCESS_SOFT_DELETE_SUB_PROCESS_MESSAGE = "Soft delete sub process success";
         #endregion
         #endregion
 
+        #region FAIL
         #region User fail code
         public static int FAIL_CREATE_CODE = -1;
         public static int FAIL_LOGOUT_CODE = 500;
@@ -277,10 +300,25 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static string FAIL_UPDATE_PROCESS_MESSAGE = "Update process failed";
         public static int FAIL_DELETE_PROCESS_CODE = 500;
         public static string FAIL_DELETE_PROCESS_MESSAGE = "Delete process failed";
+        public static int FAIL_SOFT_DELETE_PROCESS_CODE = 500;
+        public static string FAIL_SOFT_DELETE_PROCESS_MESSAGE = "Soft delete process failed";
         public static int FAIL_GET_PROCESS_CODE = 500;
         public static string FAIL_GET_PROCESS_MESSAGE = "Get process failed";
         public static int FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_CODE = 500;
         public static string FAIL_UPDATE_SUB_PROCESS_OF_PROCESS_MESSAGE = "Can not update subprocess that iss not part of the process";
+        #endregion
+
+        #region SubProcess Fail code
+        public static int FAIL_CREATE_SUB_PROCESS_CODE = 500;
+        public static string FAIL_CREATE_SUB_PROCESS_MESSAGE = "Create sub process failed";
+        public static int FAIL_UPDATE_SUB_PROCESS_CODE = 500;          
+        public static string FAIL_UPDATE_SUB_PROCESS_MESSAGE = "Update sub process failed";
+        public static int FAIL_DELETE_SUB_PROCESS_CODE = 500;          
+        public static string FAIL_DELETE_SUB_PROCESS_MESSAGE = "Delete sub process failed";
+        public static int FAIL_SOFT_DELETE_SUB_PROCESS_CODE = 500;
+        public static string FAIL_SOFT_DELETE_SUB_PROCESS_MESSAGE = "Soft delete sub process failed";
+        public static int FAIL_GET_SUB_PROCESS_CODE = 500;
+        public static string FAIL_GET_SUB_PROCESS_MESSAGE = "Get sub process failed";
         #endregion
         #region
         public static int FAIL_CREATE_CRITERIA_CODE = 500;
@@ -290,7 +328,14 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_UPDATE_CRITERIA_CODE = 500;
         public static string FAIL_UPDATE_CRITERIA_MSG = "Update criteria type failed";
         #endregion
-
+        #region Plant-Criteria Fail code
+        public static int FAIL_PLANTS_REQUEST_EMPTY_CODE = 500;
+        public static string FAIL_PLANT_REQUEST_EMPTY_MSG = "You not select any plant";
+        public static int FAIL_CRITERIA_REQUEST_EMPTY_CODE = 500;
+        public static string FAIL_CRITERIA_REQUEST_EMPTY_MSG = "You not select any Criteria";
+        public static int FAIL_APPLY_LIST_CRITERIA_PLANTS_CODE = 500;
+        public static string FAIL_APPLY_LIST_CRITERIA_PLANTS_MSG = "Apply criteias for selected plants success";
+        #endregion
         #region Farm Fail code
         public static int FAIL_CREATE_FARM_CODE = 500;
         public static string FAIL_CREATE_FARM_MSG = "Create farm have server error";
@@ -307,7 +352,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_DELETE_FARM_LANDPLOT_CODE = 500;
         public static string FAIL_DELETE_FARM_LANDPLOT_MSG = "Delete landplot of farm have server error";
         #endregion
-
         #region Partner Fail code
         public static int FAIL_CREATE_PARTNER_CODE = 500;
         public static string FAIL_CREATE_PARTNER_MESSAGE = "Create partner failed";
@@ -318,7 +362,6 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_GET_PARTNER_CODE = 500;
         public static string FAIL_GET_PARTNER_MESSAGE = "Get partner failed";
         #endregion
-
         #region GrowthStage Fail code
         public static int FAIL_CREATE_GROWTHSTAGE_CODE = 500;
         public static string FAIL_CREATE_GROWTHSTAGE_MESSAGE = "Create GrowthStage failed";
@@ -329,9 +372,9 @@ namespace CapstoneProject_SP25_IPAS_Common
         public static int FAIL_GET_GROWTHSTAGE_CODE = 500;
         public static string FAIL_GET_GROWTHSTAGE_MESSAGE = "Get GrowthStage failed";
         #endregion
+        #endregion
 
-
-        #region Warning Code
+        #region WARNING
 
         public static int WARNING_INVALID_LOGIN_CODE = 400;
         public static string WARNING_INVALID_LOGIN_MSG = "UserName or Password is wrong";
@@ -411,6 +454,13 @@ namespace CapstoneProject_SP25_IPAS_Common
         public const string WARNING_MISSING_DATE_FILTER_MSG = "Please enter both values for the date filter (Create Date From and Create Date To).";
         public static int WARNING_INVALID_DATE_FILTER_CODE = 400;
         public static string WARNING_INVALID_DATE_FILTER_MSG = "Date 'To' must greater than Date 'From'";
+        #endregion
+
+        #region SubProcess
+        public static int WARNING_GET_SUB_PROCESS_DOES_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_SUB_PROCESS_DOES_NOT_EXIST_MSG = "Does not have any sub process";
+        public static int WARNING_GET_PROCESS_DATA_OF_SUB_PROCESS_NOT_EXIST_CODE = 404;
+        public static string WARNING_GET_PROCESS_DATA_OF_SUB_PROCESS_NOT_EXIST_MSG = "Does not have any data of this sub process";
         #endregion
         #endregion
     }

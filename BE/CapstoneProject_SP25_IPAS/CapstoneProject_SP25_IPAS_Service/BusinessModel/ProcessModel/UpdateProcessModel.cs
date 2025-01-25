@@ -15,6 +15,7 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessModel
         public string? ProcessName { get; set; }
 
         public bool? IsActive { get; set; }
+        public bool? IsDefault { get; set; }
 
         public bool? IsDeleted { get; set; }
 

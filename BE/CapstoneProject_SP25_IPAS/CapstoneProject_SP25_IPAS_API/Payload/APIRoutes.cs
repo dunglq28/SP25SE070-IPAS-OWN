@@ -135,9 +135,22 @@ namespace CapstoneProject_SP25_IPAS_API.Payload
             public const string getProcessById = Base + "/processs/get-process-by-id/{id}";
             public const string getProcessWithPagination = Base + "/processs";
             public const string permanenlyDelete = Base + "/processs/delete-permanenly/{id}";
+            public const string softDeleteProcess = Base + "/processs/soft-delete/{id}";
             public const string updateProcessInfo = Base + "/processs/update-process-info";
             public const string getProcessByName = Base + "/processs/get-process-by-name/{name}";
             public const string getProcessDataOfProcess = Base + "/processs/{id}/processData";
+        }
+
+        public static class SubProcess
+        {
+            public const string createSubProcess = Base + "/subProcesss";
+            public const string getSubProcessById = Base + "/subProcesss/get-subProcess-by-id/{id}";
+            public const string getSubProcessWithPagination = Base + "/subProcesss";
+            public const string permanenlyDelete = Base + "/subProcesss/delete-permanenly/{id}";
+            public const string softDeleteSubProcess = Base + "/subProcesss/soft-delete/{id}";
+            public const string updateSubProcessInfo = Base + "/subProcesss/update-subProcess-info";
+            public const string getSubProcessByName = Base + "/subProcesss/get-subProcess-by-name/{name}";
+            public const string getProcessDataOfSubProcess = Base + "/subProcesss/{id}/processData";
         }
 
     }

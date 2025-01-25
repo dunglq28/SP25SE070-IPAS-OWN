@@ -15,6 +15,7 @@ using CapstoneProject_SP25_IPAS_Service.BusinessModel.GrowthStageModel;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessStyleModel;
 using CapstoneProject_SP25_IPAS_Service.BusinessModel.ProcessModel;
 using Process = CapstoneProject_SP25_IPAS_BussinessObject.Entities.Process;
+using CapstoneProject_SP25_IPAS_Service.BusinessModel.SubProcessModel;
 
 namespace CapstoneProject_SP25_IPAS_Service.Mapping
 {
@@ -25,13 +26,13 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             CreateMap<Role, RoleModel>()
                 .ReverseMap();
             CreateMap<User, UserModel>()
-                 .ForMember(dest => dest.Role, opt => opt.MapFrom(x => x.Role.RoleName))
+                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(x => x.Role.RoleName))
                 .ReverseMap();
 
             CreateMap<PlantLot, PlantLotModel>()
                 .ForMember(dest => dest.PartnerName, opt => opt.MapFrom(x => x.Partner.PartnerName))
                .ReverseMap();
-            CreateMap<User, UserModel>().ReverseMap();
+           
 
             CreateMap<Farm, FarmModel>()
             .ForMember(dest => dest.FarmCoordinations, opt => opt.MapFrom(src => src.FarmCoordinations))
@@ -67,6 +68,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
             CreateMap<ProcessStyle, ProcessStyleModel>().ReverseMap();
             CreateMap<SubProcessInProcessModel, SubProcess>().ReverseMap();
             CreateMap<ProcessDataInProcessModel, ProcessData>().ReverseMap();
+            CreateMap<ProcessDataInSubProcessModel, ProcessData>().ReverseMap();
             CreateMap<Process, ProcessModel>()
                  .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
                  .ForMember(dest => dest.ProcessStyleName, opt => opt.MapFrom(src => src.ProcessStyle.ProcessStyleName))
@@ -74,6 +76,12 @@ namespace CapstoneProject_SP25_IPAS_Service.Mapping
                  .ForMember(dest => dest.ListProcessData, opt => opt.MapFrom(src => src.ProcessData.Where(x => x.ProcessId == src.ProcessId)))
                  .ForMember(dest => dest.SubProcesses, opt => opt.MapFrom(src => src.SubProcesses.Where(x => x.ProcessId == src.ProcessId)))
                 .ReverseMap();
+
+            CreateMap<SubProcess, SubProcessModel>()
+                .ForMember(dest => dest.ProcessName, opt => opt.MapFrom(src => src.Process.ProcessName))
+                .ForMember(dest => dest.ProcessStyleName, opt => opt.MapFrom(src => src.ProcessStyle.ProcessStyleName))
+                .ForMember(dest => dest.ListSubProcessData, opt => opt.MapFrom(src => src.ProcessData.Where(x => x.SubProcessId == src.SubProcessId)))
+               .ReverseMap();
 
             CreateMap<LandPlotCoordination, LandPlotCoordinationModel>().ReverseMap();
 

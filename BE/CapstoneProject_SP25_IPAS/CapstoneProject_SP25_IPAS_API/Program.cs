@@ -107,7 +107,7 @@ app.UseSwaggerUI();
 app.UseMiddleware<TokenValidationMiddleware>();
 app.UseMiddleware<AccountStatusMiddleware>();
 //app.UseMiddleware<AuthorizeMiddleware>();
-app.UseMiddleware<FarmSoftDeleteMiddleware>();
+//app.UseMiddleware<FarmSoftDeleteMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

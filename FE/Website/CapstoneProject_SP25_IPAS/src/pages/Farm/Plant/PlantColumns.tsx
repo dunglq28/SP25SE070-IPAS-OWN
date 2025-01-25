@@ -18,7 +18,31 @@ export const plantColumns: TableColumn<GetPlant>[] = [
   {
     header: "Số điện thoại",
     field: "phone",
-    accessor: (plant) => plant.phone,
+    accessor: (plant) =>  <div className={style.tableText}>{plant.phone}</div>,
+    width: 150,
+  },
+  {
+    header: "Số điện thoại",
+    field: "phone",
+    accessor: (plant) =>  <div className={style.tableText}>{plant.phone}</div>,
+    width: 150,
+  },
+  {
+    header: "Số điện thoại",
+    field: "phone",
+    accessor: (plant) =>  <div className={style.tableText}>{plant.phone}</div>,
+    width: 150,
+  },
+  {
+    header: "Số điện thoại",
+    field: "phone",
+    accessor: (plant) =>  <div className={style.tableText}>{plant.phone}</div>,
+    width: 150,
+  },
+  {
+    header: "Số điện thoại",
+    field: "phone",
+    accessor: (plant) =>  <div className={style.tableText}>{plant.phone}</div>,
     width: 150,
   },
   {
