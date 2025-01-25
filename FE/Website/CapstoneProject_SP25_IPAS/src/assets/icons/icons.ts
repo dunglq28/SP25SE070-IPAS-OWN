@@ -45,3 +45,4 @@ export { IoSettingsOutline as setting, IoLanguageOutline as language } from "rea
 export { TfiHelpAlt as help } from "react-icons/tfi";
 export { GrOverview as overview, GrMapLocation as location } from "react-icons/gr";
 export { GiTreeGrowth as growth } from "react-icons/gi";
+export { TiWeatherPartlySunny as weather } from "react-icons/ti";

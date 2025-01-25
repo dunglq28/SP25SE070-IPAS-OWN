@@ -35,4 +35,9 @@ export const PATHS = {
     PROCESS_LIST: "/processes",
     PROCESS_DETAIL: "/processes/:id",
   },
+
+  //Weather
+  WEATHER: {
+    WEATHER: "/dashboard-weather",
+  },
 };
