@@ -12,12 +12,17 @@ interface Props {
 }
 
 const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
-  const handleGoogleLoginSuccess = (tokenResponse: any) => {
-    console.log("Google Sign-In Success:", tokenResponse);
-  };
+  const handleSignInGoogle = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log("Google Sign-In Success:", tokenResponse);
+    },
+    onError: () => {
+      console.error("Google Sign-In Failed");
+    },
+  });
 
-  const handleGoogleLoginFailure = () => {
-    console.error("Google Sign-In Failed");
+  const handleGoogleButtonClick = () => {
+    handleSignInGoogle();
   };
 
   return (
@@ -39,7 +44,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
               },
             ]}
             // hasFeedback
-            // validateStatus="success"
+            // validateStatus="error"
             // help="Should be combination of numbers & alphabets"
           >
             <Input placeholder="Email" />
@@ -65,8 +70,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
 
         <Divider>OR</Divider>
 
-        {/* <GoogleButton style={{ width: "auto" }} onClick={handleGoogleButtonClick} /> */}
-        <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={handleGoogleLoginFailure} />
+        <GoogleButton style={{ width: "auto" }} onClick={handleGoogleButtonClick} />
       </Form>
     </div>
   );
