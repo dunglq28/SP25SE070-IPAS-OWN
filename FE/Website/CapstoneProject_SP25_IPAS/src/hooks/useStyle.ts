@@ -68,6 +68,10 @@ const useStyle = createStyles(({ css }) => {
       .ant-select-selector:hover {
         border-color: ${primaryColor} !important;
       }
+
+      .ant-segmented-item-label {
+        color: ${primaryColor} !important;
+      }
     `,
     customTab: css`
       .ant-tabs-tab:hover,
@@ -78,6 +82,38 @@ const useStyle = createStyles(({ css }) => {
       .ant-tabs-ink-bar {
         background-color: ${primaryColor};
       }
+    `,
+    customSegment: css`
+      .ant-segmented-item {
+        color: ${primaryColor};
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        border-radius: 12px;
+      }
+
+      .ant-segmented-item-selected {
+        background-color: ${primaryColor} !important;
+        color: white !important;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .ant-segmented-item-label {
+        font-size: 14px;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .ant-segmented-item-icon {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin-top: 7px;
+      }
+
     `,
   };
 });

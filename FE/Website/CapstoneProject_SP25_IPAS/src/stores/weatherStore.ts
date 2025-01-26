@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 
 interface WeatherState {
   weather: Record<string, any> | null;
+  forecast: Record<string, any>[];
   place: string;
   isLoading: boolean;
   error: string | null;
@@ -14,6 +15,7 @@ interface WeatherState {
 
 const useWeatherStore = create<WeatherState>((set, get) => ({
   weather: null,
+  forecast: [],
   place: "Hanoi",
   isLoading: false,
   error: null,
@@ -26,18 +28,46 @@ const useWeatherStore = create<WeatherState>((set, get) => ({
     if (isLoading) return;
 
     const API_KEY = "c01125b343b6934e4c8a22f0edc300b7";
-    const BASE_URL = `https://api.openweathermap.org/data/2.5/weather`;
+    const CURRENT_WEATHER_URL = `https://api.openweathermap.org/data/2.5/weather`;
+    const FORECAST_URL = `https://api.openweathermap.org/data/2.5/forecast`;
 
     try {
       set({ isLoading: true, error: null });
-      const response = await axios.get(BASE_URL, {
+      // const response = await axios.get(CURRENT_WEATHER_URL, {
+      //   params: {
+      //     q: place,
+      //     appid: API_KEY,
+      //     units: "metric",
+      //   },
+      // });
+      // set({ weather: response.data, isLoading: false });
+      const currentWeatherPromise = axios.get(CURRENT_WEATHER_URL, {
         params: {
           q: place,
           appid: API_KEY,
           units: "metric",
         },
       });
-      set({ weather: response.data, isLoading: false });
+
+      // Gọi API dự báo thời tiết
+      const forecastPromise = axios.get(FORECAST_URL, {
+        params: {
+          q: place,
+          appid: API_KEY,
+          units: "metric",
+        },
+      });
+
+      const [currentWeatherResponse, forecastResponse] = await Promise.all([
+        currentWeatherPromise,
+        forecastPromise,
+      ]);
+
+      set({
+        weather: currentWeatherResponse.data,
+        forecast: forecastResponse.data.list, // Lưu dữ liệu dự báo thời tiết
+        isLoading: false,
+      });
     } catch (error: any) { // Lúc này 'error' được cho kiểu 'any'
       console.error("Weather fetch error:", error);
       // Kiểm tra lỗi chi tiết từ Axios

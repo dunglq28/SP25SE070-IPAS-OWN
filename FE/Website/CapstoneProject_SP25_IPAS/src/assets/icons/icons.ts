@@ -36,6 +36,7 @@ export {
   FaRegCalendarPlus as calendar,
   FaSortAmountUp as sort,
   FaRegEdit as edit,
+  FaCloud as cloud,
 } from "react-icons/fa";
 export { PiFarm as farms, PiPlantLight as plant } from "react-icons/pi";
 export { HiOutlineUserGroup as people, HiDotsVertical as dot } from "react-icons/hi";
@@ -46,3 +47,7 @@ export { TfiHelpAlt as help } from "react-icons/tfi";
 export { GrOverview as overview, GrMapLocation as location } from "react-icons/gr";
 export { GiTreeGrowth as growth } from "react-icons/gi";
 export { TiWeatherPartlySunny as weather } from "react-icons/ti";
+export { FaWind as wind } from "react-icons/fa6";
+export { LiaTemperatureHighSolid as temperature } from "react-icons/lia";
+export { BsCloudRainFill as cloudRain } from "react-icons/bs";
+export { IoIosSunny as sunny } from "react-icons/io";
