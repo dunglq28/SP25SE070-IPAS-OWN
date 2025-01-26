@@ -12,12 +12,17 @@ interface Props {
 }
 
 const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
-  const handleGoogleLoginSuccess = (tokenResponse: any) => {
-    console.log("Google Sign-In Success:", tokenResponse);
-  };
+  const handleSignInGoogle = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log("Google Sign-In Success:", tokenResponse);
+    },
+    onError: () => {
+      console.error("Google Sign-In Failed");
+    },
+  });
 
-  const handleGoogleLoginFailure = () => {
-    console.error("Google Sign-In Failed");
+  const handleGoogleButtonClick = () => {
+    handleSignInGoogle();
   };
 
   const { styles } = useStyle();
@@ -42,9 +47,9 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                 message: "Please enter a valid email!",
               },
             ]}
-          // hasFeedback
-          // validateStatus="success"
-          // help="Should be combination of numbers & alphabets"
+            // hasFeedback
+            // validateStatus="error"
+            // help="Should be combination of numbers & alphabets"
           >
             <Input
               placeholder="Email" style={{fontSize: "16px", backgroundColor: "white", borderRadius: "6px", border: "1px solid #d9d9d9"}} />
@@ -70,8 +75,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
 
         <Divider>OR</Divider>
 
-        {/* <GoogleButton style={{ width: "auto" }} onClick={handleGoogleButtonClick} /> */}
-        <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={handleGoogleLoginFailure} />
+        <GoogleButton style={{ width: "auto" }} onClick={handleGoogleButtonClick} />
       </Form>
     </div>
   );

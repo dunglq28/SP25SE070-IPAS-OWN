@@ -309,7 +309,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         {
                             return new BusinessResult(Const.WARNING_ACCOUNT_BANNED_CODE, Const.WARNING_ACCOUNT_BANNED_MSG);
                         }
-                        if(existUser.IsDelete == true)
+                        if (existUser.IsDelete == true)
                         {
                             return new BusinessResult(Const.WARNING_ACCOUNT_DELETED_CODE, Const.WARNING_ACCOUNT_DELETED_MSG);
                         }
@@ -955,20 +955,20 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         if (existUser == null)
                         {
                             //lay thong tin user tu token gg
-                            var userInfoGG = await FetchGoogleUserInfoAsync(googleToken);
+                            //var userInfoGG = await FetchGoogleUserInfoAsync(googleToken);
                             User newUser = new User()
                             {
                                 Email = userInfo.Email,
                                 UserCode = NumberHelper.GenerateRandomCode(CodeAliasEntityConst.USER),
-                                FullName = userInfoGG.FullName,
+                                FullName = userInfo.Name,
                                 Status = "Active",
                                 IsDelete = false,
                                 CreateDate = DateTime.Now,
                                 UpdateDate = DateTime.Now,
-                                AvatarURL = userInfoGG.Avatar ?? "",
-                                Gender = userInfoGG.Gender,
-                                PhoneNumber = userInfoGG.PhoneNumber,
-                                Dob = userInfoGG.Birthday
+                                AvatarURL = userInfo.Picture ?? "",
+                                Gender = "",
+                                PhoneNumber = "",
+                                Dob = null
                             };
                             var role = await _unitOfWork.RoleRepository.GetRoleById((int)RoleEnum.USER);
                             if (role != null)
@@ -1099,7 +1099,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 var content = await response.Content.ReadAsStringAsync();
                 var userGoogleInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(content);
                 return userGoogleInfo;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error validating Google token: {ex.Message}");
                 return null;
