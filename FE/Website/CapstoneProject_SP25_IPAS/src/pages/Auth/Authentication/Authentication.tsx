@@ -28,8 +28,8 @@ function Authentication() {
           style={{
             width: "50px",
             cursor: "pointer",
-            position: "absolute",
-            zIndex: 5,
+            position: "fixed",
+            zIndex: 1000,
             margin: "15px",
           }}
           src={logo}

@@ -907,7 +907,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 string includeProperties = "Role";
                 var entities = await _unitOfWork.UserRepository.Get(filter, orderBy, includeProperties, paginationParameter.PageIndex, paginationParameter.PageSize);
                 var pagin = new PageEntity<UserModel>();
-                pagin.List = _mapper.Map<IEnumerable<UserModel>>(entities).ToList();
+                pagin.List = _mapper.Map<List<UserModel>>(entities).ToList();
                 pagin.TotalRecord = await _unitOfWork.UserRepository.Count();
                 pagin.TotalPage = PaginHelper.PageCount(pagin.TotalRecord, paginationParameter.PageSize);
                 if (pagin.List.Any())

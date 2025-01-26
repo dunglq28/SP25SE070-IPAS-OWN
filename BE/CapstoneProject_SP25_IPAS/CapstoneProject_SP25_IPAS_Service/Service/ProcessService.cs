@@ -477,6 +477,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                     {
                         checkExistProcess.IsActive = updateProcessModel.IsActive;
                     }
+                    if (updateProcessModel.IsDefault != null)
+                    {
+                        checkExistProcess.IsDefault = updateProcessModel.IsDefault;
+                    }
                     if (updateProcessModel.IsDeleted != null)
                     {
                         checkExistProcess.IsDeleted = updateProcessModel.IsDeleted;
@@ -494,35 +498,39 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         checkExistProcess.GrowthStageID = updateProcessModel.GrowthStageID;
                     }
                     var processData = checkExistProcess.ProcessData.ToList();
-                    foreach (var oldData in processData)
+                    if (updateProcessModel.ListUpdateProcessData != null && updateProcessModel.ListUpdateProcessData.Count > 0)
                     {
-                        if(IsImageLink(oldData.ResourceUrl))
+
+                        foreach (var oldData in processData)
                         {
-                            await _cloudinaryService.DeleteImageByUrlAsync(oldData.ResourceUrl);
+                            if (IsImageLink(oldData.ResourceUrl))
+                            {
+                                await _cloudinaryService.DeleteImageByUrlAsync(oldData.ResourceUrl);
+                            }
+                            else
+                            {
+                                await _cloudinaryService.DeleteVideoByUrlAsync(oldData.ResourceUrl);
+                            }
+                            checkExistProcess.ProcessData.Remove(oldData);
                         }
-                        else
+                        foreach (var newData in updateProcessModel.ListUpdateProcessData)
                         {
-                            await _cloudinaryService.DeleteVideoByUrlAsync(oldData.ResourceUrl);
+                            var getLink = "";
+                            if (IsImageFile(newData))
+                            {
+                                getLink = await _cloudinaryService.UploadImageAsync(newData, "process/data");
+                            }
+                            else
+                            {
+                                getLink = await _cloudinaryService.UploadVideoAsync(newData, "process/data");
+                            }
+                            checkExistProcess.ProcessData.Add(new ProcessData()
+                            {
+                                ResourceUrl = getLink,
+                                CreateDate = DateTime.Now,
+                                ProcessDataCode = NumberHelper.GenerateRandomCode("PCD")
+                            });
                         }
-                        checkExistProcess.ProcessData.Remove(oldData);
-                    }
-                    foreach (var newData in updateProcessModel.ListUpdateProcessData)
-                    {
-                        var getLink = "";
-                        if (IsImageFile(newData))
-                        {
-                            getLink = await _cloudinaryService.UploadImageAsync(newData, "process/data");
-                        }
-                        else
-                        {
-                            getLink = await _cloudinaryService.UploadVideoAsync(newData, "process/data");
-                        }
-                        checkExistProcess.ProcessData.Add(new ProcessData()
-                        {
-                            ResourceUrl = getLink,
-                            CreateDate = DateTime.Now,
-                            ProcessDataCode = NumberHelper.GenerateRandomCode("PCD")
-                        });
                     }
                     checkExistProcess.UpdateDate = DateTime.Now;
                     if (updateProcessModel.ListUpdateSubProcess != null)
@@ -604,6 +612,31 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
         {
             string[] validImageExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
             return url.Contains("/image/") && validImageExtensions.Contains(Path.GetExtension(url).ToLower());
+        }
+
+        public async Task<BusinessResult> SoftDeleteProcess(int processId)
+        {
+            try
+            {
+                var checkExistProcess = await _unitOfWork.ProcessRepository.GetByID(processId);
+                if(checkExistProcess != null)
+                {
+                    checkExistProcess.IsDeleted = true;
+                    var result = await _unitOfWork.SaveAsync();
+                    if(result > 0)
+                    {
+                        return new BusinessResult(Const.SUCCESS_SOFT_DELETE_PROCESS_CODE, Const.SUCCESS_SOFT_DELETE_PROCESS_MESSAGE, result > 0);
+                    }
+                    return new BusinessResult(Const.FAIL_SOFT_DELETE_PROCESS_CODE, Const.FAIL_SOFT_DELETE_PROCESS_MESSAGE, false);
+
+                }
+                return new BusinessResult(Const.WARNING_GET_PROCESS_DOES_NOT_EXIST_CODE, Const.WARNING_GET_PROCESS_DOES_NOT_EXIST_MSG);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
     }
 }

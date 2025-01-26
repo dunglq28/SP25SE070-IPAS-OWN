@@ -64,6 +64,7 @@ namespace CapstoneProject_SP25_IPAS_API.ProgramConfig
             services.AddScoped<IProcessService, ProcessService>();
             services.AddScoped<IProcessStyleService, ProcessStyleService>();
             services.AddScoped<ICriteriaService, CriteriaService>();
+            services.AddScoped<ISubProcessService, SubProcessService>();
 
             services.AddHttpClient();
 
