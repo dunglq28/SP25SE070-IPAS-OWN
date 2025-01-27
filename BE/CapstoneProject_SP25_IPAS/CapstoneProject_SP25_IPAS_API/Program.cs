@@ -111,7 +111,7 @@ app.UseMiddleware<AccountStatusMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors("Cors");
 app.MapControllers();
 
 app.Run();
