@@ -68,6 +68,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
       isView: !isDefault,
     },
     {
+      key: "Weather",
+      label: "Weather",
+      icon: <Icons.weather />,
+      to: PATHS.WEATHER.WEATHER,
+      activePaths: [PATHS.WEATHER.WEATHER],
+      category: "Main",
+      isView: !isDefault,
+    },
+    {
       key: "User Management",
       label: "User Management",
       icon: <Icons.users />,

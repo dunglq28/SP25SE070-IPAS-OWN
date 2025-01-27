@@ -314,10 +314,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                             return new BusinessResult(Const.WARNING_ACCOUNT_DELETED_CODE, Const.WARNING_ACCOUNT_DELETED_MSG);
                         }
                         _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-                        string accessToken = await GenerateAccessToken(email, existUser);
+                        string accessToken = await GenerateAccessToken(email, existUser,-1,-1);
 
                         _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
-                        string refreshToken = await GenerateRefreshToken(email, null, tokenValidityInDays);
+                        string refreshToken = await GenerateRefreshToken(email, null, tokenValidityInDays, -1, -1);
 
 
                         await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
@@ -387,6 +387,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 SecurityToken validatedToken;
                 var principal = handler.ValidateToken(jwtToken, validationParameters, out validatedToken);
                 var email = principal.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+                var roleInFarm = int.Parse(principal.Claims.FirstOrDefault(x => x.Type == "role").Value);
+                var farmId = int.Parse(principal.Claims.FirstOrDefault(x => x.Type == "farmId").Value);
                 if (email != null)
                 {
                     if (principal != null)
@@ -404,10 +406,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                             {
                                 if (checkExistRefreshToken.ExpiredDate >= DateTime.Now)
                                 {
-                                    var newAccessToken = await GenerateAccessToken(email, existUser);
+                                    var newAccessToken = await GenerateAccessToken(email, existUser, roleInFarm, farmId);
                                     _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int newTokenValidityInMinutes);
 
-                                    var newRefreshToken = await GenerateRefreshToken(email, checkExistRefreshToken.ExpiredDate, 0);
+                                    var newRefreshToken = await GenerateRefreshToken(email, checkExistRefreshToken.ExpiredDate, 0, roleInFarm, farmId);
                                     _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
 
                                     await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
@@ -456,7 +458,9 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         FullName = model.FullName,
                         CreateDate = DateTime.Now,
                         UpdateDate = DateTime.Now,
-                        AvatarURL = model.Avatar ?? "",
+                        Gender = model.Gender,
+                        PhoneNumber = model.Phone,
+                        Dob = model.Dob,
                         Status = "Active",
                         IsDelete = false,
                     };
@@ -630,19 +634,31 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        private async Task<string> GenerateAccessToken(string email, User user)
+        private async Task<string> GenerateAccessToken(string email, User user, int roleInFarm, int farmId)
         {
             var role = await _unitOfWork.RoleRepository.GetRoleById(user.RoleId);
+            var getRoleInFarm = await _unitOfWork.RoleRepository.GetRoleById(roleInFarm);
             var authClaims = new List<Claim>();
             if (role != null)
             {
                 authClaims.Add(new Claim("email", email));
                 //authClaims.Add(new Claim("role", role.RoleName));
-                authClaims.Add(new Claim("roleId", role.RoleId.ToString()));
+                if(getRoleInFarm == null)
+                {
+                    authClaims.Add(new Claim("roleId", role.RoleId.ToString()));
+                    authClaims.Add(new Claim(ClaimTypes.Role, role.RoleName));
+                }
+                else
+                {
+                    authClaims.Add(new Claim("roleId", getRoleInFarm.RoleId.ToString()));
+                    authClaims.Add(new Claim(ClaimTypes.Role, getRoleInFarm.RoleName));
+                    authClaims.Add(new Claim("farmId", farmId.ToString()));
+                   
+                }
                 authClaims.Add(new Claim("UserId", user.UserId.ToString()));
                 authClaims.Add(new Claim("Status", user.Status.ToString()));
+                authClaims.Add(new Claim("AvatarURL", user.AvatarURL));
                 authClaims.Add(new Claim("FullName", user.FullName));
-                authClaims.Add(new Claim(ClaimTypes.Role, role.RoleName));
                 authClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
             }
@@ -650,20 +666,42 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             return new JwtSecurityTokenHandler().WriteToken(accessToken);
         }
 
-        private async Task<string> GenerateRefreshToken(string email, DateTime? beginTimeRefreshToken, int expiredDays)
+        private async Task<string> GenerateRefreshToken(string email, DateTime? beginTimeRefreshToken, int expiredDays, int roleInFarm, int farmId)
         {
             var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
             var role = await _unitOfWork.RoleRepository.GetRoleById(user.RoleId);
-            var authClaims = new List<Claim>
+            var getRoleInFarm = await _unitOfWork.RoleRepository.GetRoleById(roleInFarm);
+            var authClaims = new List<Claim>();
+            if (getRoleInFarm == null)
             {
-                 new Claim("email", email),
-                 new Claim("role", role.RoleName),
-                 new Claim("roleId", role.RoleId.ToString()),
-                 new Claim("UserId", user.UserId.ToString()),
-                 new Claim("Status", user.Status.ToString()),
-                 new Claim("FullName", user.FullName),
-                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+              authClaims = new List<Claim>
+              {
+                     new Claim("email", email),
+                     new Claim("role", role.RoleName),
+                     new Claim("roleId", role.RoleId.ToString()),
+                     new Claim("UserId", user.UserId.ToString()),
+                     new Claim("Status", user.Status.ToString()),
+                     new Claim("FullName", user.FullName),
+                     new Claim("AvatarURL", user.AvatarURL),
+                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+              };
+            }
+            else
+            {
+                authClaims = new List<Claim>
+                {
+                     new Claim("email", email),
+                     new Claim("role", getRoleInFarm.RoleName),
+                     new Claim("roleId", getRoleInFarm.RoleId.ToString()),
+                     new Claim("farmId", farmId.ToString()),
+                     new Claim("UserId", user.UserId.ToString()),
+                     new Claim("Status", user.Status.ToString()),
+                     new Claim("FullName", user.FullName),
+                     new Claim("AvatarURL", user.AvatarURL),
+                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+            }
+               
             JwtSecurityToken refreshToken = null;
             if (beginTimeRefreshToken != null)
             {
@@ -736,7 +774,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             string sendOtp = await CreateOtpRegisterAsync(email);
             return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, new RegisterSendOtpResponse()
             {
-                OtpHashSHA256 = sendOtp
+                otpHash = sendOtp
             });
         }
 
@@ -990,10 +1028,10 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         }
                         // nếu tồn tại
                         _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-                        string accessToken = await GenerateAccessToken(userInfo.Email, existUser);
+                        string accessToken = await GenerateAccessToken(userInfo.Email, existUser,-1,-1);
 
                         _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
-                        string refreshToken = await GenerateRefreshToken(userInfo.Email, null, tokenValidityInDays);
+                        string refreshToken = await GenerateRefreshToken(userInfo.Email, null, tokenValidityInDays,-1,-1);
 
 
                         await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
@@ -1104,6 +1142,88 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                 Console.WriteLine($"Error validating Google token: {ex.Message}");
                 return null;
+            }
+        }
+
+        public async Task<BusinessResult> ValidateRoleOfUserInFarm(string jwtToken, int farmId)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
+            var handler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = authSigningKey,
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["JWT:ValidIssuer"],
+                ValidateAudience = true,
+                ValidAudience = _configuration["JWT:ValidAudience"],
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            };
+            try
+            {
+                SecurityToken validatedToken;
+                var principal = handler.ValidateToken(jwtToken, validationParameters, out validatedToken);
+                var email = principal.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+                if (email != null)
+                {
+                    if (principal != null)
+                    {
+                        var existUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+                        if (existUser != null)
+                        {
+                            var checkExistRefreshToken = await _unitOfWork.RefreshTokenRepository.GetRefrshTokenByRefreshTokenValue(jwtToken);
+                            if (checkExistRefreshToken == null)
+                            {
+                                return new BusinessResult(Const.WARNING_RFT_NOT_EXIST_CODE, Const.WARNING_RFT_NOT_EXIST_MSG);
+
+                            }
+                            else
+                            {
+                                if (checkExistRefreshToken.ExpiredDate >= DateTime.Now)
+                                {
+                                    var getRoleOfUserInFarm = await _unitOfWork.UserFarmRepository.getRoleOfUserInFarm(existUser.UserId, farmId);
+
+                                    var newAccessToken = await GenerateAccessToken(email, existUser, getRoleOfUserInFarm, farmId);
+                                    _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int newTokenValidityInMinutes);
+
+                                    var newRefreshToken = await GenerateRefreshToken(email, checkExistRefreshToken.ExpiredDate, 0, getRoleOfUserInFarm, farmId);
+                                    _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int tokenValidityInDays);
+
+                                    var getFarm = await _unitOfWork.FarmRepository.GetByID(farmId);
+
+                                    await _unitOfWork.RefreshTokenRepository.AddRefreshToken(new RefreshToken()
+                                    {
+                                        UserId = checkExistRefreshToken.UserId,
+                                        RefreshTokenCode = NumberHelper.GenerateRandomCode("RFT"),
+                                        RefreshTokenValue = newRefreshToken,
+                                        CreateDate = DateTime.Now,
+                                        ExpiredDate = checkExistRefreshToken.ExpiredDate
+                                    });
+                                    return new BusinessResult(Const.SUCCESS_RFT_CODE, Const.SUCCESS_RFT_MSG, new ReIssueToken
+                                    {
+                                        AccessToken = newAccessToken,
+                                        RefreshToken = newRefreshToken,
+                                        FarmName = getFarm.FarmName,
+                                        FarmLogo = getFarm.LogoUrl
+                                    });
+
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RefreshTokenRepository.DeleteToken(jwtToken);
+                                    return new BusinessResult(Const.WARNING_INVALID_REFRESH_TOKEN_CODE, Const.WARNING_INVALID_REFRESH_TOKEN_MSG);
+                                }
+                            }
+                        }
+                    }
+                }
+                return new BusinessResult(Const.WARNING_SIGN_IN_CODE, Const.WARNING_SIGN_IN_MSG);
+            }
+            catch (Exception ex)
+            {
+
+                return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
     }
