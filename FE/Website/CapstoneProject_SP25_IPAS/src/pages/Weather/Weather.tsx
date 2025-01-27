@@ -18,16 +18,11 @@ function Weather() {
   const { weather, isLoading, error, place, setPlace, fetchWeather, isSearchVisible, toggleSearch } = useWeatherStore((state) => state);
 
   const [searchValue, setSearchValue] = useState<string>("");
+  const { styles } = useStyle();
 
   useEffect(() => {
     fetchWeather();
   }, [place, fetchWeather]);
-
-  const handleSearch = () => {
-    if (searchValue) {
-      setPlace(searchValue);
-    }
-  };
 
   const labelMapping = {
     temp: "Temperature",
@@ -38,6 +33,7 @@ function Weather() {
   const handleSegmentChange = (value: string) => {
     setViewMode(value.toLowerCase() as ViewMode);
   };
+  
   const weatherImages = {
     Clouds: Images.cloudy,
     Clear: Images.sunny,
@@ -78,30 +74,11 @@ function Weather() {
     { icon: "🌥", temp: "28", wind: "12", rain: "7", time: "Evening" },
     { icon: "🌥", temp: "22", wind: "8", rain: "15", time: "Night" },
   ];
-  const { styles } = useStyle();
-
-  const forecastData = [
-    { time: "Now", temp: "24°", icon: Icons.sunny },
-    { time: "01 PM", temp: "24°", icon: Icons.sunny },
-    { time: "02 PM", temp: "24°", icon: Icons.sunny },
-    { time: "03 PM", temp: "24°", icon: Icons.sunny },
-  ];
   
-  const weekData = [
-    { day: "Tomorrow", date: "10 Dec", temp: "24°", icon: Icons.sunny },
-    { day: "Tomorrow", date: "10 Dec", temp: "24°", icon: Icons.cloudRain },
-    { day: "Tomorrow", date: "10 Dec", temp: "24°", icon: Icons.sunny },
-    { day: "Tomorrow", date: "10 Dec", temp: "24°", icon: Icons.sunny },
-    { day: "Tomorrow", date: "10 Dec", temp: "19°", icon: Icons.cloudRain },
-    { day: "Tomorrow", date: "10 Dec", temp: "24°", icon: Icons.sunny },
-    { day: "Tomorrow", date: "10 Dec", temp: "24°", icon: Icons.sunny },
-  ];
-
-
 
   return (
     <Layout className={style.container}>
-      <Content style={{ padding: "20px", flex: 3 }}>
+      <Content style={{ flex: 3 }}>
         <Flex gap="middle" vertical={true}>
           <Flex gap="middle" vertical={false} style={{ flex: 2 }}>
             <div className={style.card} style={{ backgroundImage: backgroundImage }}>
@@ -155,7 +132,7 @@ function Weather() {
             </div>
           </Flex>
           <Flex style={{ flex: 3 }}>
-            <div style={{ flex: 1 }} className={style.temperature}>
+            <div style={{ flex: 1.5 }} className={style.temperature}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   <h2>How’s the</h2>

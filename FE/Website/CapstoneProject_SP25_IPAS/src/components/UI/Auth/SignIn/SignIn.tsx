@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input, Button, Form, Space, Divider } from "antd";
 import { FaGoogle } from "react-icons/fa";
 import style from "./SignIn.module.scss";
 import GoogleButton from "react-google-button";
-import { signInWithPopup } from "firebase/auth";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useStyle } from "@/hooks";
 
 interface Props {
   toggleForm: () => void;
@@ -12,6 +12,14 @@ interface Props {
 }
 
 const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (!isSignUp) {
+      form.resetFields();
+    }
+  }, [isSignUp, form]);
+
   const handleGoogleLoginSuccess = (tokenResponse: any) => {
     console.log("Google Sign-In Success:", tokenResponse);
   };
@@ -20,11 +28,15 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
     console.error("Google Sign-In Failed");
   };
 
+  const { styles } = useStyle();
+  console.log('mệt', styles.customInput);
+
+
   return (
     <div
       className={`${style["form-container"]} ${style["sign-in"]} ${isSignUp ? style.hidden : ""}`}
     >
-      <Form name="sign_in" initialValues={{ remember: true }} layout="vertical">
+      <Form form={form} name="sign_in" initialValues={{ remember: true }} layout="vertical">
         <h1 className={style.formTitle}>Sign In</h1>
 
         <div className={style["inputGroup"]}>
@@ -38,18 +50,19 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                 message: "Please enter a valid email!",
               },
             ]}
-            // hasFeedback
-            // validateStatus="success"
-            // help="Should be combination of numbers & alphabets"
+          // hasFeedback
+          // validateStatus="success"
+          // help="Should be combination of numbers & alphabets"
           >
-            <Input placeholder="Email" />
+            <Input
+              placeholder="Email" style={{ fontSize: "16px", backgroundColor: "white", borderRadius: "6px", border: "1px solid #d9d9d9" }} />
           </Form.Item>
 
           <Form.Item
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password placeholder="Password" />
+            <Input.Password placeholder="Password" className={`${styles.customInput}`} />
           </Form.Item>
         </div>
 

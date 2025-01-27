@@ -1,63 +1,136 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Typography, List, Row, Col, message, Card, Button, Segmented, Carousel } from "antd";
+import { Layout, Typography, List, Row, Col, message, Card, Button, Segmented, Carousel, Divider, Dropdown, Menu } from "antd";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi"; // Weather Icons
 import useWeatherStore from "@/stores/weatherStore";
 import style from "./Weather.module.scss";
 import axios from "axios";
 import { Icons } from "@/assets";
 import Slider from "react-slick";
+import { useStyle } from "@/hooks";
+import { MoreOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
 const { Text, Title } = Typography;
 
-interface WeatherData {
-    main: {
-      temp: number;
-      humidity: number;
-      pressure: number;
-    };
-    weather: Array<{
-      description: string;
-    }>;
-    wind: {
-      speed: number;
-    };
-    visibility: number;
-  }
-  
-  // Khai báo kiểu dữ liệu cho dữ liệu đất (SoilGrids)
-  interface SoilData {
-    properties: {
-      soil_moisture_0_5cm: number;
-      soil_temperature_0_5cm: number;
-      soil_phh2o_0_5cm: number;
-      nitrogen_0_5cm: number;
-      phosphorus_0_5cm: number;
-      potassium_0_5cm: number;
-    };
-  }
 
-  function SampleNextArrow(props: any) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block", background: "red" }}
-        onClick={onClick}
-      />
-    );
+
+interface WeatherData {
+  main: {
+    temp: number;
+    humidity: number;
+    pressure: number;
+  };
+  weather: Array<{
+    description: string;
+  }>;
+  wind: {
+    speed: number;
+  };
+  visibility: number;
+}
+
+// Khai báo kiểu dữ liệu cho dữ liệu đất (SoilGrids)
+interface SoilData {
+  properties: {
+    soil_moisture_0_5cm: number;
+    soil_temperature_0_5cm: number;
+    soil_phh2o_0_5cm: number;
+    nitrogen_0_5cm: number;
+    phosphorus_0_5cm: number;
+    potassium_0_5cm: number;
+  };
+}
+
+interface HourlyForecastItem {
+  time: string;
+  temp: number;
+  weather: string;
+  wind: number;
+}
+
+const getWeatherIcon = (weather: string) => {
+  switch (weather) {
+    case "Clear":
+      return <WiDaySunny />;
+    case "Clouds":
+      return <WiCloud />;
+    case "Rain":
+      return <WiRain />;
+    default:
+      return <WiCloud />;
   }
-  
-  function SamplePrevArrow(props: any) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block", background: "#bcd379",  }}
-        onClick={onClick}
-      />
-    );
-  }
+};
+
+function SampleNextArrow(props: any) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={`${className}`}
+      onClick={onClick}
+    />
+  );
+}
+
+function SamplePrevArrow(props: any) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={`${className}`}
+      onClick={onClick}
+    />
+  );
+}
+
+const CustomSlide: React.FC<{ item: HourlyForecastItem }> = ({ item }) => (
+  <div
+    style={{
+      textAlign: "center",
+      backgroundColor: "#f6f8f9",
+      borderRadius: "12px",
+      padding: "10px",
+      margin: "0 5px",
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+    }}
+  >
+    <Text strong style={{ fontSize: "14px", display: "block" }}>
+      {item.time}
+    </Text>
+    <div style={{ margin: "10px 0" }}>{getWeatherIcon(item.weather)}</div>
+    <Text style={{ fontSize: "16px", fontWeight: "bold" }}>{item.temp}</Text>
+  </div>
+);
+
+const handleMenuClick = (e: any) => {
+  console.log('Menu clicked:', e);
+};
+
+const menu = (
+  <Menu onClick={handleMenuClick}>
+    <Menu.Item key="1">Update Schedule</Menu.Item>
+    <Menu.Item key="2">View Details</Menu.Item>
+  </Menu>
+);
+
+const WeeklySlide: React.FC<{ item: any }> = ({ item }) => (
+  <div
+    style={{
+      textAlign: "center",
+      backgroundColor: "#f6f8f9",
+      borderRadius: "12px",
+      padding: "10px",
+      margin: "0 5px",
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+    }}
+  >
+    <Text strong style={{ fontSize: "14px", display: "block" }}>
+      {item.day}
+    </Text>
+    <Text style={{ fontSize: "12px", color: "#888", whiteSpace: "nowrap" }}>{item.date}</Text>
+    <div style={{ margin: "10px 0" }}>{getWeatherIcon(item.weather)}</div>
+    <Text style={{ fontSize: "16px", fontWeight: "bold" }}>{item.temp}</Text>
+  </div>
+);
+
 
 const RightSidebar: React.FC = () => {
   const { forecast, fetchWeather, place } = useWeatherStore();
@@ -67,24 +140,21 @@ const RightSidebar: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedView, setSelectedView] = useState<'Today' | 'Week'>('Today');
 
+  const { styles } = useStyle();
+
+
   const weatherApiKey = 'c01125b343b6934e4c8a22f0edc300b7'; // Điền API Key vào đây
   const soilGridsApiUrl = 'https://rest.isric.org/soilgrids/v2.0/classification/query?lon=24&lat=24&number_classes=5';
 
-//   const hourlyForecastData = [
-//     { time: '12 PM', temp: 24, weather: 'Sunny', wind: 10 },
-//     { time: '01 PM', temp: 26, weather: 'Sunny', wind: 12 },
-//     { time: '02 PM', temp: 28, weather: 'Sunny', wind: 15 },
-//     { time: '03 PM', temp: 29, weather: 'Sunny', wind: 17 },
-//   ];
-
-const settings = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
     nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />
+    prevArrow: <SamplePrevArrow />,
+    className: styles.customSlick,
   };
 
   const hourlyForecastData = [
@@ -115,37 +185,25 @@ const settings = {
   ];
 
   const farmAlertsData = [
-    { alert: 'Cảnh báo: Gió mạnh trên 20 km/h vào lúc 03:00 PM' },
-    { alert: 'Cảnh báo Mưa Lớn: Mưa dự báo 20mm vào ngày mai' },
-    { alert: 'Cảnh báo Sương Mù: Sương mù dày đặc sáng mai' },
+    { alert: 'Gió mạnh trên 20 km/h vào lúc 03:00 PM', level: 'high' },
+    { alert: 'Mưa dự báo 20mm vào ngày mai', level: 'medium' },
+    { alert: 'Sương mù dày đặc sáng mai', level: 'low' },
   ];
 
-  // Hàm lấy icon thời tiết
-  const getWeatherIcon = (weather: string) => {
-    switch (weather) {
-      case "Clear":
-        return <WiDaySunny />;
-      case "Clouds":
-        return <WiCloud />;
-      case "Rain":
-        return <WiRain />;
-      default:
-        return <WiCloud />;
-    }
-  };
-
   console.log("forecast", forecast);
-  
+  console.log("soildData", soilData);
+
+
 
   useEffect(() => {
     const fetchSoilData = async () => {
-        try {
-          const soilResponse = await axios.get(soilGridsApiUrl);
-          setSoilData(soilResponse.data);
-        } catch (error) {
-          message.error('Không thể lấy dữ liệu đất.');
-        }
-      };
+      try {
+        const soilResponse = await axios.get(soilGridsApiUrl);
+        setSoilData(soilResponse.data);
+      } catch (error) {
+        message.error('Không thể lấy dữ liệu đất.');
+      }
+    };
     fetchWeather(); // Lấy dữ liệu thời tiết khi load component
     fetchSoilData();
   }, [place]);
@@ -175,80 +233,89 @@ const settings = {
       icon: getWeatherIcon(item.weather[0].main),
     }));
 
-    const weeklyForecastData = [
-        { day: 'Mon', temp: 22, weather: 'Cloudy' },
-        { day: 'Tue', temp: 25, weather: 'Rainy' },
-        { day: 'Wed', temp: 28, weather: 'Sunny' },
-        { day: 'Thu', temp: 24, weather: 'Windy' },
-        { day: 'Fri', temp: 23, weather: 'Partly Cloudy' },
-        { day: 'Sat', temp: 27, weather: 'Sunny' },
-        { day: 'Sun', temp: 29, weather: 'Thunderstorm' },
-      ];
+  const weeklyForecastData = [
+    { day: "Mon", date: "Jan 29", temp: 22, weather: "Clouds" },
+    { day: "Tue", date: "Jan 30", temp: 24, weather: "Rain" },
+    { day: "Wed", date: "Jan 31", temp: 28, weather: "Sunny" },
+    { day: "Thu", date: "Feb 1", temp: 24, weather: "Clouds" },
+    { day: "Fri", date: "Feb 2", temp: 23, weather: "Rain" },
+    { day: "Sat", date: "Feb 3", temp: 27, weather: "Sunny" },
+    { day: "Sun", date: "Feb 4", temp: 29, weather: "Sunny" },
+  ];
+
 
   return (
     <Sider className={style.rightSidebar} width={270}>
-        {/* Segmented Button */}
-        <Row justify="space-between" align="middle" style={{ marginBottom: '10px' }}>
-          <Col span={12}>
-            <Segmented
-              options={['Today', 'Week']}
-              value={selectedView}
-              onChange={setSelectedView}
-              style={{ width: '100%' }}
-            />
-          </Col>
-        </Row>
+      {/* Segmented Button */}
+      <Row justify="space-between" align="middle" style={{ marginBottom: '10px' }}>
+        <Col span={12}>
+          <Segmented
+            options={['Today', 'Week']}
+            value={selectedView}
+            onChange={setSelectedView}
+            style={{ width: '100%' }}
+          />
+        </Col>
+      </Row>
 
-        {/* Render data based on selection */}
-        {selectedView === 'Today' ? (
-          <div style={{ position: 'relative', width: '80%', marginLeft: "20px" }}>
-            <Slider {...settings}>
-              {hourlyForecastData.map((item, index) => (
-                <div key={index} style={{ minWidth: '100px', textAlign: 'center' }}>
-                    <Text>{item.time}</Text>
-                    <br />
-                    <div>{getWeatherIcon(item.weather)}</div>
-                    <Text>{item.temp}°C</Text>
-                </div>
-              ))}
-            </Slider>
-          </div>
-        ) : (
-          <Text>7-day forecast coming soon...</Text> // Placeholder for weekly forecast
+      {/* Render data based on selection */}
+      {selectedView === 'Today' ? (
+        <div style={{ position: 'relative', width: '80%', marginLeft: "20px" }}>
+          <Slider {...settings}>
+            {hourlyForecastData.map((item, index) => (
+              <CustomSlide key={index} item={item} />
+            ))}
+          </Slider>
+        </div>
+      ) : (
+        <div style={{ position: 'relative', width: '80%', marginLeft: "20px" }}>
+          <Slider {...settings}>
+            {weeklyForecastData.map((item, index) => (
+              <WeeklySlide key={index} item={item} />
+            ))}
+          </Slider>
+        </div>
+      )}
+
+      <Divider />
+
+      <List
+        dataSource={farmAlertsData}
+        renderItem={(item) => (
+          <List.Item
+            style={{
+              backgroundColor: item.level === 'high' ? '#FFCCCC' : item.level === 'medium' ? '#FFF3CD' : '#D4EDDA',
+              borderRadius: '5px',
+              marginBottom: '10px',
+              padding: '10px',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: '13px',
+                fontWeight: 'bold',
+                color: item.level === 'high' ? '#FF0000' : item.level === 'medium' ? '#FF9900' : '#28A745',
+              }}
+            >
+              {item.alert}
+            </Text>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <Button
+                type="link"
+                style={{
+                  float: 'right',
+                  fontSize: '14px',
+                  color: item.level === 'high' ? '#FF0000' : item.level === 'medium' ? '#FF9900' : '#28A745',
+                }}
+              >
+                <MoreOutlined />
+              </Button>
+            </Dropdown>
+          </List.Item>
         )}
+      />
 
-      {/* This Week
-      <div className={style.weekSection}>
-        <Row justify="space-between" align="middle" className={style.weekHeader}>
-          <Text strong className={style.title}>
-            This Week
-          </Text>
-          <div className={style.weekControls}>
-            <Text>{"<"}</Text>
-            <Text style={{ margin: "0 8px" }}>{">"}</Text>
-          </div>
-        </Row>
-        <List
-          dataSource={weekData}
-          renderItem={(item) => (
-            <List.Item>
-              <Row align="middle" className={style.weekItem}>
-                <Col span={8}>
-                  <Text>
-                    {item.day} <br /> {item.date}
-                  </Text>
-                </Col>
-                <Col span={8} style={{ textAlign: "center" }}>
-                  <div>{item.icon}</div>
-                </Col>
-                <Col span={8} style={{ textAlign: "right" }}>
-                  <Text className={style.tempText}>{item.temp}</Text>
-                </Col>
-              </Row>
-            </List.Item>
-          )}
-        />
-      </div> */}
+      <Divider />
     </Sider>
   );
 };

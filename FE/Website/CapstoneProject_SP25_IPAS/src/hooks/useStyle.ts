@@ -115,6 +115,31 @@ const useStyle = createStyles(({ css }) => {
       }
 
     `,
+    customInput: css`
+      .ant-picker-input > input,
+      .ant-input .ant-input-outlined,
+      input {
+        font-size: 16px !important;
+  }
+    `,
+    customPlaceholder: css`
+      .ant-select-selection-placeholder {
+        font-size: 16px;
+      }
+    `,
+    customSlick: css`
+      .slick-next, .slick-prev {
+        z-index: 2;
+  }
+
+      .slick-next:before, .slick-prev:before {
+        font-size: 20px;
+        line-height: 1;
+        opacity: 0.75;
+        color: #20461e;
+  }
+`
+
   };
 });
 

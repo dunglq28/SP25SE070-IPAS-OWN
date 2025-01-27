@@ -4,7 +4,7 @@
     background-color: #D3F0E5;
 
     .weatherDetails {
-        margin-top: 10px;
+        // margin-top: 10px;
     
         div {
             padding: 10px 25px;
@@ -75,15 +75,17 @@
         .rowContainer {
             position: relative;
             height: 250px;
-            left: 15%;
+            left: 8%;
             margin-top: 40px;
             margin-left: auto;
+            display: flex;
+            gap: 20px;
         
             .chart {
                 position: absolute;
                 top: -70px;
                 // left: 0%;
-                width: 67%;
+                width: 80%;
                 height: 100%;
                 z-index: 2;
                 // margin-right: 20%;
