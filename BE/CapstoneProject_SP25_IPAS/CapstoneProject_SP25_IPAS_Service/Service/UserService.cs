@@ -458,7 +458,9 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                         FullName = model.FullName,
                         CreateDate = DateTime.Now,
                         UpdateDate = DateTime.Now,
-                        AvatarURL = model.Avatar ?? "",
+                        Gender = model.Gender,
+                        PhoneNumber = model.Phone,
+                        Dob = model.Dob,
                         Status = "Active",
                         IsDelete = false,
                     };
@@ -772,7 +774,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             string sendOtp = await CreateOtpRegisterAsync(email);
             return new BusinessResult(Const.SUCCESS_SEND_OTP_RESET_PASSWORD_CODE, Const.SUCCESS_SEND_OTP_RESET_PASSWORD_USER_MSG, new RegisterSendOtpResponse()
             {
-                OtpHashSHA256 = sendOtp
+                otpHash = sendOtp
             });
         }
 
