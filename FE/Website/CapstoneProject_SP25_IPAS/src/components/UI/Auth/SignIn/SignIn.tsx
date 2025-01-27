@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input, Button, Form, Space, Divider } from "antd";
 import { FaGoogle } from "react-icons/fa";
 import style from "./SignIn.module.scss";
@@ -12,6 +12,14 @@ interface Props {
 }
 
 const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (!isSignUp) {
+      form.resetFields();
+    }
+  }, [isSignUp, form]);
+
   const handleSignInGoogle = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       console.log("Google Sign-In Success:", tokenResponse);
@@ -33,7 +41,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
     <div
       className={`${style["form-container"]} ${style["sign-in"]} ${isSignUp ? style.hidden : ""}`}
     >
-      <Form name="sign_in" initialValues={{ remember: true }} layout="vertical">
+      <Form form={form} name="sign_in" initialValues={{ remember: true }} layout="vertical">
         <h1 className={style.formTitle}>Sign In</h1>
 
         <div className={style["inputGroup"]}>
@@ -52,7 +60,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp }) => {
             // help="Should be combination of numbers & alphabets"
           >
             <Input
-              placeholder="Email" style={{fontSize: "16px", backgroundColor: "white", borderRadius: "6px", border: "1px solid #d9d9d9"}} />
+              placeholder="Email" style={{ fontSize: "16px", backgroundColor: "white", borderRadius: "6px", border: "1px solid #d9d9d9" }} />
           </Form.Item>
 
           <Form.Item

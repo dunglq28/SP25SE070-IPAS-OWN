@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input, Button, DatePicker, Select, Form, Row, Col, Divider } from "antd";
 import GoogleButton from "react-google-button";
 import style from "./SignUp.module.scss";
@@ -11,9 +11,18 @@ interface Props {
 }
 
 const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
+    const [form] = Form.useForm();
     const navigate = useNavigate();
-    console.log("SignUp", isSignUp);
     const { styles } = useStyle();
+
+    useEffect(() => {
+        if (!isSignUp) {
+          form.resetFields();
+        }
+      }, [isSignUp, form]);
+
+    console.log("SignUp", isSignUp);
+    
 
     const signUpWithGoogle = async () => {
         // signInWithPopup(auth, provider).then((data) => {
@@ -45,6 +54,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
             <h1 style={{ fontSize: "30px", marginBottom: "30px" }}>Create Your Account</h1>
 
             <Form
+                form={form}
                 name="sign_up"
                 initialValues={{ remember: true }}
                 layout="vertical"
@@ -120,9 +130,9 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                         <Form.Item
                             name="gender"
                             rules={[{ required: true, message: "Please select your gender!" }]}
-                            
+
                         >
-                            <Select placeholder="Gender" style={{height: "50px", fontSize: "16px"}} className={`${styles.customPlaceholder}`}>
+                            <Select placeholder="Gender" style={{ height: "50px", fontSize: "16px" }} className={`${styles.customPlaceholder}`}>
                                 <Select.Option value="male">Male</Select.Option>
                                 <Select.Option value="female">Female</Select.Option>
                                 <Select.Option value="other">Other</Select.Option>
