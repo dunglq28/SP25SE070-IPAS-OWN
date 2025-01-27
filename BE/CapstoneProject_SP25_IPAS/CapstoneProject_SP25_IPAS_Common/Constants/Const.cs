@@ -127,6 +127,8 @@ namespace CapstoneProject_SP25_IPAS_Common
         #region Plant-Criteria
         public static int SUCCESS_APPLY_LIST_CRITERIA_PLANTS_CODE = 200;
         public static string SUCCESS_APPLY_LIST_CRITERIA_PLANTS_MSG = "Apply criteias for selected plants success";
+        public static int SUCCES_CHECK_PLANT_CRITERIA_CODE = 200;
+        public static string SUCCES_CHECK_PLANT_CRITERIA_MSG = "Check criteria of plant success";
         #endregion
         #region landplot
         public static int SUCCESS_GET_ALL_LANDPLOT_IN_FARM_CODE = 200;

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -67,20 +68,13 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public async Task<BusinessResult> DeleteCriteriaForPlant(int plantId, int criteriaId)
+        public async Task<BusinessResult> UpdateCriteriaForPlant(int plantId, int criteriaId)
         {
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
-                    if (criteriaId <= 0)
-                    {
-                        return new BusinessResult();
-                    }
-                    if (plantId <= 0)
-                    {
-                        return new BusinessResult();
-                    }
+                    //var plantCriteria = await _unitOfWork.plant
                     return new BusinessResult();
                     //var plantcriteria
                 }
@@ -91,9 +85,37 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
-        public Task<BusinessResult> CheckCriteriaForPlant(CheckPlantCriteriaRequest checkPlantCriteriaRequest)
+        public async Task<BusinessResult> CheckCriteriaForPlant(CheckPlantCriteriaRequest checkPlantCriteriaRequest)
         {
-            throw new NotImplementedException();
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    foreach (var criteria in checkPlantCriteriaRequest.criteriaDatas)
+                    {
+                        Expression<Func<PlantCriteria, bool>> filter = x => x.CriteriaId == criteria.CriteriaId && x.PlantId == checkPlantCriteriaRequest.PlantId;
+                        var plantCriteria = await _unitOfWork.PlantCriteriaRepository.GetByCondition(filter);
+                        // neu khong co doi tuong thi bo qua luon, khoi update
+                        if (plantCriteria != null)
+                        {
+                            plantCriteria.IsChecked = criteria.IsChecked;
+                        }
+                        _unitOfWork.PlantCriteriaRepository.Update(plantCriteria!);
+                    }
+                    int result = await _unitOfWork.SaveAsync();
+                    if (result > 0)
+                    {
+                        await transaction.CommitAsync();
+                        var newPlantCriteria = await _unitOfWork.PlantCriteriaRepository.GetAllCriteriaOfPlantNoPaging(checkPlantCriteriaRequest.PlantId);
+                        return new BusinessResult(Const.SUCCES_CHECK_PLANT_CRITERIA_CODE, Const.SUCCES_CHECK_PLANT_CRITERIA_MSG, newPlantCriteria);
+                    }
+                    else return new BusinessResult(Const.ERROR_EXCEPTION, Const.FAIL_TO_SAVE_TO_DATABASE, new { success = false });
+                }
+                catch (Exception ex)
+                {
+                    return new BusinessResult(Const.ERROR_EXCEPTION, ex.Message);
+                }
+            }
         }
 
     }
