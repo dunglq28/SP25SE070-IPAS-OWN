@@ -237,6 +237,25 @@ namespace CapstoneProject_SP25_IPAS_API.Controllers
             }
         }
 
+        [HttpPost(APIRoutes.Authentication.ValidateRoleUserInFarm, Name = "validateRoleUserInFarm")]
+        public async Task<IActionResult> ValidateRoleUserInFarm([FromBody] ValidateRoleUserInFarm validateRoleUserInFarm)
+        {
+            try
+            {
+                var result = await _userService.ValidateRoleOfUserInFarm(validateRoleUserInFarm.RefreshToken, validateRoleUserInFarm.FarmId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var response = new BaseResponse()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = ex.Message
+                };
+                return BadRequest(response);
+            }
+        }
+
     }
 }
 

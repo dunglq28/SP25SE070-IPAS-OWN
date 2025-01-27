@@ -38,5 +38,6 @@ namespace CapstoneProject_SP25_IPAS_Service.IService
         public Task<BusinessResult> GetAllUsersByRole(string roleName);
         public Task<BusinessResult> GetAllUsers(PaginationParameter paginationParameter);
         public Task<BusinessResult> LoginGoogleHandler(string GoogleToken);
+        public Task<BusinessResult> ValidateRoleOfUserInFarm(string jwtToken, int farmId);
     }
 }

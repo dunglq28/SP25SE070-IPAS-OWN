@@ -27,4 +27,9 @@
     {
         public string VideoURL { get; set; }
     }
+    public class ValidateRoleUserInFarm
+    {
+        public string RefreshToken { get; set; }
+        public int FarmId { get; set; }
+    }
 }

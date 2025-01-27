@@ -97,6 +97,7 @@ public partial class IpasContext : DbContext
     public virtual DbSet<TypeWork> TypeWorks { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<UserFarm> UserFarms { get; set; }
 
     public virtual DbSet<UserWorkLog> UserWorkLogs { get; set; }
 
