@@ -79,6 +79,18 @@ const useStyle = createStyles(({ css }) => {
         background-color: ${primaryColor};
       }
     `,
+    customInput: css`
+      .ant-picker-input > input,
+      .ant-input .ant-input-outlined,
+      input {
+        font-size: 16px !important;
+  }
+    `,
+    customPlaceholder: css`
+      .ant-select-selection-placeholder {
+        font-size: 16px;
+      }
+    `
   };
 });
 

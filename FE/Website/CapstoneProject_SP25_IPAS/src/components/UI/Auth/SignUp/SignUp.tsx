@@ -2,8 +2,8 @@ import React from "react";
 import { Input, Button, DatePicker, Select, Form, Row, Col, Divider } from "antd";
 import GoogleButton from "react-google-button";
 import style from "./SignUp.module.scss";
-import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useStyle } from "@/hooks";
 
 interface Props {
     toggleForm: () => void;
@@ -13,6 +13,7 @@ interface Props {
 const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
     const navigate = useNavigate();
     console.log("SignUp", isSignUp);
+    const { styles } = useStyle();
 
     const signUpWithGoogle = async () => {
         // signInWithPopup(auth, provider).then((data) => {
@@ -21,23 +22,23 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
     }
 
     const handleSignUp = async (values: any) => {
-    
+
         try {
-          // send otp request
-          
-          if (true) {
-            console.log("OTP sent successfully!");
-            
-            navigate("/sign-up/otp", { state: { type: "sign-up" } });
-          } else {
-            console.log("OTP failed to send!");
-            
-          }
+            // send otp request
+
+            if (true) {
+                console.log("OTP sent successfully!");
+
+                navigate("/sign-up/otp", { state: { type: "sign-up" } });
+            } else {
+                console.log("OTP failed to send!");
+
+            }
         } catch (error: any) {
-          console.error(error);
+            console.error(error);
         }
-      };
-      
+    };
+
 
     return (
         <div className={`${style["form-container"]} ${style["sign-up"]} ${!isSignUp ? style.hidden : ""}`} style={{ padding: "50px 100px", textAlign: "center" }}>
@@ -47,14 +48,23 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                 name="sign_up"
                 initialValues={{ remember: true }}
                 layout="vertical"
-                style={{ maxWidth: "500px", margin: "0 auto" }}
-                onFinish={handleSignUp} 
+                style={{ maxWidth: "500px", margin: "0 auto", fontSize: "16px" }}
+                onFinish={handleSignUp}
             >
                 <Form.Item
                     name="fullName"
                     rules={[{ required: true, message: "Please input your full name!" }]}
                 >
-                    <Input placeholder="Full Name" />
+                    <Input
+                        placeholder="Full Name"
+                        style={{
+                            backgroundColor: "white",
+                            borderRadius: "6px",
+                            border: "1px solid #d9d9d9",
+                            fontSize: "16px",
+                            margin: "0px"
+                        }}
+                    />
                 </Form.Item>
 
                 <Row gutter={16}>
@@ -64,12 +74,19 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                             rules={[
                                 { required: true, message: "Please input your email!" },
                                 {
-                                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|int|mil|coop|aero|museum)$/,
-                                  message: "Please enter a valid email!"
+                                    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|int|mil|coop|aero|museum)$/,
+                                    message: "Please enter a valid email!"
                                 }
-                              ]}
+                            ]}
                         >
-                            <Input placeholder="Email" />
+                            <Input
+                                placeholder="Email"
+                                style={{
+                                    backgroundColor: "white",
+                                    borderRadius: "6px",
+                                    border: "1px solid #d9d9d9",
+                                    fontSize: "16px",
+                                }} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -77,7 +94,14 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                             name="phoneNumber"
                             rules={[{ required: true, message: "Please input your phone number!" }]}
                         >
-                            <Input placeholder="Phone Number" />
+                            <Input
+                                placeholder="Phone Number"
+                                style={{
+                                    backgroundColor: "white",
+                                    borderRadius: "6px",
+                                    border: "1px solid #d9d9d9",
+                                    fontSize: "16px",
+                                }} />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -88,7 +112,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                             name="dateOfBirth"
                             rules={[{ required: true, message: "Please input your date of birth!" }]}
                         >
-                            <DatePicker placeholder="Date of Birth" style={{ width: "100%" }} />
+                            <DatePicker placeholder="Date of Birth" style={{ width: "100%", fontSize: "16px" }} className={`${styles.customInput}`} />
                         </Form.Item>
                     </Col>
 
@@ -96,8 +120,9 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                         <Form.Item
                             name="gender"
                             rules={[{ required: true, message: "Please select your gender!" }]}
+                            
                         >
-                            <Select placeholder="Gender">
+                            <Select placeholder="Gender" style={{height: "50px", fontSize: "16px"}} className={`${styles.customPlaceholder}`}>
                                 <Select.Option value="male">Male</Select.Option>
                                 <Select.Option value="female">Female</Select.Option>
                                 <Select.Option value="other">Other</Select.Option>
@@ -110,7 +135,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                     name="password"
                     rules={[{ required: true, message: "Please input your password!" }]}
                 >
-                    <Input.Password placeholder="Password" />
+                    <Input.Password placeholder="Password" className={`${styles.customInput}`} />
                 </Form.Item>
 
                 <Form.Item
@@ -127,7 +152,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp }) => {
                         }),
                     ]}
                 >
-                    <Input.Password placeholder="Confirm Password" />
+                    <Input.Password placeholder="Confirm Password" className={`${styles.customInput}`} />
                 </Form.Item>
 
                 <Form.Item>
