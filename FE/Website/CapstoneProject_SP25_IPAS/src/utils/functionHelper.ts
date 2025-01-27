@@ -40,6 +40,21 @@ export const convertKeysToCamelCase = (obj: any): any => {
   }, {} as any);
 };
 
+export const hashOtp = async (input: string): Promise<string> => {
+  // Chuyển OTP thành mảng byte
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+
+  // Tạo hash SHA-256
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+
+  // Chuyển buffer nhị phân thành Base64
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const base64String = btoa(String.fromCharCode(...hashArray));
+
+  return base64String;
+};
+
 export const buildParams = (
   currentPage?: number,
   rowsPerPage?: number,
@@ -147,6 +162,8 @@ export const formatCurrency = (amount: string): string => {
     .trim();
 };
 
+export const DATE_FORMAT = "DD/MM/YYYY";
+
 export const getCurrentDate = (): string => {
   return moment().format("dddd, DD/MM/YYYY");
 };
@@ -168,15 +185,6 @@ export const getRoleName = (roleId: number): string => {
     return "Quản lý chi nhánh";
   }
   return UserRole[roleId] ? `Vai trò: ${UserRole[roleId]}` : "Vai trò không xác định";
-};
-
-export const getGender = (gender: string): string => {
-  if (gender === "Male") {
-    return "Nam";
-  } else if (gender === "Female") {
-    return "Nữ";
-  }
-  return gender;
 };
 
 export const formatTime = (time: number) => {

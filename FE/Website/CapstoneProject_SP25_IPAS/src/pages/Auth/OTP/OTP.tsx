@@ -1,21 +1,25 @@
 import { enterOTP } from "@/assets/images/images";
 import style from "./OTP.module.scss";
-import { Button, Col, Form, Row, Typography } from "antd";
-import { InputOTP } from "antd-input-otp";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Button, Col, Form, Input, Row, Typography } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { authService } from "@/services";
+import { hashOtp } from "@/utils";
 
 const { Title, Text } = Typography;
 
 function OTP() {
-  const [form] = Form.useForm();
-  const [otp, setOtp] = useState("");
+  const navigate = useNavigate();
   const location = useLocation();
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [form] = Form.useForm();
+  // const [formRegister, setFormRegister] = useState<any | null>(null);
+  const TIME_COUNTER = 30;
+  const [timeLeft, setTimeLeft] = useState(TIME_COUNTER);
+  const otpRef = useRef<string | null>(location.state?.otp);
+  const formRegisterRef = useRef<any | null>(location.state?.values);
 
-  // const params = new URLSearchParams(location.search);
-  // const type = params.get("type");
   const type = location.state?.type;
+  // const formRegister = location.state?.values;
 
   const instructions =
     type === "sign-up"
@@ -23,26 +27,79 @@ function OTP() {
       : "An OTP has been sent to your email to reset your password. Please enter the code below.";
 
   useEffect(() => {
+    console.log(otpRef.current);
+
+    // Kiểm tra `timeLeft` từ localStorage
+    const storedTime = localStorage.getItem("otpTimeLeft");
+    const now = Date.now();
+    const savedTimeLeft = storedTime ? parseInt(storedTime) : 0;
+
+    if (savedTimeLeft > now) {
+      // Nếu thời gian chưa hết hạn, tính `timeLeft` còn lại
+      setTimeLeft(Math.ceil((savedTimeLeft - now) / 1000));
+    } else {
+      // Nếu hết hạn, đặt lại về 60 giây
+      setTimeLeft(TIME_COUNTER);
+    }
+
+    // Xóa timeout khi rời khỏi trang
+    return () => {
+      localStorage.removeItem("otpTimeLeft");
+    };
+  }, []);
+
+  useEffect(() => {
     if (timeLeft > 0) {
+      // Lưu lại thời gian hết hạn vào localStorage
+      const expiryTime = Date.now() + timeLeft * 1000;
+      localStorage.setItem("otpTimeLeft", expiryTime.toString());
+
       const timer = setTimeout(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
+
       return () => clearTimeout(timer);
+    } else {
+      // Khi hết thời gian, xóa giá trị lưu trong localStorage
+      localStorage.removeItem("otpTimeLeft");
     }
   }, [timeLeft]);
 
-  const handleFinish = (values: { otp: string }) => {
-    console.log("OTP Submitted:", values.otp);
-    if (type === "sign-up") {
-      // Logic verify account
-    } else if (type === "reset") {
-      // Logic reset password
+  const handleFinish = async (values: { otp: string }) => {
+    const otpUser = await hashOtp(values.otp);
+    console.log("OTP Submitted:", otpUser);
+    console.log("Time:", timeLeft);
+    console.log(otpUser !== otpRef.current);
+    if (otpUser !== otpRef.current) {
+      form.setFields([
+        {
+          name: "otp",
+          errors: ["The OTP you entered is incorrect. Please try again!"],
+        },
+      ]);
+      return;
+    }
+    if (timeLeft <= 0) {
+      form.setFields([
+        {
+          name: "otp",
+          errors: ["The OTP has expired. Please request a new one!"],
+        },
+      ]);
+      return;
     }
   };
 
-  const handleResendOTP = () => {
-    console.log("Resend OTP clicked");
-    setTimeLeft(60);
+  const handleResendOTP = async () => {
+    try {
+      var result = await authService.sendOTP(formRegisterRef.current.email);
+      if (result.statusCode === 200) {
+        otpRef.current = result.data.opt;
+        setTimeLeft(TIME_COUNTER);
+      }
+    } catch (error) {
+      console.error("Error in handleSignUp:", error);
+    }
   };
 
   const formatTime = (seconds: number) => {
@@ -55,11 +112,7 @@ function OTP() {
     <div className={style.container}>
       <Row justify="center" align="middle" gutter={32}>
         <Col xs={24} sm={12} md={12}>
-          <img
-            src={enterOTP}
-            alt="Enter OTP gif"
-            className={style.otpImg}
-          />
+          <img src={enterOTP} alt="Enter OTP gif" className={style.otpImg} />
         </Col>
 
         <Col xs={24} sm={12} md={8}>
@@ -67,32 +120,22 @@ function OTP() {
             <Title level={2} className={style.title}>
               Enter OTP
             </Title>
-            <Text className={style.infoText}>
-              {instructions}
-            </Text>
+            <Text className={style.infoText}>{instructions}</Text>
             <div className={style.timerContainer}>
               <Text>Time Remaining:</Text>
-              <span className={style.timer}>
-                {formatTime(timeLeft)}
-              </span>
+              <span className={style.timer}>{formatTime(timeLeft)}</span>
             </div>
-            <Form
-              onFinish={handleFinish}
-              form={form}
-              layout="vertical"
-              className={style.form}
-            >
+            <Form form={form} onFinish={handleFinish} layout="vertical" className={style.form}>
               <Form.Item
                 name="otp"
+                validateTrigger="onChange"
                 rules={[
                   { required: true, message: "Please enter the OTP!" },
                   { len: 6, message: "OTP must be 6 digits!" },
                 ]}
+                className={style.inputOpt}
               >
-                <InputOTP
-                  autoSubmit={form}
-                  inputType="numeric"
-                />
+                <Input.OTP inputMode="numeric" />
               </Form.Item>
 
               <Form.Item>
@@ -109,19 +152,24 @@ function OTP() {
                     </Button>
                   </Col>
                   <Col span={12}>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      block
-                      className={style.verifyBtn}
-                    >
+                    <Button type="primary" htmlType="submit" block className={style.verifyBtn}>
                       Verify OTP
                     </Button>
                   </Col>
                 </Row>
               </Form.Item>
             </Form>
-            <a className={style.back} href="/auth?mode=sign-in">Back to sign in</a>
+            <div className={style.back}>
+              <a
+                onClick={() => {
+                  navigate("/auth?mode=sign-up", {
+                    state: { formRegister: formRegisterRef.current },
+                  });
+                }}
+              >
+                Back to sign up
+              </a>
+            </div>
           </div>
         </Col>
       </Row>
