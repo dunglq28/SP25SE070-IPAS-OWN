@@ -45,7 +45,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp, handleGoogleLoginSucces
       setTimeout(() => {
         if (result.statusCode === 200) {
           setIsLoading(false);
-          navigate("/sign-up/otp", { state: { type: "sign-up", values, otp: result.data.opt } });
+          navigate("/sign-up/otp", { state: { type: "sign-up", values, otp: result.data.otpHash } });
         }
       }, 500);
     } catch (error) {

@@ -1,4 +1,10 @@
-import { ApiResponse, LoginResponse, OtpResponse } from "@/payloads";
+import {
+  ApiResponse,
+  LoginResponse,
+  OtpResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from "@/payloads";
 import { axiosNoAuth } from "@/api";
 
 export const loginGoogle = async (googleToken: string): Promise<ApiResponse<LoginResponse>> => {
@@ -26,5 +32,20 @@ export const sendOTP = async (email: string): Promise<ApiResponse<OtpResponse>> 
     email: email,
   });
   const apiResponse = res.data as ApiResponse<OtpResponse>;
+  return apiResponse;
+};
+
+export const register = async (
+  registerRequest: RegisterRequest,
+): Promise<ApiResponse<RegisterResponse>> => {
+  const { email, password, fullName, gender, dob } = registerRequest;
+  const res = await axiosNoAuth.post("register", {
+    email,
+    password,
+    fullName,
+    gender,
+    dob,
+  });
+  const apiResponse = res.data as ApiResponse<RegisterResponse>;
   return apiResponse;
 };
