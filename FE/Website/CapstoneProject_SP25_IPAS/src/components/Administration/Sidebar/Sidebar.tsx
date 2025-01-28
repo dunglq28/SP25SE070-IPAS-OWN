@@ -7,7 +7,8 @@ import "@/App.css";
 import { PATHS } from "@/routes";
 import { useSidebarStore } from "@/stores";
 import { ActiveMenu, MenuItem } from "@/types";
-import { useStyle } from "@/hooks";
+import { authService } from "@/services";
+import { useAuth } from "@/hooks";
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -212,6 +213,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
       isView: !isDefault,
     },
   ];
+
+  const handleLogout = async () => {
+    const { getAuthData, clearAuthData } = useAuth();
+    const authData = getAuthData();
+    if (authData.refreshToken) {
+      var result = await authService.logout(authData.refreshToken);
+      if (result.statusCode === 200) {
+        clearAuthData();
+        navigate(PATHS.AUTH.LANDING);
+      } else {
+        console.log(result.message);
+      }
+    }
+  };
 
   menuItems = mergeActivePaths(menuItems);
 
@@ -431,6 +446,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
           style={{
             justifyContent: !isExpanded ? "center" : undefined,
           }}
+          onClick={handleLogout}
         >
           <Tooltip title={!isExpanded ? "Logout Account" : ""} placement="right">
             <Icons.logout className={style.logoutIcon} />

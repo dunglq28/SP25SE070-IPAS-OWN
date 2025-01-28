@@ -5,21 +5,23 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authService } from "@/services";
 import { formatToISO8601, hashOtp } from "@/utils";
+import { RegisterRequest } from "@/payloads";
+import { useAuth } from "@/hooks";
+import { PATHS } from "@/routes";
+import { toast } from "react-toastify";
 
 const { Title, Text } = Typography;
 
 function OTP() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
-  // const [formRegister, setFormRegister] = useState<any | null>(null);
   const TIME_COUNTER = 120;
   const [timeLeft, setTimeLeft] = useState(TIME_COUNTER);
   const otpRef = useRef<string | null>(location.state?.otp);
   const formRegisterRef = useRef<any | null>(location.state?.values);
-
   const type = location.state?.type;
-  // const formRegister = location.state?.values;
 
   const instructions =
     type === "sign-up"
@@ -83,20 +85,39 @@ function OTP() {
       ]);
       return;
     }
-    console.log();
-    
+
     if (otpUser === otpRef.current) {
-      const registerRequest = {
-        email: formRegisterRef.current.email,
-        password: formRegisterRef.current.password,
-        fullName: formRegisterRef.current.fullName,
-        phone: formRegisterRef.current.phoneNumber,
-        gender: formRegisterRef.current.gender,
-        dob: formatToISO8601(formRegisterRef.current.dateOfBirth),
-      };
-      var result = await authService.register(registerRequest);
-      console.log(result);
-      if (result.statusCode === 200) {
+      try {
+        setIsLoading(true);
+        const registerRequest: RegisterRequest = {
+          email: formRegisterRef.current.email,
+          password: formRegisterRef.current.password,
+          fullName: formRegisterRef.current.fullName,
+          phone: formRegisterRef.current.phoneNumber,
+          gender: formRegisterRef.current.gender === "male" ? "Male" : "Female",
+          dob: formRegisterRef.current.dateOfBirth,
+        };
+
+        var result = await authService.register(registerRequest);
+        if (result.statusCode === 200) {
+          const { saveAuthData } = useAuth();
+          const registerResponse = {
+            accessToken: result.data.authenModel.accessToken,
+            refreshToken: result.data.authenModel.refreshToken,
+            fullName: result.data.fullname,
+            avatar: result.data.avatar,
+          };
+
+          saveAuthData(registerResponse);
+          const toastMessage = result.message;
+          navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
+        } else if (result.statusCode === 400) {
+          toast.error(result.message);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -163,7 +184,13 @@ function OTP() {
                     </Button>
                   </Col>
                   <Col span={12}>
-                    <Button type="primary" htmlType="submit" block className={style.verifyBtn}>
+                    <Button
+                      loading={isLoading}
+                      type="primary"
+                      htmlType="submit"
+                      block
+                      className={style.verifyBtn}
+                    >
                       Verify OTP
                     </Button>
                   </Col>

@@ -27,7 +27,6 @@
 
     .dateWrapper {
       align-items: center;
-      justify-content: center;
       gap: 8px;
 
       .dateIcon {
@@ -73,7 +72,7 @@
 
     .profileContainer {
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       cursor: pointer;
       transition: 0.3s;
       border-radius: 8px;

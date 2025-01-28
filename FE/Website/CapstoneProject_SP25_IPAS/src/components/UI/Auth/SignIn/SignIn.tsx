@@ -3,7 +3,7 @@ import { Input, Button, Form, Divider, Flex } from "antd";
 import style from "./SignIn.module.scss";
 import { GoogleCredentialResponse } from "@react-oauth/google";
 import { GoogleLoginButton } from "@/components";
-import { useStyle } from "@/hooks";
+import { useAuth, useStyle } from "@/hooks";
 import { RulesManager } from "@/utils";
 import { authService } from "@/services";
 import { useNavigate } from "react-router-dom";
@@ -33,17 +33,23 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp, handleGoogleLoginSucces
       setIsLoading(true);
       const result = await authService.login(values.email, values.password);
       const toastMessage = result.message;
-      setTimeout(() => {
-        setIsLoading(false);
-        if (result.statusCode === 200) {
-          navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
-        } else {
-          toast.error(toastMessage);
-        }
-      }, 1500);
+      if (result.statusCode === 200) {
+        const { saveAuthData } = useAuth();
+        const loginResponse = {
+          accessToken: result.data.authenModel.accessToken,
+          refreshToken: result.data.authenModel.refreshToken,
+          fullName: result.data.fullname,
+          avatar: result.data.avatar,
+        };
+        saveAuthData(loginResponse);
+        navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
+      } else if (result.statusCode === 400) {
+        toast.error(toastMessage);
+      }
     } catch (error) {
-      setIsLoading(false);
       console.error("Error submitting form:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

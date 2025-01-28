@@ -7,8 +7,10 @@ import { GoogleCredentialResponse, GoogleOAuthProvider } from "@react-oauth/goog
 import { authService } from "@/services";
 import { PATHS } from "@/routes";
 import { toast } from "react-toastify";
+import { useAuth, useAuthRedirect } from "@/hooks";
 
 function Authentication() {
+  // useAuthRedirect();
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
@@ -20,7 +22,17 @@ function Authentication() {
   const handleGoogleLoginSuccess = async (response: GoogleCredentialResponse) => {
     if (response.credential) {
       var result = await authService.loginGoogle(response.credential);
+
       if (result.statusCode === 200) {
+        const { saveAuthData } = useAuth();
+        const loginResponse = {
+          accessToken: result.data.authenModel.accessToken,
+          refreshToken: result.data.authenModel.refreshToken,
+          fullName: result.data.fullname,
+          avatar: result.data.avatar,
+        };
+
+        saveAuthData(loginResponse);
         const toastMessage = result.message;
         navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
       } else {
