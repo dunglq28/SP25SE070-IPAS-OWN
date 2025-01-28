@@ -21,7 +21,6 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "baseUrl": "./src",
     "paths": {
       "@/*": ["./src/*"]
     }
