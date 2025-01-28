@@ -74,7 +74,12 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             {
                 try
                 {
-                    //var plantCriteria = await _unitOfWork.plant
+                    Expression<Func<PlantCriteria,bool>> condition = x => x.PlantId == plantId && x.CriteriaId == criteriaId;
+                    var plantCriteria = await _unitOfWork.PlantCriteriaRepository.GetByCondition(condition);
+                    //if ()
+                    //{
+
+                    //}
                     return new BusinessResult();
                     //var plantcriteria
                 }

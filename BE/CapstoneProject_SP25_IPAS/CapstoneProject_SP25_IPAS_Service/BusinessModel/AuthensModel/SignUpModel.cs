@@ -21,6 +21,5 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel
         public string FullName { get; set; } = "";
         public string Avatar { get; set; } = "";
 
-        public RoleEnum Role { get; set; }
     }
 }
