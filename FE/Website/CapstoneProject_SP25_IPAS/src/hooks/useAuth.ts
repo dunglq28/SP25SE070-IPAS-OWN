@@ -1,13 +1,14 @@
+import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { useState } from "react";
 
 const useAuth = () => {
   const getAuthData = () => {
     // Lấy dữ liệu từ localStorage, trả về đối tượng
     const authData = {
-      accessToken: localStorage.getItem("accessToken"),
-      refreshToken: localStorage.getItem("refreshToken"),
-      fullname: localStorage.getItem("fullname"),
-      avatar: localStorage.getItem("avatar"),
+      accessToken: localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN),
+      refreshToken: localStorage.getItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN),
+      fullName: localStorage.getItem(LOCAL_STORAGE_KEYS.FULL_NAME),
+      avatar: localStorage.getItem(LOCAL_STORAGE_KEYS.AVATAR),
     };
     return authData;
   };
@@ -15,14 +16,14 @@ const useAuth = () => {
   const saveAuthData = (data: {
     accessToken: string;
     refreshToken: string;
-    fullname: string;
+    fullName: string;
     avatar: string;
   }) => {
     // Lưu vào localStorage
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    localStorage.setItem("fullname", data.fullname);
-    localStorage.setItem("avatar", data.avatar);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, data.accessToken);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, data.refreshToken);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.FULL_NAME, data.fullName);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.AVATAR, data.avatar);
   };
 
   const clearAuthData = () => {

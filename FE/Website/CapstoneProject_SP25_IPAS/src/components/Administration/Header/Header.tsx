@@ -6,12 +6,16 @@ import style from "./Header.module.scss";
 import { getCurrentDate, getRoleName } from "@/utils";
 import { Icons, Images } from "@/assets";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks";
 
 interface HeaderProps {
   isDefault?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({ isDefault = false }) => {
+  const { getAuthData } = useAuth();
+  const authData = getAuthData();
+
   const menuItems = [
     { label: "Hồ sơ cá nhân", path: "/profile" },
     { label: "Cài đặt tài khoản", path: "/settings" },
@@ -51,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ isDefault = false }) => {
     <Flex className={style.header}>
       <Flex className={style.content}>
         <Flex className={style.leftSection}>
-          <Text className={style.welcomeMessage}>Welcome back, dsd!</Text>
+          <Text className={style.welcomeMessage}>Welcome back, {authData.fullName}</Text>
           <Flex className={style.dateWrapper}>
             <Icons.calendar className={style.dateIcon} />
             <Text className={style.dateText}>{getCurrentDate()}</Text>
@@ -65,15 +69,21 @@ const Header: React.FC<HeaderProps> = ({ isDefault = false }) => {
               </Popover>
             ))}
           </Flex>
-          <Popover content={profileContent} trigger="click" placement="bottomRight">
+          <Popover content={profileContent} trigger="click" placement="bottom">
             <Flex className={style.profileContainer}>
-              {/* <Avatar shape="square" size={50} icon={<UserOutlined />} /> */}
-              <Avatar size={50} shape="square" src={<img src={Images.avatar} alt="avatar" />} />
+              {authData.avatar &&
+              authData.avatar !== "null" &&
+              authData.avatar !== "undefined" &&
+              authData.avatar.trim() !== "" ? (
+                <Avatar size={50} shape="square" src={authData.avatar} />
+              ) : (
+                <Avatar size={50} shape="square" icon={<UserOutlined />} />
+              )}
               <Flex className={`${style.profileInfo}`}>
-                <Text className={style.profileName}>Admin</Text>
+                <Text className={style.profileName}>{authData.fullName}</Text>
                 {!isDefault && <Text className={style.profileRole}>{getRoleName(Number(1))}</Text>}
               </Flex>
-              {!isDefault && <Icons.arrowDropDownLine className={style.dropdownIcon} />}
+              <Icons.arrowDropDownLine className={style.dropdownIcon} />
             </Flex>
           </Popover>
         </Flex>

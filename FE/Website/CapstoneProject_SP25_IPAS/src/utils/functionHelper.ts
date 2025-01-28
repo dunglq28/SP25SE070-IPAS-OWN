@@ -193,9 +193,9 @@ export const formatDateAndTime = (date: Date): string => {
 export const getRoleName = (roleId: number): string => {
   if (roleId === UserRole.Admin) {
     return "Quản trị viên";
-  } else if (roleId === UserRole.BrandManager) {
+  } else if (roleId === UserRole.Employee) {
     return "Quản lý thương hiệu";
-  } else if (roleId === UserRole.BranchManager) {
+  } else if (roleId === UserRole.Manager) {
     return "Quản lý chi nhánh";
   }
   return UserRole[roleId] ? `Vai trò: ${UserRole[roleId]}` : "Vai trò không xác định";
@@ -205,23 +205,6 @@ export const formatTime = (time: number) => {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-};
-
-export const translateDemographics = (demographics: string): string => {
-  const [gender, time] = demographics.split(", ") as [string, string];
-
-  const genderMap: { [key: string]: string } = {
-    Male: "Nam",
-    Female: "Nữ",
-  };
-
-  const timeMap: { [key: string]: string } = {
-    Morning: "Buổi Sáng",
-    Afternoon: "Buổi Trưa",
-    Evening: "Buổi Chiều",
-  };
-
-  return `${genderMap[gender] || "Không xác định"}, ${timeMap[time] || "Không xác định"}`;
 };
 
 export const addOneMonthToDate = (date: Date): string => {

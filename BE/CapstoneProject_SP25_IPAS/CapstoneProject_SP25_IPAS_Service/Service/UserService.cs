@@ -424,9 +424,9 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                                         CreateDate = DateTime.Now,
                                         ExpiredDate = checkExistRefreshToken.ExpiredDate
                                     });
-                                    return new BusinessResult(Const.SUCCESS_RFT_CODE, Const.SUCCESS_RFT_MSG,new
+                                    return new BusinessResult(Const.SUCCESS_RFT_CODE, Const.SUCCESS_RFT_MSG, new
                                     {
-                                       AuthenModel =  new AuthenModel
+                                        AuthenModel = new AuthenModel
                                         {
                                             AccessToken = newAccessToken,
                                             RefreshToken = newRefreshToken
@@ -690,8 +690,6 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                 }
                 authClaims.Add(new Claim("UserId", user.UserId.ToString()));
                 authClaims.Add(new Claim("Status", user.Status.ToString()));
-                authClaims.Add(new Claim("AvatarURL", user.AvatarURL));
-                authClaims.Add(new Claim("FullName", user.FullName));
                 authClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
             }
@@ -714,8 +712,6 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                      new Claim("roleId", role.RoleId.ToString()),
                      new Claim("UserId", user.UserId.ToString()),
                      new Claim("Status", user.Status.ToString()),
-                     new Claim("FullName", user.FullName),
-                     new Claim("AvatarURL", user.AvatarURL),
                      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
               };
             }
@@ -729,8 +725,6 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                      new Claim("farmId", farmId.ToString()),
                      new Claim("UserId", user.UserId.ToString()),
                      new Claim("Status", user.Status.ToString()),
-                     new Claim("FullName", user.FullName),
-                     new Claim("AvatarURL", user.AvatarURL),
                      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
             }
@@ -1074,8 +1068,8 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
                                     AccessToken = accessToken1,
                                     RefreshToken = refreshToken1
                                 },
-                                Avatar = existUser.AvatarURL,
-                                Fullname = existUser.FullName,
+                                Avatar = newUser.AvatarURL,
+                                Fullname = newUser.FullName,
                             });
                         }
                         // nếu người dùng bị ban

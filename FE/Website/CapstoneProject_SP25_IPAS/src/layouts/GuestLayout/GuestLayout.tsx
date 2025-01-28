@@ -3,6 +3,7 @@ import { Layout, Divider } from "antd";
 
 import style from "./GuestLayout.module.scss";
 import { Footer, HeaderGuest } from "@/components";
+import { useAuthRedirect } from "@/hooks";
 
 const { Content } = Layout;
 
@@ -11,6 +12,7 @@ interface GuestLayoutProps {
 }
 
 const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
+  // useAuthRedirect();
   return (
     <Layout>
       {/* container */}

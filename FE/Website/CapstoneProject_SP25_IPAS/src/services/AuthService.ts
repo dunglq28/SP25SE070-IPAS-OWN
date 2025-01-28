@@ -38,14 +38,23 @@ export const sendOTP = async (email: string): Promise<ApiResponse<OtpResponse>> 
 export const register = async (
   registerRequest: RegisterRequest,
 ): Promise<ApiResponse<RegisterResponse>> => {
-  const { email, password, fullName, gender, dob } = registerRequest;
+  const { email, password, fullName, phone, gender, dob } = registerRequest;
   const res = await axiosNoAuth.post("register", {
     email,
     password,
     fullName,
     gender,
+    phone,
     dob,
   });
   const apiResponse = res.data as ApiResponse<RegisterResponse>;
+  return apiResponse;
+};
+
+export const logout = async (refreshToken: string): Promise<ApiResponse<Object>> => {
+  const res = await axiosNoAuth.post("logout", {
+    refreshToken,
+  });
+  const apiResponse = res.data as ApiResponse<Object>;
   return apiResponse;
 };
