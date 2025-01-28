@@ -43,6 +43,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
         private LandPlotRepository _landPlotRepo;
         private LandPlotCoordinationRepository _landPlotCoordinationRepo;
         private PlantCriteriaRepository _plantCriteriaRepo;
+        private LandRowRepository _landRowRepo;
         public UnitOfWork(IpasContext context, IConfiguration configuration)
         {
             _context = context;
@@ -72,6 +73,7 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
             _landPlotRepo = new LandPlotRepository(context);
             _landPlotCoordinationRepo = new LandPlotCoordinationRepository(context);
             _planRepo = new PlanRepository(context);
+            _landRowRepo = new LandRowRepository(context);
         }
 
         private bool disposed = false;
@@ -414,6 +416,18 @@ namespace CapstoneProject_SP25_IPAS_Repository.UnitOfWork
                     this._processDataRepo = new ProcessDataRepository(_context);
                 }
                 return _processDataRepo;
+            }
+        }
+
+        public LandRowRepository LandRowRepository
+        {
+            get
+            {
+                if (_landRowRepo == null)
+                {
+                    this._landRowRepo = new LandRowRepository(_context);
+                }
+                return _landRowRepo;
             }
         }
     }

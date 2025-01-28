@@ -23,6 +23,5 @@ namespace CapstoneProject_SP25_IPAS_Service.BusinessModel.AuthensModel
         public string Phone { get; set; } = "";
         public DateTime Dob { get; set; } = new DateTime();
 
-        public RoleEnum Role { get; set; }
     }
 }
