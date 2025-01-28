@@ -168,6 +168,20 @@ export const getCurrentDate = (): string => {
   return moment().format("dddd, DD/MM/YYYY");
 };
 
+export const formatToISO8601 = (dateInput: string | Date): string => {
+  if (!dateInput) {
+    throw new Error("Invalid date input");
+  }
+
+  const formattedDate = moment(dateInput).toISOString();
+
+  if (!formattedDate) {
+    throw new Error("Failed to convert date to ISO 8601");
+  }
+
+  return formattedDate;
+};
+
 export const formatDate = (date: Date): string => {
   return moment(date).format("DD/MM/YYYY");
 };

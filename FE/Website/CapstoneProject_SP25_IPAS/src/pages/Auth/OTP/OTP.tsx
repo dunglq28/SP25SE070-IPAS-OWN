@@ -4,7 +4,7 @@ import { Button, Col, Form, Input, Row, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authService } from "@/services";
-import { hashOtp } from "@/utils";
+import { formatToISO8601, hashOtp } from "@/utils";
 
 const { Title, Text } = Typography;
 
@@ -13,7 +13,7 @@ function OTP() {
   const location = useLocation();
   const [form] = Form.useForm();
   // const [formRegister, setFormRegister] = useState<any | null>(null);
-  const TIME_COUNTER = 30;
+  const TIME_COUNTER = 120;
   const [timeLeft, setTimeLeft] = useState(TIME_COUNTER);
   const otpRef = useRef<string | null>(location.state?.otp);
   const formRegisterRef = useRef<any | null>(location.state?.values);
@@ -27,8 +27,6 @@ function OTP() {
       : "An OTP has been sent to your email to reset your password. Please enter the code below.";
 
   useEffect(() => {
-    console.log(otpRef.current);
-
     // Kiểm tra `timeLeft` từ localStorage
     const storedTime = localStorage.getItem("otpTimeLeft");
     const now = Date.now();
@@ -67,9 +65,6 @@ function OTP() {
 
   const handleFinish = async (values: { otp: string }) => {
     const otpUser = await hashOtp(values.otp);
-    console.log("OTP Submitted:", otpUser);
-    console.log("Time:", timeLeft);
-    console.log(otpUser !== otpRef.current);
     if (otpUser !== otpRef.current) {
       form.setFields([
         {
@@ -88,13 +83,29 @@ function OTP() {
       ]);
       return;
     }
+    console.log();
+    
+    if (otpUser === otpRef.current) {
+      const registerRequest = {
+        email: formRegisterRef.current.email,
+        password: formRegisterRef.current.password,
+        fullName: formRegisterRef.current.fullName,
+        phone: formRegisterRef.current.phoneNumber,
+        gender: formRegisterRef.current.gender,
+        dob: formatToISO8601(formRegisterRef.current.dateOfBirth),
+      };
+      var result = await authService.register(registerRequest);
+      console.log(result);
+      if (result.statusCode === 200) {
+      }
+    }
   };
 
   const handleResendOTP = async () => {
     try {
       var result = await authService.sendOTP(formRegisterRef.current.email);
       if (result.statusCode === 200) {
-        otpRef.current = result.data.opt;
+        otpRef.current = result.data.otpHash;
         setTimeLeft(TIME_COUNTER);
       }
     } catch (error) {
