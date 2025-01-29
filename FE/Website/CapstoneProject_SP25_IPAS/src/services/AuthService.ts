@@ -5,7 +5,8 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from "@/payloads";
-import { axiosNoAuth } from "@/api";
+import { axiosAuth, axiosNoAuth } from "@/api";
+import { LOCAL_STORAGE_KEYS } from "@/constants";
 
 export const loginGoogle = async (googleToken: string): Promise<ApiResponse<LoginResponse>> => {
   const res = await axiosNoAuth.post("login-with-google", {
@@ -48,6 +49,49 @@ export const register = async (
     dob,
   });
   const apiResponse = res.data as ApiResponse<RegisterResponse>;
+  return apiResponse;
+};
+
+export const sendForgetPassOTP = async (email: string): Promise<ApiResponse<Object>> => {
+  const res = await axiosNoAuth.post("forget-password", {
+    email: email,
+  });
+  const apiResponse = res.data as ApiResponse<Object>;
+  return apiResponse;
+};
+
+export const forgetPassOTPConfirm = async (
+  email: string,
+  otp: string,
+): Promise<ApiResponse<Object>> => {
+  const res = await axiosNoAuth.post("forget-password/confirm", {
+    email: email,
+    otpCode: otp,
+  });
+  const apiResponse = res.data as ApiResponse<Object>;
+  return apiResponse;
+};
+
+export const forgetPassNewPass = async (
+  email: string,
+  newPassword: string,
+  otp: string,
+): Promise<ApiResponse<Object>> => {
+  const res = await axiosNoAuth.post("forget-password/new-password", {
+    email: email,
+    newPassword: newPassword,
+    otpCode: otp,
+  });
+  const apiResponse = res.data as ApiResponse<Object>;
+  return apiResponse;
+};
+
+export const refreshToken = async (): Promise<ApiResponse<Object>> => {
+  const refreshToken = localStorage.getItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
+  const res = await axiosNoAuth.post("refresh-token", {
+    refreshToken: refreshToken,
+  });
+  const apiResponse = res.data as ApiResponse<Object>;
   return apiResponse;
 };
 

@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
 
 import style from "./ManagementLayout.module.scss";
-import { HeaderAdmin, SidebarAdmin } from "@/components";
+import { HeaderAdmin, Loading, SidebarAdmin } from "@/components";
 import { Breadcrumb, Flex, Layout } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { isValidBreadcrumb } from "@/utils";
+import { useAuthRedirect } from "@/hooks";
 const { Content, Footer } = Layout;
 
 interface ManagementLayoutProps {
@@ -14,6 +15,11 @@ interface ManagementLayoutProps {
 const ManagementLayout: React.FC<ManagementLayoutProps> = ({ children }) => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const isAuthChecked = useAuthRedirect();
+
+  if (!isAuthChecked) {
+    return <Loading />;
+  }
 
   const breadcrumbItems = pathnames
     .filter((path) => !isValidBreadcrumb(path))

@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
-import { Layout, Divider } from "antd";
+import { Layout } from "antd";
 
 import style from "./GuestLayout.module.scss";
 import { Footer, HeaderGuest } from "@/components";
-import { useAuthRedirect } from "@/hooks";
+import { useAuthRedirect, useToastFromLocalStorage, useToastMessage } from "@/hooks";
 
 const { Content } = Layout;
 
@@ -13,6 +13,8 @@ interface GuestLayoutProps {
 
 const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
   // useAuthRedirect();
+  useToastMessage();
+  useToastFromLocalStorage();
   return (
     <Layout>
       {/* container */}

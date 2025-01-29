@@ -353,6 +353,7 @@ namespace CapstoneProject_SP25_IPAS_Service.Service
             }
         }
 
+
         public async Task<BusinessResult> Logout(string refreshToken)
         {
             var checkExistRefreshToken = await _unitOfWork.RefreshTokenRepository.GetRefrshTokenByRefreshTokenValue(refreshToken);

@@ -2,14 +2,22 @@ import React, { ReactNode } from "react";
 
 import style from "./FarmPickerLayout.module.scss";
 import { Flex, Layout } from "antd";
-import { HeaderAdmin, SidebarAdmin } from "@/components";
-const { Header, Content, Footer } = Layout;
+import { HeaderAdmin, Loading, SidebarAdmin } from "@/components";
+import { useAuthRedirect, useToastMessage } from "@/hooks";
+const { Content, Footer } = Layout;
 
 interface FarmPickerLayoutProps {
   children: ReactNode;
 }
 
 const FarmPickerLayout: React.FC<FarmPickerLayoutProps> = ({ children }) => {
+  const isAuthChecked = useAuthRedirect();
+  useToastMessage();
+
+  if (!isAuthChecked) {
+    return <Loading />;
+  }
+
   return (
     <Flex>
       <SidebarAdmin isDefault={true} />

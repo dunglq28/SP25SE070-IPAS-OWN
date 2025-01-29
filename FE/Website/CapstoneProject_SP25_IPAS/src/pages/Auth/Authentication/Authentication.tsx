@@ -7,10 +7,11 @@ import { GoogleCredentialResponse, GoogleOAuthProvider } from "@react-oauth/goog
 import { authService } from "@/services";
 import { PATHS } from "@/routes";
 import { toast } from "react-toastify";
-import { useAuth, useAuthRedirect } from "@/hooks";
+import { useAuth, useAuthRedirect, useToastMessage } from "@/hooks";
 
 function Authentication() {
   // useAuthRedirect();
+  useToastMessage();
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);

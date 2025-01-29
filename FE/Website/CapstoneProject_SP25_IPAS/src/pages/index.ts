@@ -1,6 +1,7 @@
 export { default as Landing } from "@/pages/LandingPage/Landing";
 export { default as Authentication } from "@/pages/Auth/Authentication/Authentication";
 export { default as ForgetPassword } from "@/pages/Auth/ForgetPassword/ForgetPassword";
+export { default as ResetPassword } from "@/pages/Auth/ResetPassword/ResetPassword";
 export { default as OTP } from "@/pages/Auth/OTP/OTP";
 export { default as FarmPicker } from "@/pages/FarmPicker/FarmPicker";
 export { default as Dashboard } from "@/pages/dashboard/Dashboard";

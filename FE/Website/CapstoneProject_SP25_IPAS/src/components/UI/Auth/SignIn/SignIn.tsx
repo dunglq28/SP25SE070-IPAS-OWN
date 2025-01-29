@@ -3,12 +3,15 @@ import { Input, Button, Form, Divider, Flex } from "antd";
 import style from "./SignIn.module.scss";
 import { GoogleCredentialResponse } from "@react-oauth/google";
 import { GoogleLoginButton } from "@/components";
-import { useAuth, useStyle } from "@/hooks";
+import { useAuth, useStyle, useToastMessage } from "@/hooks";
 import { RulesManager } from "@/utils";
 import { authService } from "@/services";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "@/routes";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+import { DecodedToken } from "@/types";
+import { UserRole } from "@/constants";
 
 interface Props {
   toggleForm: () => void;
@@ -35,14 +38,20 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp, handleGoogleLoginSucces
       const toastMessage = result.message;
       if (result.statusCode === 200) {
         const { saveAuthData } = useAuth();
+        const accessToken = result.data.authenModel.accessToken;
         const loginResponse = {
-          accessToken: result.data.authenModel.accessToken,
+          accessToken: accessToken,
           refreshToken: result.data.authenModel.refreshToken,
           fullName: result.data.fullname,
           avatar: result.data.avatar,
         };
         saveAuthData(loginResponse);
-        navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
+        const roleId = jwtDecode<DecodedToken>(accessToken).roleId;
+
+        if (roleId === UserRole.User.toString())
+          navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
+        if (roleId === UserRole.Admin.toString())
+          navigate(PATHS.USER.USER_LIST, { state: { toastMessage } });
       } else if (result.statusCode === 400) {
         toast.error(toastMessage);
       }
@@ -85,7 +94,7 @@ const SignIn: React.FC<Props> = ({ toggleForm, isSignUp, handleGoogleLoginSucces
         </div>
 
         <Flex className={style.forgetWrapper}>
-          <a href="/forgot-password" className={style["forgetpw"]}>
+          <a href={PATHS.AUTH.FORGOT_PASSWORD} className={style["forgetpw"]}>
             Forgot Password?
           </a>
         </Flex>
