@@ -9,6 +9,7 @@ import { DATE_FORMAT, RulesManager } from "@/utils";
 import dayjs from "dayjs";
 import { authService } from "@/services";
 import { toast } from "react-toastify";
+import { PATHS } from "@/routes";
 
 interface Props {
   toggleForm: () => void;
@@ -44,7 +45,7 @@ const SignUp: React.FC<Props> = ({ toggleForm, isSignUp, handleGoogleLoginSucces
       setIsLoading(true);
       var result = await authService.sendOTP(values.email);
       if (result.statusCode === 200) {
-        navigate("/sign-up/otp", {
+        navigate(PATHS.AUTH.SIGN_UP_OTP, {
           state: { type: "sign-up", values, otp: result.data.otpHash },
         });
       } else if (result.statusCode === 400) {

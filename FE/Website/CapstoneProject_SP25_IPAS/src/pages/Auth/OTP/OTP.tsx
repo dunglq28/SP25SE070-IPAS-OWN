@@ -17,10 +17,11 @@ function OTP() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
-  const TIME_COUNTER = 120;
+  const TIME_COUNTER = 30;
   const [timeLeft, setTimeLeft] = useState(TIME_COUNTER);
-  const otpRef = useRef<string | null>(location.state?.otp);
+  const otpRef = useRef<string>(location.state?.otp);
   const formRegisterRef = useRef<any | null>(location.state?.values);
+  const emailRef = useRef<string | null>(location.state?.email);
   const type = location.state?.type;
 
   const instructions =
@@ -65,17 +66,7 @@ function OTP() {
     }
   }, [timeLeft]);
 
-  const handleFinish = async (values: { otp: string }) => {
-    const otpUser = await hashOtp(values.otp);
-    if (otpUser !== otpRef.current) {
-      form.setFields([
-        {
-          name: "otp",
-          errors: ["The OTP you entered is incorrect. Please try again!"],
-        },
-      ]);
-      return;
-    }
+  const validateOtp = async (otp: string, shouldHash = true) => {
     if (timeLeft <= 0) {
       form.setFields([
         {
@@ -83,42 +74,86 @@ function OTP() {
           errors: ["The OTP has expired. Please request a new one!"],
         },
       ]);
-      return;
+      return false;
     }
 
-    if (otpUser === otpRef.current) {
-      try {
-        setIsLoading(true);
-        const registerRequest: RegisterRequest = {
-          email: formRegisterRef.current.email,
-          password: formRegisterRef.current.password,
-          fullName: formRegisterRef.current.fullName,
-          phone: formRegisterRef.current.phoneNumber,
-          gender: formRegisterRef.current.gender === "male" ? "Male" : "Female",
-          dob: formRegisterRef.current.dateOfBirth,
+    if (shouldHash) {
+      const hashedOtp = await hashOtp(otp);
+
+      if (hashedOtp !== otpRef.current) {
+        form.setFields([
+          {
+            name: "otp",
+            errors: ["The OTP you entered is incorrect. Please try again!"],
+          },
+        ]);
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const handleFinalRegister = async (values: { otp: string }) => {
+    if (!(await validateOtp(values.otp, true))) return;
+
+    try {
+      setIsLoading(true);
+      const registerRequest: RegisterRequest = {
+        email: formRegisterRef.current.email,
+        password: formRegisterRef.current.password,
+        fullName: formRegisterRef.current.fullName,
+        phone: formRegisterRef.current.phoneNumber,
+        gender: formRegisterRef.current.gender === "male" ? "Male" : "Female",
+        dob: formRegisterRef.current.dateOfBirth,
+      };
+
+      var result = await authService.register(registerRequest);
+      if (result.statusCode === 200) {
+        const { saveAuthData } = useAuth();
+        const registerResponse = {
+          accessToken: result.data.authenModel.accessToken,
+          refreshToken: result.data.authenModel.refreshToken,
+          fullName: result.data.fullname,
+          avatar: result.data.avatar,
         };
 
-        var result = await authService.register(registerRequest);
-        if (result.statusCode === 200) {
-          const { saveAuthData } = useAuth();
-          const registerResponse = {
-            accessToken: result.data.authenModel.accessToken,
-            refreshToken: result.data.authenModel.refreshToken,
-            fullName: result.data.fullname,
-            avatar: result.data.avatar,
-          };
-
-          saveAuthData(registerResponse);
-          const toastMessage = result.message;
-          navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
-        } else if (result.statusCode === 400) {
-          toast.error(result.message);
-        }
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsLoading(false);
+        saveAuthData(registerResponse);
+        const toastMessage = result.message;
+        navigate(PATHS.FARM_PICKER, { state: { toastMessage } });
+      } else if (result.statusCode === 400) {
+        toast.error(result.message);
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgetOtpConfirm = async (values: { otp: string }) => {
+    if (!(await validateOtp(values.otp, false))) return;
+
+    try {
+      setIsLoading(true);
+      if (!emailRef.current) return;
+      var result = await authService.forgetPassOTPConfirm(emailRef.current, values.otp);
+      if (result.statusCode === 200) {
+        navigate(PATHS.AUTH.FORGOT_PASSWORD_RESET, {
+          state: { email: emailRef.current, otp: values.otp },
+        });
+      } else {
+        form.setFields([
+          {
+            name: "otp",
+            errors: ["The OTP you entered is incorrect. Please try again!"],
+          },
+        ]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -127,6 +162,18 @@ function OTP() {
       var result = await authService.sendOTP(formRegisterRef.current.email);
       if (result.statusCode === 200) {
         otpRef.current = result.data.otpHash;
+        setTimeLeft(TIME_COUNTER);
+      }
+    } catch (error) {
+      console.error("Error in handleSignUp:", error);
+    }
+  };
+
+  const handleResendPasswordOTP = async () => {
+    try {
+      if (!emailRef.current) return;
+      var result = await authService.sendForgetPassOTP(emailRef.current);
+      if (result.statusCode === 200) {
         setTimeLeft(TIME_COUNTER);
       }
     } catch (error) {
@@ -157,7 +204,12 @@ function OTP() {
               <Text>Time Remaining:</Text>
               <span className={style.timer}>{formatTime(timeLeft)}</span>
             </div>
-            <Form form={form} onFinish={handleFinish} layout="vertical" className={style.form}>
+            <Form
+              form={form}
+              onFinish={type === "sign-up" ? handleFinalRegister : handleForgetOtpConfirm}
+              layout="vertical"
+              className={style.form}
+            >
               <Form.Item
                 name="otp"
                 validateTrigger="onChange"
@@ -175,7 +227,7 @@ function OTP() {
                   <Col span={12}>
                     <Button
                       type="default"
-                      onClick={handleResendOTP}
+                      onClick={type === "sign-up" ? handleResendOTP : handleResendPasswordOTP}
                       block
                       disabled={timeLeft > 0}
                       className={style.resendButton}
@@ -200,12 +252,13 @@ function OTP() {
             <div className={style.back}>
               <a
                 onClick={() => {
-                  navigate("/auth?mode=sign-up", {
-                    state: { formRegister: formRegisterRef.current },
-                  });
+                  navigate(
+                    type === "sign-up" ? PATHS.AUTH.Register : PATHS.AUTH.LOGIN2,
+                    type === "sign-up" ? { state: { formRegister: formRegisterRef.current } } : {},
+                  );
                 }}
               >
-                Back to sign up
+                {type === "sign-up" ? "Back to sign up" : "Back to sign in"}
               </a>
             </div>
           </div>

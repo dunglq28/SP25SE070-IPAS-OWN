@@ -7,8 +7,7 @@ import "@/App.css";
 import { PATHS } from "@/routes";
 import { useSidebarStore } from "@/stores";
 import { ActiveMenu, MenuItem } from "@/types";
-import { authService } from "@/services";
-import { useAuth } from "@/hooks";
+import { useLogout } from "@/hooks";
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -214,19 +213,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDefault = false }) => {
     },
   ];
 
-  const handleLogout = async () => {
-    const { getAuthData, clearAuthData } = useAuth();
-    const authData = getAuthData();
-    if (authData.refreshToken) {
-      var result = await authService.logout(authData.refreshToken);
-      if (result.statusCode === 200) {
-        clearAuthData();
-        navigate(PATHS.AUTH.LANDING);
-      } else {
-        console.log(result.message);
-      }
-    }
-  };
+  const handleLogout = useLogout();
 
   menuItems = mergeActivePaths(menuItems);
 

@@ -3,4 +3,5 @@ export const LOCAL_STORAGE_KEYS = {
   REFRESH_TOKEN: "refreshToken",
   FULL_NAME: "fullName",
   AVATAR: "avatar",
+  ERROR_MESSAGE: "errorMessage"
 };

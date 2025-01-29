@@ -385,9 +385,9 @@ namespace CapstoneProject_SP25_IPAS_Common
 
         #region UserService
         public static int WARNING_ACCOUNT_BANNED_CODE = 400;
-        public static string WARNING_ACCOUNT_BANNED_MSG = "Your account is banned";
+        public static string WARNING_ACCOUNT_BANNED_MSG = "Your account has been banned. Contact support for further details";
         public static int WARNING_ACCOUNT_DELETED_CODE = 400;
-        public static string WARNING_ACCOUNT_DELETED_MSG = "Your account is deleted";
+        public static string WARNING_ACCOUNT_DELETED_MSG = "Your account has been deleted. Contact support for further details";
         public static int WARNING_PASSWORD_INCORRECT_CODE = 400;
         public static string WARNING__PASSWORD_INCORRECT_MSG = "Password is not correct";
         public static int WARNING_SIGN_IN_CODE = 400;
